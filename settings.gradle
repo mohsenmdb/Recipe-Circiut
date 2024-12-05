@@ -15,7 +15,7 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "Recipe"
+rootProject.name = "RecipeCircuit"
 include ':app'
 include ':network'
 include ':shared'

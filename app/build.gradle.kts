@@ -90,6 +90,12 @@ dependencies {
     implementation(project(":data"))
     implementation(project(":domain"))
 
+    implementation("com.slack.circuit:circuit-foundation:0.23.1")
+    implementation("com.slack.circuit:circuitx-android:0.23.1")
+    implementation("com.slack.circuit:circuit-codegen-annotations:0.23.1")
+    implementation("androidx.appcompat:appcompat:1.7.0")
+
+
     api(platform(libs.compose.bom))
     androidTestImplementation(platform(libs.compose.bom))
     debugImplementation(platform(libs.compose.bom))
