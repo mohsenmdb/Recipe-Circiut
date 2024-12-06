@@ -10,14 +10,14 @@
         android:name=".base.BaseApplication"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
-        android:theme="@style/Theme.Recipe"
+        android:theme="@style/NewTheme.Recipe"
         tools:targetApi="31">
         <activity
             android:name=".ui.MainActivityCircuit"
             android:exported="true"
             android:label="@string/app_name"
             android:launchMode="standard"
-            android:theme="@style/Theme.Recipe">
+            android:theme="@style/NewTheme.Recipe">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />

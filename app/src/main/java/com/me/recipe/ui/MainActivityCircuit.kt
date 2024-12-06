@@ -8,7 +8,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import com.me.recipe.ui.home.HomeScreen
+import com.me.recipe.ui.home.HomeScreen1
 import com.me.recipe.ui.home.MainUiScreen
 import com.me.recipe.ui.theme.RecipeTheme
 import com.slack.circuit.backstack.rememberSaveableBackStack
@@ -24,7 +24,6 @@ import dagger.hilt.android.AndroidEntryPoint
 import dagger.hilt.components.SingletonComponent
 import javax.inject.Inject
 
-
 @AndroidEntryPoint
 class MainActivityCircuit : AppCompatActivity() {
 
@@ -34,29 +33,28 @@ class MainActivityCircuit : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            RecipeTheme {
-                val backstack = rememberSaveableBackStack(
-                    root = MainUiScreen(
-                        title = "title",
-                    ),
+            val backstack = rememberSaveableBackStack(
+                root = MainUiScreen(
+                    title = "title",
+                ),
+            )
+            val navigator =
+                rememberAndroidScreenAwareNavigator(
+                    delegate = rememberCircuitNavigator(backstack),
+                    starter = remember { AndroidScreenStarter(::handleLegacyScreen) },
                 )
-                val navigator =
-                    rememberAndroidScreenAwareNavigator(
-                        delegate = rememberCircuitNavigator(backstack),
-                        starter = remember { AndroidScreenStarter(::handleLegacyScreen) },
-                    )
 
-                CircuitCompositionLocals(
-                    circuit = circuit,
-                    content = { NavigableCircuitContent(navigator, backstack) },
-                )
+            CircuitCompositionLocals(circuit = circuit) {
+                RecipeTheme {
+                    NavigableCircuitContent(navigator, backstack)
+                }
             }
         }
     }
 
     private fun handleLegacyScreen(screen: AndroidScreen): Boolean {
         when (screen) {
-            is HomeScreen -> {}
+            is HomeScreen1 -> {}
             else -> return false
         }
         return true
@@ -68,7 +66,7 @@ class MainActivityCircuit : AppCompatActivity() {
 @Composable
 fun MainScreen(
     state: MainUiScreen,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Text("HI CIRCUIT ------------- HI ")
 }

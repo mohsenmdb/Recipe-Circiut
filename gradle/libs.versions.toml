@@ -11,6 +11,7 @@ hiltVersion = "2.51.1"
 roomVersion = "2.6.1"
 timberVersion = "5.0.1"
 junitVersion = "4.13.2"
+appcompat = "1.7.0"
 
 compose-bom = "2024.06.00"
 composeViewmodelLifecycle = "2.8.2"
@@ -24,22 +25,20 @@ datastorePreferences = "1.1.1"
 workKtx = "2.9.0"
 androidxTestExt = "1.1.5"
 androidxTestEspresso = "3.5.1"
-junitJupiter = "5.9.3"
 mockWebserver = "4.11.0"
 navigationTesting = "2.7.7"
 kotlinxCollectionsImmutable = "0.3.6"
 ksp= "1.9.23-1.0.19"
 spotless = "6.25.0"
 composeLintChecks = "1.3.1"
-coreKtx = "1.13.1"
-appcompat = "1.7.0"
-material = "1.12.0"
+circuit = "0.23.1"
 
 
 [libraries]
 tools-buildGradle = { module = "com.android.tools.build:gradle", version.ref = "toolsBuildGradle" }
 kotlin-pluginGradle = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlinVersion" }
 hilt-pluginGradle = { module = "com.google.dagger:hilt-android-gradle-plugin", version.ref = "hiltVersion" }
+androidx-appcompat = { module = "androidx.appcompat:appcompat", version.ref = "appcompat" }
 
 
 compose-bom = { module = "androidx.compose:compose-bom", version.ref = "compose-bom" }
@@ -91,9 +90,11 @@ androidx-navigation-testing = { module = "androidx.navigation:navigation-testing
 hilt-testing = { module = "com.google.dagger:hilt-android-testing", version.ref = "hiltVersion" }
 robolectric = "org.robolectric:robolectric:4.12.1"
 spotless-gradlePlugin = { module = "com.diffplug.spotless:spotless-plugin-gradle", version.ref = "spotless" }
-androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
-androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
-material = { group = "com.google.android.material", name = "material", version.ref = "material" }
+
+circuit-foundation = { module = "com.slack.circuit:circuit-foundation", version.ref = "circuit" }
+circuit-android = { module = "com.slack.circuit:circuitx-android", version.ref = "circuit" }
+circuit-codegen-annotations = { module = "com.slack.circuit:circuit-codegen-annotations", version.ref = "circuit" }
+circuit-codegen = { module = "com.slack.circuit:circuit-codegen", version.ref = "circuit" }
 
 
 [plugins]

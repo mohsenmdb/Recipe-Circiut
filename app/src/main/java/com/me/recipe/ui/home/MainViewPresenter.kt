@@ -11,31 +11,29 @@ import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
 import dagger.hilt.components.SingletonComponent
 
-
-class DetailViewPresenter @AssistedInject constructor(
+class MainViewPresenter @AssistedInject constructor(
     @Assisted private val screen: MainUiScreen,
     @Assisted internal val navigator: Navigator,
 ) : Presenter<MainUiState> {
-
 
     @Composable
     override fun present(): MainUiState {
         val stableScope = rememberStableCoroutineScope()
 
+        navigator.toString()
         return MainUiState(
-            uid = "uid",
+            uid = screen.title.toString(),
             eventSink = { event ->
                 when (event) {
                     OnPlayClicked -> {}
                 }
-            }
+            },
         )
     }
-
 }
 
 @CircuitInject(MainUiScreen::class, SingletonComponent::class)
 @AssistedFactory
 interface Factory {
-    fun create(screen: MainUiScreen, navigator: Navigator): DetailViewPresenter
+    fun create(screen: MainUiScreen, navigator: Navigator): MainViewPresenter
 }

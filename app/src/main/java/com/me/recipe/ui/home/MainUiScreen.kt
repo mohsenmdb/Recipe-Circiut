@@ -13,21 +13,17 @@ data class MainUiScreen(
 ) : Screen
 
 @Parcelize
-data object HomeScreen : AndroidScreen
+data object HomeScreen1 : AndroidScreen
 
 typealias MainUiSink = (MainUiEvent) -> Unit
+
 @Stable
 data class MainUiState(
     val uid: String,
     val eventSink: MainUiSink,
-) : CircuitUiState {
-
-}
+) : CircuitUiState
 
 sealed interface MainUiEvent : CircuitUiEvent {
 
     data object OnPlayClicked : MainUiEvent
-
 }
-
-

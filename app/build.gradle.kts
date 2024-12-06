@@ -10,6 +10,10 @@ plugins {
     alias(libs.plugins.spotless)
 }
 
+ksp {
+    arg("circuit.codegen.mode", "hilt")
+}
+
 android {
     namespace = "com.me.recipe"
     compileSdk = 34
@@ -90,11 +94,11 @@ dependencies {
     implementation(project(":data"))
     implementation(project(":domain"))
 
-    implementation("com.slack.circuit:circuit-foundation:0.23.1")
-    implementation("com.slack.circuit:circuitx-android:0.23.1")
-    implementation("com.slack.circuit:circuit-codegen-annotations:0.23.1")
-    implementation("androidx.appcompat:appcompat:1.7.0")
-
+    implementation(libs.circuit.foundation)
+    implementation(libs.circuit.android)
+    implementation(libs.circuit.codegen.annotations)
+    ksp(libs.circuit.codegen)
+    implementation(libs.androidx.appcompat)
 
     api(platform(libs.compose.bom))
     androidTestImplementation(platform(libs.compose.bom))

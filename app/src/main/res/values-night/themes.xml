@@ -4,4 +4,8 @@
     <style name="Theme.Recipe" parent="android:Theme.Material.Light.NoActionBar">
         <item name="android:statusBarColor">@color/black</item>
     </style>
+
+    <style name="NewTheme.Recipe" parent="Theme.AppCompat.DayNight.NoActionBar">
+        <item name="android:statusBarColor">@color/black</item>
+    </style>
 </resources>
