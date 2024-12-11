@@ -29,9 +29,8 @@ import com.me.recipe.ui.theme.RecipeTheme
 import kotlinx.collections.immutable.ImmutableList
 
 @Composable
-internal fun SharedTransitionScope.RecipeContent(
+internal fun RecipeContent(
     recipe: com.me.recipe.domain.features.recipe.model.Recipe,
-    animatedVisibilityScope: AnimatedVisibilityScope,
     isLoading: Boolean,
     modifier: Modifier = Modifier,
 ) {
@@ -44,7 +43,6 @@ internal fun SharedTransitionScope.RecipeContent(
             uid = recipe.uid,
             title = recipe.title,
             rank = recipe.rating.toString(),
-            animatedVisibilityScope = animatedVisibilityScope,
             isLoading = isLoading,
         )
         if (!isLoading) {
@@ -60,11 +58,10 @@ internal fun SharedTransitionScope.RecipeContent(
 }
 
 @Composable
-private fun SharedTransitionScope.TitleRow(
+private fun TitleRow(
     uid: String,
     title: String,
     rank: String,
-    animatedVisibilityScope: AnimatedVisibilityScope,
     isLoading: Boolean,
 ) {
     Row(
@@ -77,10 +74,6 @@ private fun SharedTransitionScope.TitleRow(
             style = MaterialTheme.typography.titleLarge,
             color = MaterialTheme.colorScheme.onSurface,
             modifier = Modifier
-                .sharedBounds(
-                    rememberSharedContentState(key = "title-$uid"),
-                    animatedVisibilityScope = animatedVisibilityScope,
-                )
                 .wrapContentWidth(Alignment.Start)
                 .weight(1f)
                 .testTag("testTag_TitleRow_Text"),
@@ -134,12 +127,9 @@ internal fun RecipeInfoView(
 @Composable
 private fun RecipeContentPreview() {
     RecipeTheme(true) {
-        SharedTransitionLayoutPreview {
-            RecipeContent(
-                recipe = com.me.recipe.domain.features.recipe.model.Recipe.testData(),
-                animatedVisibilityScope = it,
-                isLoading = false,
-            )
-        }
+        RecipeContent(
+            recipe = com.me.recipe.domain.features.recipe.model.Recipe.testData(),
+            isLoading = false,
+        )
     }
 }

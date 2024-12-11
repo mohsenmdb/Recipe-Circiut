@@ -39,8 +39,6 @@ import com.me.recipe.ui.theme.RecipeTheme
 internal fun RecipeCategoryVerticalItem(
     category: CategoryRecipe,
     event: (HomeContract.Event) -> Unit,
-    sharedTransitionScope: SharedTransitionScope,
-    animatedVisibilityScope: AnimatedVisibilityScope,
 ) {
     Column(
         modifier = Modifier
@@ -61,8 +59,6 @@ internal fun RecipeCategoryVerticalItem(
             items(category.recipes) {
                 CategoryCardVertical(
                     recipe = it,
-                    sharedTransitionScope = sharedTransitionScope,
-                    animatedVisibilityScope = animatedVisibilityScope,
                     onClick = {
                         event.invoke(HomeContract.Event.OnRecipeClick(it))
                     },
@@ -80,8 +76,6 @@ private fun CategoryCardVertical(
     recipe: Recipe,
     onClick: () -> Unit,
     onLongClick: () -> Unit,
-    sharedTransitionScope: SharedTransitionScope,
-    animatedVisibilityScope: AnimatedVisibilityScope,
     modifier: Modifier = Modifier,
 ) {
     Card(
@@ -90,43 +84,31 @@ private fun CategoryCardVertical(
         modifier = modifier
             .combinedClickable(onClick = onClick, onLongClick = onLongClick),
     ) {
-        with(sharedTransitionScope) {
-            Column {
-                CoilImage(
-                    data = recipe.featuredImage,
-                    contentDescription = "recipe image",
-                    modifier = Modifier
-                        .sharedBounds(
-                            rememberSharedContentState(key = "image-${recipe.uid}"),
-                            animatedVisibilityScope = animatedVisibilityScope,
-                        )
-                        .width(200.dp)
-                        .height(200.dp),
-                    contentScale = ContentScale.Crop,
-                )
-                RecipeTitle(
-                    recipe,
-                    animatedVisibilityScope,
-                )
-            }
+        Column {
+            CoilImage(
+                data = recipe.featuredImage,
+                contentDescription = "recipe image",
+                modifier = Modifier
+                    .width(200.dp)
+                    .height(200.dp),
+                contentScale = ContentScale.Crop,
+            )
+            RecipeTitle(
+                recipe
+            )
         }
     }
 }
 
 @Composable
-private fun SharedTransitionScope.RecipeTitle(
+private fun RecipeTitle(
     recipe: Recipe,
-    animatedVisibilityScope: AnimatedVisibilityScope,
     modifier: Modifier = Modifier,
 ) {
     Text(
         text = recipe.title,
         maxLines = 1,
         modifier = modifier
-            .sharedBounds(
-                rememberSharedContentState(key = "title-${recipe.uid}"),
-                animatedVisibilityScope = animatedVisibilityScope,
-            )
             .fillMaxWidth()
             .padding(12.dp),
         style = MaterialTheme.typography.labelMedium,
@@ -142,14 +124,10 @@ private fun SharedTransitionScope.RecipeTitle(
 @Composable
 private fun CategoryCardVerticalPreview() {
     RecipeTheme {
-        SharedTransitionLayoutPreview {
-            CategoryCardVertical(
-                recipe = Recipe.testData(),
-                onClick = {},
-                onLongClick = {},
-                sharedTransitionScope = this,
-                animatedVisibilityScope = it,
-            )
-        }
+        CategoryCardVertical(
+            recipe = Recipe.testData(),
+            onClick = {},
+            onLongClick = {},
+        )
     }
 }

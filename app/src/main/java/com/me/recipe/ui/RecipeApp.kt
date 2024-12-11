@@ -12,7 +12,7 @@ import com.me.recipe.ui.navigation.RecipeNavHost
 @Composable
 internal fun RecipeApp(navController: NavHostController = rememberNavController()) {
     Scaffold(
-        bottomBar = { NavBottomBar(navController) },
+        bottomBar = { /*NavBottomBar(navController)*/ },
     ) { innerPadding ->
         RecipeNavHost(navController = navController, modifier = Modifier.padding(innerPadding))
     }

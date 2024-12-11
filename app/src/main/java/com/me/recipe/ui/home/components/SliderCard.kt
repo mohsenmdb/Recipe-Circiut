@@ -38,8 +38,6 @@ internal fun SliderCard(
     recipe: Recipe,
     onClick: () -> Unit,
     onLongClick: () -> Unit,
-    sharedTransitionScope: SharedTransitionScope,
-    animatedVisibilityScope: AnimatedVisibilityScope,
     modifier: Modifier = Modifier,
 ) {
     Card(
@@ -51,42 +49,31 @@ internal fun SliderCard(
             .combinedClickable(onClick = onClick, onLongClick = onLongClick),
     ) {
         BoxWithConstraints(modifier = Modifier.fillMaxSize()) {
-            with(sharedTransitionScope) {
-                CoilImage(
-                    data = recipe.featuredImage,
-                    contentDescription = "recipe image",
-                    modifier = Modifier
-                        .sharedBounds(
-                            rememberSharedContentState(key = "image-${recipe.uid}"),
-                            animatedVisibilityScope = animatedVisibilityScope,
-                        )
-                        .fillMaxSize(),
-                    contentScale = ContentScale.Crop,
-                )
-                VerticalGradientBox()
-                RecipeTitle(
-                    recipe,
-                    animatedVisibilityScope,
-                    modifier = Modifier.align(Alignment.BottomCenter),
-                )
-            }
+
+            CoilImage(
+                data = recipe.featuredImage,
+                contentDescription = "recipe image",
+                modifier = Modifier
+                    .fillMaxSize(),
+                contentScale = ContentScale.Crop,
+            )
+            VerticalGradientBox()
+            RecipeTitle(
+                recipe,
+                modifier = Modifier.align(Alignment.BottomCenter),
+            )
         }
     }
 }
 
 @Composable
-private fun SharedTransitionScope.RecipeTitle(
+private fun RecipeTitle(
     recipe: Recipe,
-    animatedVisibilityScope: AnimatedVisibilityScope,
     modifier: Modifier = Modifier,
 ) {
     Text(
         text = recipe.title,
         modifier = modifier
-            .sharedBounds(
-                rememberSharedContentState(key = "title-${recipe.uid}"),
-                animatedVisibilityScope = animatedVisibilityScope,
-            )
             .fillMaxWidth()
             .padding(vertical = 16.dp, horizontal = 12.dp),
         style = MaterialTheme.typography.titleMedium,
@@ -123,14 +110,10 @@ private fun BoxWithConstraintsScope.VerticalGradientBox() {
 @Composable
 private fun SliderCardPreview() {
     RecipeTheme {
-        SharedTransitionLayoutPreview {
-            SliderCard(
-                recipe = Recipe.testData(),
-                onClick = {},
-                onLongClick = {},
-                sharedTransitionScope = this,
-                animatedVisibilityScope = it,
-            )
-        }
+        SliderCard(
+            recipe = Recipe.testData(),
+            onClick = {},
+            onLongClick = {},
+        )
     }
 }

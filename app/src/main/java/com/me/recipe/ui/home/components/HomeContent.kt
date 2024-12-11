@@ -18,15 +18,14 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.me.recipe.ui.component.util.SharedTransitionLayoutPreview
 import com.me.recipe.ui.home.HomeContract
+import com.me.recipe.ui.home.MainUiState
 import com.me.recipe.ui.theme.RecipeTheme
 
 @Composable
 internal fun HomeContent(
     padding: PaddingValues,
-    state: HomeContract.State,
-    event: (HomeContract.Event) -> Unit,
-    sharedTransitionScope: SharedTransitionScope,
-    animatedVisibilityScope: AnimatedVisibilityScope,
+    state: MainUiState,
+    event: (HomeContract.Event) -> Unit = {},
 ) {
     LazyColumn(
         modifier = Modifier
@@ -38,8 +37,6 @@ internal fun HomeContent(
             HomeSlider(
                 recipes = state.sliderRecipes,
                 event = event,
-                sharedTransitionScope = sharedTransitionScope,
-                animatedVisibilityScope = animatedVisibilityScope,
             )
         }
         itemsIndexed(state.categoriesRecipes) { index, category ->
@@ -47,16 +44,12 @@ internal fun HomeContent(
                 RecipeCategoryHorizontalItem(
                     category = category,
                     event = event,
-                    sharedTransitionScope = sharedTransitionScope,
-                    animatedVisibilityScope = animatedVisibilityScope,
                 )
                 return@itemsIndexed
             }
             RecipeCategoryVerticalItem(
                 category = category,
                 event = event,
-                sharedTransitionScope = sharedTransitionScope,
-                animatedVisibilityScope = animatedVisibilityScope,
             )
         }
     }
@@ -66,14 +59,10 @@ internal fun HomeContent(
 @Composable
 private fun HomeContentPreview() {
     RecipeTheme(true) {
-        SharedTransitionLayoutPreview {
-            HomeContent(
-                padding = PaddingValues(16.dp),
-                state = HomeContract.State.testData(),
-                event = {},
-                sharedTransitionScope = this,
-                animatedVisibilityScope = it,
-            )
-        }
+        HomeContent(
+            padding = PaddingValues(16.dp),
+            state = MainUiState.testData(),
+            event = {},
+        )
     }
 }

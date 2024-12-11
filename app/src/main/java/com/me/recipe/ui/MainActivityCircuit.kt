@@ -4,22 +4,34 @@ import android.annotation.SuppressLint
 import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
+import androidx.compose.runtime.setValue
+import androidx.compose.runtime.getValue
+import androidx.compose.ui.graphics.Color
 import com.me.recipe.ui.home.HomeScreen1
 import com.me.recipe.ui.home.MainUiScreen
+import com.me.recipe.ui.navigation.NavBottomBar
 import com.me.recipe.ui.theme.RecipeTheme
+import com.slack.circuit.backstack.SaveableBackStack
 import com.slack.circuit.backstack.rememberSaveableBackStack
 import com.slack.circuit.codegen.annotations.CircuitInject
 import com.slack.circuit.foundation.Circuit
 import com.slack.circuit.foundation.CircuitCompositionLocals
 import com.slack.circuit.foundation.NavigableCircuitContent
 import com.slack.circuit.foundation.rememberCircuitNavigator
-import com.slack.circuitx.android.AndroidScreen
-import com.slack.circuitx.android.AndroidScreenStarter
-import com.slack.circuitx.android.rememberAndroidScreenAwareNavigator
+import com.slack.circuit.overlay.ContentWithOverlays
+import com.slack.circuit.runtime.Navigator
+import com.slack.circuitx.gesturenavigation.GestureNavigationDecoration
 import dagger.hilt.android.AndroidEntryPoint
 import dagger.hilt.components.SingletonComponent
 import javax.inject.Inject
@@ -33,36 +45,57 @@ class MainActivityCircuit : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            val backstack = rememberSaveableBackStack(
-                root = MainUiScreen(
-                    title = "title",
-                ),
-            )
-            val navigator =
-                rememberAndroidScreenAwareNavigator(
-                    delegate = rememberCircuitNavigator(backstack),
-                    starter = remember { AndroidScreenStarter(::handleLegacyScreen) },
-                )
-
+            val backstack = rememberSaveableBackStack(root = MainUiScreen(title = "title"))
+            val navigator = rememberCircuitNavigator(backstack)
+            var selectedIndex by remember { mutableIntStateOf(0) }
             CircuitCompositionLocals(circuit = circuit) {
                 RecipeTheme {
-                    NavigableCircuitContent(navigator, backstack)
+                    Scaffold(
+                        modifier = Modifier.fillMaxSize(),
+                        bottomBar = {
+                            NavBottomBar(
+                                selectedIndex = selectedIndex,
+                                onIndexChanged = { selectedIndex = it },
+                                navigator = navigator
+                            )
+                        },
+                        content = { paddingValues ->
+                            Content(
+                                paddingValues = PaddingValues(bottom = 0.dp),
+                                navigator = navigator,
+                                backstack = backstack
+                            )
+                        }
+                    )
                 }
             }
         }
     }
+}
 
-    private fun handleLegacyScreen(screen: AndroidScreen): Boolean {
-        when (screen) {
-            is HomeScreen1 -> {}
-            else -> return false
-        }
-        return true
+@Composable
+private fun Content(
+    paddingValues: PaddingValues,
+    navigator: Navigator,
+    backstack: SaveableBackStack
+) {
+    val gestureNavigationDecoration = remember(navigator) {
+        GestureNavigationDecoration(onBackInvoked = navigator::pop)
+    }
+    ContentWithOverlays(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(paddingValues)
+    ) {
+        NavigableCircuitContent(
+            modifier = Modifier.background(Color.Transparent),
+            navigator = navigator,
+            backStack = backstack,
+            decoration = gestureNavigationDecoration
+        )
     }
 }
 
-@CircuitInject(MainUiScreen::class, SingletonComponent::class)
-@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter", "RememberReturnType")
 @Composable
 fun MainScreen(
     state: MainUiScreen,

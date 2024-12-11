@@ -97,6 +97,8 @@ dependencies {
     implementation(libs.circuit.foundation)
     implementation(libs.circuit.android)
     implementation(libs.circuit.codegen.annotations)
+    implementation(libs.circuit.gesturenav)
+    implementation(libs.circuit.overlay)
     ksp(libs.circuit.codegen)
     implementation(libs.androidx.appcompat)
 

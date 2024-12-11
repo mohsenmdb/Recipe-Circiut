@@ -35,8 +35,6 @@ internal fun RecipeCard(
     recipe: Recipe,
     onClick: () -> Unit,
     onLongClick: () -> Unit,
-    sharedTransitionScope: SharedTransitionScope,
-    animatedVisibilityScope: AnimatedVisibilityScope,
     modifier: Modifier = Modifier,
 ) {
     Card(
@@ -48,30 +46,23 @@ internal fun RecipeCard(
             .combinedClickable(onClick = onClick, onLongClick = onLongClick),
     ) {
         Column(modifier = Modifier.fillMaxWidth()) {
-            with(sharedTransitionScope) {
-                CoilImage(
-                    data = recipe.featuredImage,
-                    contentDescription = "recipe image",
-                    modifier = Modifier
-                        .sharedBounds(
-                            rememberSharedContentState(key = "image-${recipe.uid}"),
-                            animatedVisibilityScope = animatedVisibilityScope,
-                        )
-                        .fillMaxWidth()
-                        .requiredHeight(225.dp)
-                        .testTag("testTag_RecipeCard_Image_${recipe.id}"),
-                    contentScale = ContentScale.Crop,
-                )
-                RecipeInfoRow(recipe, animatedVisibilityScope)
-            }
+            CoilImage(
+                data = recipe.featuredImage,
+                contentDescription = "recipe image",
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .requiredHeight(225.dp)
+                    .testTag("testTag_RecipeCard_Image_${recipe.id}"),
+                contentScale = ContentScale.Crop,
+            )
+            RecipeInfoRow(recipe)
         }
     }
 }
 
 @Composable
-private fun SharedTransitionScope.RecipeInfoRow(
+private fun RecipeInfoRow(
     recipe: Recipe,
-    animatedVisibilityScope: AnimatedVisibilityScope,
 ) {
     Row(
         modifier = Modifier
@@ -81,10 +72,6 @@ private fun SharedTransitionScope.RecipeInfoRow(
         Text(
             text = recipe.title,
             modifier = Modifier
-                .sharedBounds(
-                    rememberSharedContentState(key = "title-${recipe.uid}"),
-                    animatedVisibilityScope = animatedVisibilityScope,
-                )
                 .fillMaxWidth(0.8f)
                 .wrapContentWidth(Alignment.Start),
             style = MaterialTheme.typography.titleMedium,
@@ -111,14 +98,10 @@ private fun SharedTransitionScope.RecipeInfoRow(
 @Composable
 private fun RecipeCardPreview() {
     RecipeTheme {
-        SharedTransitionLayoutPreview {
-            RecipeCard(
-                recipe = com.me.recipe.domain.features.recipe.model.Recipe.testData(),
-                onClick = {},
-                onLongClick = {},
-                sharedTransitionScope = this,
-                animatedVisibilityScope = it,
-            )
-        }
+        RecipeCard(
+            recipe = Recipe.testData(),
+            onClick = {},
+            onLongClick = {},
+        )
     }
 }

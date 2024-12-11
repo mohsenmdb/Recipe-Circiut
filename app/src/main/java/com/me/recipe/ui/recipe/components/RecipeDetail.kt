@@ -21,8 +21,6 @@ import com.me.recipe.ui.theme.RecipeTheme
 internal fun RecipeDetail(
     recipe: Recipe,
     isLoading: Boolean,
-    sharedTransitionScope: SharedTransitionScope,
-    animatedVisibilityScope: AnimatedVisibilityScope,
     modifier: Modifier = Modifier,
 ) {
     Column(
@@ -30,18 +28,14 @@ internal fun RecipeDetail(
             .fillMaxSize()
             .background(MaterialTheme.colorScheme.background),
     ) {
-        with(sharedTransitionScope) {
-            RecipeImage(
-                uid = recipe.uid,
-                image = recipe.featuredImage,
-                animatedVisibilityScope = animatedVisibilityScope,
-            )
-            RecipeContent(
-                recipe = recipe,
-                animatedVisibilityScope = animatedVisibilityScope,
-                isLoading = isLoading,
-            )
-        }
+        RecipeImage(
+            uid = recipe.uid,
+            image = recipe.featuredImage,
+        )
+        RecipeContent(
+            recipe = recipe,
+            isLoading = isLoading,
+        )
     }
 }
 
@@ -49,13 +43,9 @@ internal fun RecipeDetail(
 @Composable
 private fun RecipeDetailPreview() {
     RecipeTheme(true) {
-        SharedTransitionLayoutPreview {
-            RecipeDetail(
-                recipe = Recipe.testData(),
-                sharedTransitionScope = this,
-                animatedVisibilityScope = it,
-                isLoading = false,
-            )
-        }
+        RecipeDetail(
+            recipe = Recipe.testData(),
+            isLoading = false,
+        )
     }
 }

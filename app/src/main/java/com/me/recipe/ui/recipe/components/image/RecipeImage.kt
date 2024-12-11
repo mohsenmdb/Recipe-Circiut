@@ -20,10 +20,9 @@ import com.me.recipe.ui.theme.RecipeTheme
 import timber.log.Timber
 
 @Composable
-internal fun SharedTransitionScope.RecipeImage(
+internal fun RecipeImage(
     uid: String,
     image: String,
-    animatedVisibilityScope: AnimatedVisibilityScope,
     modifier: Modifier = Modifier,
 ) {
     Timber.d("RecipeImage RecipeUid = $uid")
@@ -31,10 +30,6 @@ internal fun SharedTransitionScope.RecipeImage(
         data = image,
         contentDescription = "Recipe Featured Image",
         modifier = modifier
-            .sharedBounds(
-                rememberSharedContentState(key = "image-$uid"),
-                animatedVisibilityScope = animatedVisibilityScope,
-            )
             .fillMaxWidth()
             .height(250.dp)
             .testTag("testTag_RecipeImage"),
@@ -46,12 +41,9 @@ internal fun SharedTransitionScope.RecipeImage(
 @Composable
 private fun RecipeImagePreview() {
     RecipeTheme(true) {
-        SharedTransitionLayoutPreview {
-            RecipeImage(
-                uid = Recipe.testData().uid,
-                image = Recipe.testData().featuredImage,
-                animatedVisibilityScope = it,
-            )
-        }
+        RecipeImage(
+            uid = Recipe.testData().uid,
+            image = Recipe.testData().featuredImage,
+        )
     }
 }

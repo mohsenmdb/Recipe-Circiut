@@ -35,8 +35,6 @@ import kotlinx.coroutines.launch
 internal fun RecipeListScreen(
     navigateToRecipePage: NavigateToRecipePage,
     onBackPress: OnClick,
-    sharedTransitionScope: SharedTransitionScope,
-    animatedVisibilityScope: AnimatedVisibilityScope,
     modifier: Modifier = Modifier,
     viewModel: SearchViewModel = hiltViewModel(),
 ) {
@@ -48,8 +46,6 @@ internal fun RecipeListScreen(
         modifier = modifier,
         navigateToRecipePage = navigateToRecipePage,
         onBackPress = onBackPress,
-        sharedTransitionScope = sharedTransitionScope,
-        animatedVisibilityScope = animatedVisibilityScope,
     )
 }
 
@@ -61,8 +57,6 @@ private fun RecipeListScreen(
     event: (SearchContract.Event) -> Unit,
     navigateToRecipePage: NavigateToRecipePage,
     onBackPress: OnClick,
-    sharedTransitionScope: SharedTransitionScope,
-    animatedVisibilityScope: AnimatedVisibilityScope,
     modifier: Modifier = Modifier,
 ) {
     val snackbarHostState = remember { SnackbarHostState() }
@@ -101,8 +95,6 @@ private fun RecipeListScreen(
             padding = padding,
             state = state,
             event = event,
-            sharedTransitionScope = sharedTransitionScope,
-            animatedVisibilityScope = animatedVisibilityScope,
         )
     }
 }
@@ -111,16 +103,12 @@ private fun RecipeListScreen(
 @Composable
 private fun RecipeListScreenPreview() {
     RecipeTheme(true) {
-        SharedTransitionLayoutPreview {
-            RecipeListScreen(
-                event = {},
-                effect = flowOf(),
-                state = SearchContract.State.testData(),
-                navigateToRecipePage = { _ -> },
-                onBackPress = { },
-                sharedTransitionScope = this,
-                animatedVisibilityScope = it,
-            )
-        }
+        RecipeListScreen(
+            event = {},
+            effect = flowOf(),
+            state = SearchContract.State.testData(),
+            navigateToRecipePage = { _ -> },
+            onBackPress = { },
+        )
     }
 }

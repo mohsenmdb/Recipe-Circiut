@@ -28,8 +28,6 @@ internal fun SearchContent(
     padding: PaddingValues,
     state: SearchContract.State,
     event: (SearchContract.Event) -> Unit,
-    sharedTransitionScope: SharedTransitionScope,
-    animatedVisibilityScope: AnimatedVisibilityScope,
 ) {
     Box(
         modifier = Modifier
@@ -43,8 +41,6 @@ internal fun SearchContent(
             RecipeList(
                 recipes = state.recipes,
                 event = event,
-                sharedTransitionScope = sharedTransitionScope,
-                animatedVisibilityScope = animatedVisibilityScope,
             )
 
             LoadingView(isVisible = state.showLoadingProgressBar)
@@ -63,8 +59,6 @@ private fun SearchContentPreview() {
                 padding = PaddingValues(16.dp),
                 state = SearchContract.State.testData(),
                 event = {},
-                sharedTransitionScope = this,
-                animatedVisibilityScope = it,
             )
         }
     }

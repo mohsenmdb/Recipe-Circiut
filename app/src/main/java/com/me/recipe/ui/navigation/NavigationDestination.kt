@@ -1,37 +1,42 @@
 package com.me.recipe.ui.navigation
 
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.Search
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.navigation.NavType
 import androidx.navigation.navArgument
 import androidx.navigation.navDeepLink
 import com.me.recipe.R
-import com.me.recipe.ui.navigation.RecipeDestination.ITEM_ID_ARG
-import com.me.recipe.ui.navigation.RecipeDestination.ITEM_IMAGE_ARG
-import com.me.recipe.ui.navigation.RecipeDestination.ITEM_TITLE_ARG
-import com.me.recipe.ui.navigation.RecipeDestination.ITEM_UID_ARG
 
 interface NavigationDestination {
     val route: String
     val titleRes: Int
+    val icon: ImageVector?
 }
 
 object SplashDestination : NavigationDestination {
     override val route = "splash"
     override val titleRes = R.string.navigate_splash_title
+    override val icon = null
 }
 
 object HomeDestination : NavigationDestination {
     override val route = "Home"
     override val titleRes = R.string.navigate_home_title
+    override val icon = Icons.Filled.Home
 }
 
 object SearchDestination : NavigationDestination {
     override val route = "Search"
     override val titleRes = R.string.navigate_search_title
+    override val icon = Icons.Filled.Search
 }
 
 object RecipeListDestination : NavigationDestination {
     override val route = "RecipeList"
     override val titleRes = R.string.navigate_recipe_list_title
+    override val icon = null
     const val CATEGORY_TITLE_ARG = "categoryTitleArg"
     val routeWithArgs =
         "$route/{$CATEGORY_TITLE_ARG}"
@@ -43,6 +48,7 @@ object RecipeListDestination : NavigationDestination {
 object RecipeDestination : NavigationDestination {
     override val route = "Recipe"
     override val titleRes = R.string.navigate_recipe_title
+    override val icon = null
     const val ITEM_ID_ARG = "itemId"
     const val ITEM_TITLE_ARG = "itemTitle"
     const val ITEM_IMAGE_ARG = "itemImage"

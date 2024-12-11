@@ -31,12 +31,10 @@ import kotlinx.coroutines.launch
 
 @Composable
 internal fun RecipeScreen(
-    sharedTransitionScope: SharedTransitionScope,
-    animatedVisibilityScope: AnimatedVisibilityScope,
     viewModel: RecipeViewModel = hiltViewModel(),
 ) {
     val (state, effect, event) = use(viewModel = viewModel)
-    RecipeScreen(effect, state, event, sharedTransitionScope, animatedVisibilityScope)
+    RecipeScreen(effect, state, event)
 }
 
 @Composable
@@ -44,8 +42,6 @@ internal fun RecipeScreen(
     effect: Flow<RecipeContract.Effect>,
     state: RecipeContract.State,
     event: (RecipeContract.Event) -> Unit,
-    sharedTransitionScope: SharedTransitionScope,
-    animatedVisibilityScope: AnimatedVisibilityScope,
 ) {
     val snackbarHostState = remember { SnackbarHostState() }
     val coroutineScope = rememberCoroutineScope()
@@ -70,8 +66,6 @@ internal fun RecipeScreen(
         RecipeDetail(
             recipe = state.recipe,
             isLoading = state.loading,
-            sharedTransitionScope = sharedTransitionScope,
-            animatedVisibilityScope = animatedVisibilityScope,
             modifier = Modifier.padding(padding),
         )
     }
@@ -81,14 +75,10 @@ internal fun RecipeScreen(
 @Composable
 private fun RecipeScreenPreview() {
     RecipeTheme(true) {
-        SharedTransitionLayoutPreview {
-            RecipeScreen(
-                event = {},
-                effect = flowOf(),
-                state = RecipeContract.State.testData(),
-                sharedTransitionScope = this,
-                animatedVisibilityScope = it,
-            )
-        }
+        RecipeScreen(
+            event = {},
+            effect = flowOf(),
+            state = RecipeContract.State.testData(),
+        )
     }
 }

@@ -1,6 +1,8 @@
 package com.me.recipe.ui.home
 
 import androidx.compose.runtime.Composable
+import com.me.recipe.domain.features.recipe.model.CategoryRecipe
+import com.me.recipe.domain.features.recipe.model.Recipe
 import com.me.recipe.ui.home.MainUiEvent.OnPlayClicked
 import com.slack.circuit.codegen.annotations.CircuitInject
 import com.slack.circuit.runtime.Navigator
@@ -10,6 +12,7 @@ import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
 import dagger.hilt.components.SingletonComponent
+import kotlinx.collections.immutable.persistentListOf
 
 class MainViewPresenter @AssistedInject constructor(
     @Assisted private val screen: MainUiScreen,
@@ -22,7 +25,8 @@ class MainViewPresenter @AssistedInject constructor(
 
         navigator.toString()
         return MainUiState(
-            uid = screen.title.toString(),
+            sliderRecipes = persistentListOf(Recipe.testData()),
+            categoriesRecipes = persistentListOf(CategoryRecipe.testData()),
             eventSink = { event ->
                 when (event) {
                     OnPlayClicked -> {}

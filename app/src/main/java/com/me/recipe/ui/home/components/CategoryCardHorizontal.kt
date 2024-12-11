@@ -38,8 +38,6 @@ import com.me.recipe.ui.theme.RecipeTheme
 internal fun RecipeCategoryHorizontalItem(
     category: CategoryRecipe,
     event: (HomeContract.Event) -> Unit,
-    sharedTransitionScope: SharedTransitionScope,
-    animatedVisibilityScope: AnimatedVisibilityScope,
 ) {
     Column(
         modifier = Modifier
@@ -60,8 +58,6 @@ internal fun RecipeCategoryHorizontalItem(
             items(category.recipes) {
                 CategoryCardHorizontal(
                     recipe = it,
-                    sharedTransitionScope = sharedTransitionScope,
-                    animatedVisibilityScope = animatedVisibilityScope,
                     onClick = {
                         event.invoke(HomeContract.Event.OnRecipeClick(it))
                     },
@@ -79,8 +75,6 @@ internal fun CategoryCardHorizontal(
     recipe: Recipe,
     onClick: () -> Unit,
     onLongClick: () -> Unit,
-    sharedTransitionScope: SharedTransitionScope,
-    animatedVisibilityScope: AnimatedVisibilityScope,
     modifier: Modifier = Modifier,
 ) {
     Card(
@@ -91,19 +85,14 @@ internal fun CategoryCardHorizontal(
             .height(150.dp)
             .combinedClickable(onClick = onClick, onLongClick = onLongClick),
     ) {
-        with(sharedTransitionScope) {
-            CoilImage(
-                data = recipe.featuredImage,
-                contentDescription = "recipe image",
-                modifier = Modifier
-                    .sharedBounds(
-                        rememberSharedContentState(key = "image-${recipe.uid}"),
-                        animatedVisibilityScope = animatedVisibilityScope,
-                    )
-                    .fillMaxSize(),
-                contentScale = ContentScale.Crop,
-            )
-        }
+
+        CoilImage(
+            data = recipe.featuredImage,
+            contentDescription = "recipe image",
+            modifier = Modifier
+                .fillMaxSize(),
+            contentScale = ContentScale.Crop,
+        )
     }
 }
 
@@ -115,14 +104,10 @@ internal fun CategoryCardHorizontal(
 @Composable
 private fun CategoryCardHorizontalPreview() {
     RecipeTheme {
-        SharedTransitionLayoutPreview {
-            CategoryCardHorizontal(
-                recipe = Recipe.testData(),
-                onClick = {},
-                onLongClick = {},
-                sharedTransitionScope = this,
-                animatedVisibilityScope = it,
-            )
-        }
+        CategoryCardHorizontal(
+            recipe = Recipe.testData(),
+            onClick = {},
+            onLongClick = {},
+        )
     }
 }

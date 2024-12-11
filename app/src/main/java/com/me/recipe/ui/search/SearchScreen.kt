@@ -34,8 +34,6 @@ import kotlinx.coroutines.launch
 internal fun SearchScreen(
     navigateToRecipePage: NavigateToRecipePage,
     navigateToHomePage: NavigateToHomePage,
-    sharedTransitionScope: SharedTransitionScope,
-    animatedVisibilityScope: AnimatedVisibilityScope,
     modifier: Modifier = Modifier,
     viewModel: SearchViewModel = hiltViewModel(),
 ) {
@@ -47,8 +45,6 @@ internal fun SearchScreen(
         modifier = modifier,
         navigateToHomePage = navigateToHomePage,
         navigateToRecipePage = navigateToRecipePage,
-        sharedTransitionScope = sharedTransitionScope,
-        animatedVisibilityScope = animatedVisibilityScope,
     )
 }
 
@@ -60,8 +56,6 @@ internal fun SearchScreen(
     event: (SearchContract.Event) -> Unit,
     navigateToHomePage: NavigateToHomePage,
     navigateToRecipePage: NavigateToRecipePage,
-    sharedTransitionScope: SharedTransitionScope,
-    animatedVisibilityScope: AnimatedVisibilityScope,
     modifier: Modifier = Modifier,
 ) {
     val snackbarHostState = remember { SnackbarHostState() }
@@ -113,8 +107,6 @@ internal fun SearchScreen(
             padding = padding,
             state = state,
             event = event,
-            sharedTransitionScope = sharedTransitionScope,
-            animatedVisibilityScope = animatedVisibilityScope,
         )
     }
 }
@@ -123,16 +115,12 @@ internal fun SearchScreen(
 @Composable
 private fun SearchScreenPreview() {
     RecipeTheme(true) {
-        SharedTransitionLayoutPreview {
-            SearchScreen(
-                event = {},
-                effect = flowOf(),
-                state = SearchContract.State.testData(),
-                navigateToRecipePage = { _ -> },
-                navigateToHomePage = {},
-                sharedTransitionScope = this,
-                animatedVisibilityScope = it,
-            )
-        }
+        SearchScreen(
+            event = {},
+            effect = flowOf(),
+            state = SearchContract.State.testData(),
+            navigateToRecipePage = { _ -> },
+            navigateToHomePage = {},
+        )
     }
 }

@@ -23,8 +23,6 @@ import kotlinx.collections.immutable.ImmutableList
 internal fun RecipeList(
     recipes: ImmutableList<Recipe>,
     event: (SearchContract.Event) -> Unit,
-    sharedTransitionScope: SharedTransitionScope,
-    animatedVisibilityScope: AnimatedVisibilityScope,
     modifier: Modifier = Modifier,
 ) {
     LazyColumn(
@@ -43,8 +41,6 @@ internal fun RecipeList(
                 onLongClick = {
                     event.invoke(SearchContract.Event.OnRecipeLongClick(recipe.title))
                 },
-                sharedTransitionScope = sharedTransitionScope,
-                animatedVisibilityScope = animatedVisibilityScope,
             )
         }
     }
@@ -54,13 +50,9 @@ internal fun RecipeList(
 @Composable
 private fun SearchContentPreview() {
     RecipeTheme(true) {
-        SharedTransitionLayoutPreview {
-            RecipeList(
-                recipes = SearchContract.State.testData().recipes,
-                event = {},
-                sharedTransitionScope = this,
-                animatedVisibilityScope = it,
-            )
-        }
+        RecipeList(
+            recipes = SearchContract.State.testData().recipes,
+            event = {},
+        )
     }
 }

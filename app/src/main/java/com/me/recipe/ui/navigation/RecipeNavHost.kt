@@ -31,56 +31,45 @@ internal fun RecipeNavHost(
         navController.navigateTo("${RecipeListDestination.route}/${category.value}")
     }
 
-    SharedTransitionLayout {
-        NavHost(
-            navController = navController,
-            startDestination = SplashDestination.route,
-            modifier = modifier,
+    NavHost(
+        navController = navController,
+        startDestination = SplashDestination.route,
+        modifier = modifier,
+    ) {
+        composable(route = SplashDestination.route) {
+            SplashScreen(
+                navigateToHome = {
+                    navController.navigateSingleTopFromSplash(HomeDestination.route)
+                },
+            )
+        }
+        composable(route = HomeDestination.route) {
+//            HomeScreen(
+//                navigateToRecipePage = { navigateToRecipePage(it) },
+//                navigateToRecipeListPage = { navigateToRecipeListPage(it) },
+//            )
+        }
+        composable(route = SearchDestination.route) {
+            SearchScreen(
+                navigateToRecipePage = { navigateToRecipePage(it) },
+                navigateToHomePage = { navController.navigateSingleTopTo(HomeDestination.route) },
+            )
+        }
+        composable(
+            route = RecipeListDestination.routeWithArgs,
+            arguments = RecipeListDestination.arguments,
         ) {
-            composable(route = SplashDestination.route) {
-                SplashScreen(
-                    navigateToHome = {
-                        navController.navigateSingleTopFromSplash(HomeDestination.route)
-                    },
-                )
-            }
-            composable(route = HomeDestination.route) {
-                HomeScreen(
-                    navigateToRecipePage = { navigateToRecipePage(it) },
-                    navigateToRecipeListPage = { navigateToRecipeListPage(it) },
-                    sharedTransitionScope = this@SharedTransitionLayout,
-                    animatedVisibilityScope = this@composable,
-                )
-            }
-            composable(route = SearchDestination.route) {
-                SearchScreen(
-                    navigateToRecipePage = { navigateToRecipePage(it) },
-                    navigateToHomePage = { navController.navigateSingleTopTo(HomeDestination.route) },
-                    sharedTransitionScope = this@SharedTransitionLayout,
-                    animatedVisibilityScope = this@composable,
-                )
-            }
-            composable(
-                route = RecipeListDestination.routeWithArgs,
-                arguments = RecipeListDestination.arguments,
-            ) {
-                RecipeListScreen(
-                    navigateToRecipePage = { navigateToRecipePage(it) },
-                    onBackPress = { navController.popBackStack() },
-                    sharedTransitionScope = this@SharedTransitionLayout,
-                    animatedVisibilityScope = this@composable,
-                )
-            }
-            composable(
-                route = RecipeDestination.routeWithArgs,
-                arguments = RecipeDestination.arguments,
-                deepLinks = RecipeDestination.deepLinks,
-            ) {
-                RecipeScreen(
-                    sharedTransitionScope = this@SharedTransitionLayout,
-                    animatedVisibilityScope = this@composable,
-                )
-            }
+            RecipeListScreen(
+                navigateToRecipePage = { navigateToRecipePage(it) },
+                onBackPress = { navController.popBackStack() },
+            )
+        }
+        composable(
+            route = RecipeDestination.routeWithArgs,
+            arguments = RecipeDestination.arguments,
+            deepLinks = RecipeDestination.deepLinks,
+        ) {
+            RecipeScreen()
         }
     }
 }

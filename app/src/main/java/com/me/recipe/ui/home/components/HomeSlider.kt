@@ -28,8 +28,6 @@ import kotlinx.collections.immutable.ImmutableList
 fun HomeSlider(
     recipes: ImmutableList<Recipe>,
     event: (HomeContract.Event) -> Unit,
-    sharedTransitionScope: SharedTransitionScope,
-    animatedVisibilityScope: AnimatedVisibilityScope,
     modifier: Modifier = Modifier,
 ) {
     val pagerState = rememberPagerState(pageCount = recipes::size)
@@ -55,8 +53,6 @@ fun HomeSlider(
                 onLongClick = {
                     event.invoke(HomeContract.Event.OnRecipeLongClick(recipes[index].title))
                 },
-                sharedTransitionScope = sharedTransitionScope,
-                animatedVisibilityScope = animatedVisibilityScope,
                 modifier = Modifier.then(
                     if (pagerState.currentPage == index) {
                         Modifier
