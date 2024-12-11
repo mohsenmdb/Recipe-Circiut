@@ -18,6 +18,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.graphics.Color
+import com.me.recipe.shared.datastore.SettingsDataStore
+import com.me.recipe.shared.datastore.UserDataStore
 import com.me.recipe.ui.home.HomeScreen1
 import com.me.recipe.ui.home.MainUiScreen
 import com.me.recipe.ui.navigation.NavBottomBar
@@ -42,14 +44,21 @@ class MainActivityCircuit : AppCompatActivity() {
     @Inject
     lateinit var circuit: Circuit
 
+    @Inject
+    lateinit var settingsDataStore: SettingsDataStore
+
+    @Inject
+    lateinit var userDataStore: UserDataStore
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        userDataStore.setAccessToken("Token 9c8b06d329136da358c2d00e76946b0111ce2c48")
         setContent {
             val backstack = rememberSaveableBackStack(root = MainUiScreen(title = "title"))
             val navigator = rememberCircuitNavigator(backstack)
             var selectedIndex by remember { mutableIntStateOf(0) }
             CircuitCompositionLocals(circuit = circuit) {
-                RecipeTheme {
+                RecipeTheme(settingsDataStore.isDark.value) {
                     Scaffold(
                         modifier = Modifier.fillMaxSize(),
                         bottomBar = {
