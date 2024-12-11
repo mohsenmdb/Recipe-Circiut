@@ -52,6 +52,8 @@ dependencies {
     ksp(libs.hilt.compiler)
     implementation(libs.compose.runtime)
     implementation(libs.kotlinx.collections.immutable)
+    implementation (libs.kotlinx.atomicfu)
+    implementation(libs.timber)
 
     compileOnly(libs.spotless.gradlePlugin)
 }

@@ -3,6 +3,7 @@ package com.me.recipe.data.features.recipelist.repository
 import com.me.recipe.cache.recipe.RecipeDao
 import com.me.recipe.data.features.recipe.mapper.RecipeDtoMapper
 import com.me.recipe.data.features.recipe.mapper.RecipeEntityMapper
+import com.me.recipe.data.core.di.IoDispatcher
 import com.me.recipe.domain.features.recipe.model.CategoryRecipe
 import com.me.recipe.domain.features.recipe.model.Recipe
 import com.me.recipe.domain.features.recipelist.repository.RecipeListRepository
@@ -15,20 +16,23 @@ import com.me.recipe.shared.utils.RECIPE_SLIDER_PAGE_SIZE
 import javax.inject.Inject
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toPersistentList
-import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import timber.log.Timber
 
 class RecipeListRepositoryImpl @Inject constructor(
     private val recipeDao: RecipeDao,
     private val recipeApi: RecipeApi,
     private val entityMapper: RecipeEntityMapper,
     private val dtoMapper: RecipeDtoMapper,
+    @IoDispatcher private var ioDispatcher: CoroutineDispatcher,
 ) : RecipeListRepository {
     override suspend fun search(
         page: Int,
@@ -61,30 +65,26 @@ class RecipeListRepositoryImpl @Inject constructor(
         emit(DataState.success(list))
     }
 
-    override suspend fun categoriesRecipes(categories: ImmutableList<FoodCategory>): Flow<DataState<ImmutableList<CategoryRecipe>>> =
+    override fun categoriesRecipes(categories: ImmutableList<FoodCategory>): Flow<ImmutableList<CategoryRecipe>> =
         flow {
-            emit(DataState.loading())
-            try {
-                withContext(Dispatchers.IO) {
-                    launch {
-                        val runningTasks = categories.map { category ->
-                            async { // this will allow us to run multiple tasks in parallel
-                                val apiResponse = getRecipesFromNetwork(
-                                    page = 1,
-                                    query = category.name,
-                                    size = RECIPE_CATEGORY_PAGE_SIZE,
-                                )
-                                category to apiResponse // associate category and response for later
-                            }
-                        }
-                        val responses = runningTasks.awaitAll()
-                        responses.forEach {
-                            recipeDao.insertRecipes(entityMapper.toEntityList(it.second))
+            Timber.d("categoriesRecipes start")
+            withContext(ioDispatcher) {
+                launch {
+                    val runningTasks = categories.map { category ->
+                        async { // this will allow us to run multiple tasks in parallel
+                            val apiResponse = getRecipesFromNetwork(
+                                page = 1,
+                                query = category.name,
+                                size = RECIPE_CATEGORY_PAGE_SIZE,
+                            )
+                            category to apiResponse // associate category and response for later
                         }
                     }
+                    val responses = runningTasks.awaitAll()
+                    responses.forEach {
+                        recipeDao.insertRecipes(entityMapper.toEntityList(it.second))
+                    }
                 }
-            } catch (e: Exception) {
-                emit(DataState.error(e))
             }
 
             val list = buildList {
@@ -99,8 +99,9 @@ class RecipeListRepositoryImpl @Inject constructor(
                 }
             }.toPersistentList()
 
-            emit(DataState.success(list))
-        }
+            Timber.d("categoriesRecipes list= $list")
+            emit(list)
+        }.flowOn(ioDispatcher)
 
     override suspend fun slider(): Flow<DataState<ImmutableList<Recipe>>> = flow {
         try {

@@ -105,16 +105,16 @@ class HomeViewModel @Inject constructor(
     }
 
     private suspend fun fetchCategoriesRecipes() {
-        categoriesRecipesUsecase.get().invoke(getAllFoodCategories())
-            .onEach { dataState ->
-                _state.update { it.copy(categoriesLoading = dataState.loading) }
-                dataState.data?.let { list ->
-                    _state.update { it.copy(categoriesRecipes = list) }
-                }
-                dataState.error?.let { error ->
-                    showErrorDialog(errorFormatter.get().format(error))
-                }
-            }.launchIn(viewModelScope)
+//        categoriesRecipesUsecase.get().invoke(getAllFoodCategories())
+//            .onEach { dataState ->
+//                _state.update { it.copy(categoriesLoading = dataState.loading) }
+//                dataState.data?.let { list ->
+//                    _state.update { it.copy(categoriesRecipes = list) }
+//                }
+//                dataState.error?.let { error ->
+//                    showErrorDialog(errorFormatter.get().format(error))
+//                }
+//            }.launchIn(viewModelScope)
     }
 
     private fun showErrorDialog(error: String) {

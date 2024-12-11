@@ -11,6 +11,6 @@ interface RecipeListRepository {
     suspend fun search(page: Int, query: String, size: Int): Flow<DataState<ImmutableList<Recipe>>>
     suspend fun slider(): Flow<DataState<ImmutableList<Recipe>>>
     suspend fun restore(page: Int, query: String): Flow<DataState<ImmutableList<Recipe>>>
-    suspend fun categoriesRecipes(categories: ImmutableList<FoodCategory>): Flow<DataState<ImmutableList<CategoryRecipe>>>
+    fun categoriesRecipes(categories: ImmutableList<FoodCategory>): Flow<ImmutableList<CategoryRecipe>>
     suspend fun getTopRecipe(): Recipe
 }

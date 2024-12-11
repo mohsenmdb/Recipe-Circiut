@@ -97,6 +97,7 @@ circuit-codegen-annotations = { module = "com.slack.circuit:circuit-codegen-anno
 circuit-gesturenav = { module = "com.slack.circuit:circuitx-gesture-navigation", version.ref = "circuit" }
 circuit-overlay = { module = "com.slack.circuit:circuit-overlay", version.ref = "circuit" }
 circuit-codegen = { module = "com.slack.circuit:circuit-codegen", version.ref = "circuit" }
+kotlinx-atomicfu = "org.jetbrains.kotlinx:atomicfu:0.25.0"
 
 
 [plugins]
