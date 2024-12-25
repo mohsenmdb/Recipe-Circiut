@@ -25,11 +25,11 @@ typealias MainUiSink = (MainUiEvent) -> Unit
 
 @Stable
 data class MainUiState(
-    val sliderRecipes: ImmutableList<Recipe> = persistentListOf(),
-    val categoriesRecipes: ImmutableList<CategoryRecipe> = persistentListOf(),
+    val sliderRecipes: ImmutableList<Recipe>? = null,
+    val categoriesRecipes: ImmutableList<CategoryRecipe>? = null,
     val errors: GenericDialogInfo? = null,
-    val sliderLoading: Boolean = false,
-    val categoriesLoading: Boolean = false,
+    val sliderLoading: Boolean = sliderRecipes == null,
+    val categoriesLoading: Boolean = categoriesRecipes == null,
     val isDark: Boolean = false,
     val eventSink: MainUiSink,
 ) : CircuitUiState {

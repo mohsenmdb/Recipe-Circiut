@@ -1,5 +1,5 @@
 [versions]
-toolsBuildGradle = "8.4.2"
+toolsBuildGradle = "8.7.3"
 
 kotlinCompilerExtensionVersion = "1.5.12"
 kotlinVersion = "1.9.23"

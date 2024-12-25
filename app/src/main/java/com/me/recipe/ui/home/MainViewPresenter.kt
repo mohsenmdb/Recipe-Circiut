@@ -7,7 +7,8 @@ import androidx.compose.runtime.getValue
 import com.me.recipe.domain.features.recipe.model.CategoryRecipe
 import com.me.recipe.domain.features.recipe.model.Recipe
 import com.me.recipe.domain.features.recipelist.usecases.CategoriesRecipesUsecase
-import com.me.recipe.domain.features.recipelist.usecases.CategoriesRecipesUsecase2
+import com.me.recipe.domain.features.recipelist.usecases.SliderRecipesUsecase
+import com.slack.circuit.retained.collectAsRetainedState
 import com.me.recipe.shared.utils.getAllFoodCategories
 import com.me.recipe.ui.home.MainUiEvent.OnPlayClicked
 import com.slack.circuit.codegen.annotations.CircuitInject
@@ -26,7 +27,8 @@ import timber.log.Timber
 class MainViewPresenter @AssistedInject constructor(
     @Assisted private val screen: MainUiScreen,
     @Assisted internal val navigator: Navigator,
-    private val getRecipesUsecase: Lazy<CategoriesRecipesUsecase2>,
+    private val getRecipesUsecase: Lazy<CategoriesRecipesUsecase>,
+    private val sliderRecipesUsecase: Lazy<SliderRecipesUsecase>,
 ) : Presenter<MainUiState> {
 
     @Composable
@@ -34,17 +36,20 @@ class MainViewPresenter @AssistedInject constructor(
         val stableScope = rememberStableCoroutineScope()
 
         LaunchedEffect(key1 = Unit) {
-            getRecipesUsecase.get().invoke(CategoriesRecipesUsecase2.Params(getAllFoodCategories()))
+            getRecipesUsecase.get().invoke(CategoriesRecipesUsecase.Params(getAllFoodCategories()))
+            sliderRecipesUsecase.get().invoke(Unit)
         }
 
         val categoryRows: Result<ImmutableList<CategoryRecipe>>? by getRecipesUsecase.get().flow.collectAsState(initial = null)
+        val sliders: Result<ImmutableList<Recipe>>? by sliderRecipesUsecase.get().flow.collectAsRetainedState(initial = null)
 
-        Timber.d("categoriesRecipes getOrNull= ${categoryRows?.getOrNull()}")
+        Timber.d("MainViewPresenter categoriesRecipes = ${categoryRows?.getOrNull()}")
+        Timber.d("MainViewPresenter sliders getOrNull= ${sliders?.getOrNull()}")
 
         navigator.toString()
         return MainUiState(
-            sliderRecipes = persistentListOf(Recipe.testData()),
-            categoriesRecipes = categoryRows?.getOrNull() ?: persistentListOf(),
+            sliderRecipes = sliders?.getOrNull(),
+            categoriesRecipes = categoryRows?.getOrNull(),
             eventSink = { event ->
                 when (event) {
                     OnPlayClicked -> {}

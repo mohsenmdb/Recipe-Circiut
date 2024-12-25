@@ -67,7 +67,6 @@ class RecipeListRepositoryImpl @Inject constructor(
 
     override fun categoriesRecipes(categories: ImmutableList<FoodCategory>): Flow<ImmutableList<CategoryRecipe>> =
         flow {
-            Timber.d("categoriesRecipes start")
             withContext(ioDispatcher) {
                 launch {
                     val runningTasks = categories.map { category ->
@@ -81,6 +80,7 @@ class RecipeListRepositoryImpl @Inject constructor(
                         }
                     }
                     val responses = runningTasks.awaitAll()
+                    Timber.d("categoriesRecipes responses = ${responses.size}")
                     responses.forEach {
                         recipeDao.insertRecipes(entityMapper.toEntityList(it.second))
                     }
@@ -103,25 +103,17 @@ class RecipeListRepositoryImpl @Inject constructor(
             emit(list)
         }.flowOn(ioDispatcher)
 
-    override suspend fun slider(): Flow<DataState<ImmutableList<Recipe>>> = flow {
-        try {
-            emit(DataState.loading())
-            val recipes =
-                getRecipesFromNetwork(page = 1, size = RECIPE_SLIDER_PAGE_SIZE, query = "")
-            recipeDao.insertRecipes(entityMapper.toEntityList(recipes))
-        } catch (e: Exception) {
-            emit(DataState.error(e))
-        }
-
+    override fun slider(): Flow<ImmutableList<Recipe>> = flow {
+        val recipes = getRecipesFromNetwork(page = 1, size = RECIPE_SLIDER_PAGE_SIZE, query = "")
+        recipeDao.insertRecipes(entityMapper.toEntityList(recipes))
         // query the cache
         val cacheResult = recipeDao.getAllRecipes(
             pageSize = RECIPE_SLIDER_PAGE_SIZE,
             page = 1,
         )
-
         val list = entityMapper.toDomainList(cacheResult).toPersistentList()
-        emit(DataState.success(list))
-    }
+        emit(list)
+    }.flowOn(ioDispatcher)
 
     override suspend fun restore(page: Int, query: String): Flow<DataState<ImmutableList<Recipe>>> =
         flow {

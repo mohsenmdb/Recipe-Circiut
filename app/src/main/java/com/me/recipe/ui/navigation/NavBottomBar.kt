@@ -31,7 +31,7 @@ internal fun NavBottomBar(
         unselectedTextColor = MaterialTheme.colorScheme.onSurfaceVariant,
     )
     AnimatedVisibility(
-        visible = bottomNavigationScreens.any { it.route == HomeDestination?.route },//todo fix me
+        visible = bottomNavigationScreens.any { it.route == HomeDestination.route },//todo fix me
         enter = expandVertically(),
         exit = shrinkVertically(),
     ) {
@@ -58,7 +58,6 @@ internal fun NavBottomBar(
         }
     }
 }
-
 
 fun getScreenForTab(tab: NavigationDestination) = when (tab) {
     HomeDestination -> MainUiScreen("888")

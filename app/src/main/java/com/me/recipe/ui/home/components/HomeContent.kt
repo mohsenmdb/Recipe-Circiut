@@ -33,24 +33,29 @@ internal fun HomeContent(
             .padding(padding)
             .background(MaterialTheme.colorScheme.background),
     ) {
-        item {
-            HomeSlider(
-                recipes = state.sliderRecipes,
-                event = event,
-            )
+        if (!state.sliderRecipes.isNullOrEmpty()){
+            item {
+                HomeSlider(
+                    recipes = state.sliderRecipes,
+                    event = event,
+                )
+            }
         }
-        itemsIndexed(state.categoriesRecipes) { index, category ->
-            if (index == 0) {
-                RecipeCategoryHorizontalItem(
+
+        if (!state.categoriesRecipes.isNullOrEmpty()) {
+            itemsIndexed(state.categoriesRecipes) { index, category ->
+                if (index == 0) {
+                    RecipeCategoryHorizontalItem(
+                        category = category,
+                        event = event,
+                    )
+                    return@itemsIndexed
+                }
+                RecipeCategoryVerticalItem(
                     category = category,
                     event = event,
                 )
-                return@itemsIndexed
             }
-            RecipeCategoryVerticalItem(
-                category = category,
-                event = event,
-            )
         }
     }
 }

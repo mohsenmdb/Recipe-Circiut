@@ -1,6 +1,5 @@
 package com.me.recipe.ui
 
-import android.annotation.SuppressLint
 import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
@@ -9,7 +8,6 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
@@ -20,13 +18,11 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.graphics.Color
 import com.me.recipe.shared.datastore.SettingsDataStore
 import com.me.recipe.shared.datastore.UserDataStore
-import com.me.recipe.ui.home.HomeScreen1
 import com.me.recipe.ui.home.MainUiScreen
 import com.me.recipe.ui.navigation.NavBottomBar
 import com.me.recipe.ui.theme.RecipeTheme
 import com.slack.circuit.backstack.SaveableBackStack
 import com.slack.circuit.backstack.rememberSaveableBackStack
-import com.slack.circuit.codegen.annotations.CircuitInject
 import com.slack.circuit.foundation.Circuit
 import com.slack.circuit.foundation.CircuitCompositionLocals
 import com.slack.circuit.foundation.NavigableCircuitContent
@@ -35,7 +31,6 @@ import com.slack.circuit.overlay.ContentWithOverlays
 import com.slack.circuit.runtime.Navigator
 import com.slack.circuitx.gesturenavigation.GestureNavigationDecoration
 import dagger.hilt.android.AndroidEntryPoint
-import dagger.hilt.components.SingletonComponent
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -52,7 +47,7 @@ class MainActivityCircuit : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        userDataStore.setAccessToken("Token 9c8b06d329136da358c2d00e76946b0111ce2c48")
+        setUserLoginInfo(userDataStore)
         setContent {
             val backstack = rememberSaveableBackStack(root = MainUiScreen(title = "title"))
             val navigator = rememberCircuitNavigator(backstack)
@@ -105,10 +100,6 @@ private fun Content(
     }
 }
 
-@Composable
-fun MainScreen(
-    state: MainUiScreen,
-    modifier: Modifier = Modifier,
-) {
-    Text("HI CIRCUIT ------------- HI ")
+private fun setUserLoginInfo(userDataStore: UserDataStore) {
+    userDataStore.setAccessToken("Token 9c8b06d329136da358c2d00e76946b0111ce2c48")
 }
