@@ -29,7 +29,7 @@ data class MainUiState(
     val categoriesRecipes: ImmutableList<CategoryRecipe>? = null,
     val errors: GenericDialogInfo? = null,
     val sliderLoading: Boolean = sliderRecipes == null,
-    val categoriesLoading: Boolean = categoriesRecipes == null,
+    val categoriesLoading: Boolean = categoriesRecipes.isNullOrEmpty(),
     val isDark: Boolean = false,
     val eventSink: MainUiSink,
 ) : CircuitUiState {
@@ -48,4 +48,4 @@ sealed interface MainUiEvent : CircuitUiEvent {
 
 
 val MainUiState.showShimmer: Boolean
-    get() = sliderLoading || categoriesLoading
+    get() = categoriesLoading

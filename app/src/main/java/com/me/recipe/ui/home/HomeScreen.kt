@@ -33,6 +33,7 @@ import kotlinx.coroutines.InternalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.launch
+import timber.log.Timber
 
 @CircuitInject(MainUiScreen::class, SingletonComponent::class)
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter", "RememberReturnType")
@@ -43,6 +44,7 @@ internal fun HomeScreen(
 ) {
 //    val viewModel: HomeViewModel = hiltViewModel()
 //    val (state, effect, event) = use(viewModel = viewModel)
+    Timber.d("MainViewPresenter categoriesRecipes state Recipes= ${state.categoriesRecipes?.size} slider= ${state.sliderRecipes?.size}")
     HomeScreen(
         state = state,
         modifier = modifier,

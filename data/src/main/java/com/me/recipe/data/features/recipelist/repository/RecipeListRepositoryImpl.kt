@@ -1,9 +1,9 @@
 package com.me.recipe.data.features.recipelist.repository
 
 import com.me.recipe.cache.recipe.RecipeDao
+import com.me.recipe.data.core.di.IoDispatcher
 import com.me.recipe.data.features.recipe.mapper.RecipeDtoMapper
 import com.me.recipe.data.features.recipe.mapper.RecipeEntityMapper
-import com.me.recipe.data.core.di.IoDispatcher
 import com.me.recipe.domain.features.recipe.model.CategoryRecipe
 import com.me.recipe.domain.features.recipe.model.Recipe
 import com.me.recipe.domain.features.recipelist.repository.RecipeListRepository
@@ -17,14 +17,10 @@ import javax.inject.Inject
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toPersistentList
 import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.async
-import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import timber.log.Timber
 
 class RecipeListRepositoryImpl @Inject constructor(
@@ -65,16 +61,65 @@ class RecipeListRepositoryImpl @Inject constructor(
         emit(DataState.success(list))
     }
 
+
+//    val list = buildList {
+//        categories.forEach { category ->
+//            Timber.d("category1 category= ${category}")
+//            val apiResponse = getRecipesFromNetwork(
+//                page = 1,
+//                query = category.name,
+//                size = RECIPE_CATEGORY_PAGE_SIZE,
+//            )
+//            Timber.d("category1 insertRecipes= ${apiResponse}")
+//            recipeDao.insertRecipes(entityMapper.toEntityList(apiResponse))
+//
+//            val cacheResult = recipeDao.searchRecipes(
+//                pageSize = RECIPE_CATEGORY_PAGE_SIZE,
+//                query = category.name,
+//                page = 1,
+//            )
+//            val recipes = entityMapper.toDomainList(cacheResult).toPersistentList()
+//            add(CategoryRecipe(category, recipes))
+//        }
+//    }.toPersistentList()
+//
+//    Timber.d("category1 list= ${list.size}")
+//    emit(list)
+
     override fun categoriesRecipes(categories: ImmutableList<FoodCategory>): Flow<ImmutableList<CategoryRecipe>> =
         flow {
-            categories.forEach {
-                val apiResponse = getRecipesFromNetwork(
-                    page = 1,
-                    query = it.name,
-                    size = RECIPE_CATEGORY_PAGE_SIZE,
-                )
-                recipeDao.insertRecipes(entityMapper.toEntityList(apiResponse))
-            }
+            val offlineList = buildList {
+                categories.forEach { category ->
+                    val cacheResult = recipeDao.searchRecipes(
+                        pageSize = RECIPE_CATEGORY_PAGE_SIZE,
+                        query = category.name,
+                        page = 1,
+                    )
+                    val recipes = entityMapper.toDomainList(cacheResult).toPersistentList()
+                    add(CategoryRecipe(category, recipes))
+                }
+            }.toPersistentList()
+            emit(offlineList)
+
+            val list = buildList {
+                categories.forEach { category ->
+                    val apiResponse = getRecipesFromNetwork(
+                        page = 1,
+                        query = category.name,
+                        size = RECIPE_CATEGORY_PAGE_SIZE,
+                    )
+                    recipeDao.insertRecipes(entityMapper.toEntityList(apiResponse))
+
+                    val cacheResult = recipeDao.searchRecipes(
+                        pageSize = RECIPE_CATEGORY_PAGE_SIZE,
+                        query = category.name,
+                        page = 1,
+                    )
+                    val recipes = entityMapper.toDomainList(cacheResult).toPersistentList()
+                    add(CategoryRecipe(category, recipes))
+                }
+            }.toPersistentList()
+            emit(list)
 
 //
 //            withContext(ioDispatcher) {
@@ -96,22 +141,9 @@ class RecipeListRepositoryImpl @Inject constructor(
 //                    }
 //                }
 //            }
-            val list = buildList {
-                categories.forEach { category ->
-                    val cacheResult = recipeDao.searchRecipes(
-                        pageSize = RECIPE_CATEGORY_PAGE_SIZE,
-                        query = category.name,
-                        page = 1,
-                    )
-                    val recipes = entityMapper.toDomainList(cacheResult).toPersistentList()
-                    add(CategoryRecipe(category, recipes))
-                }
-            }.toPersistentList()
-
-            Timber.d("categoriesRecipes list= ${list.size}")
-            emit(list)
-
         }.flowOn(ioDispatcher)
+
+
 
     override fun slider(): Flow<ImmutableList<Recipe>> = flow {
         val recipes = getRecipesFromNetwork(page = 1, size = RECIPE_SLIDER_PAGE_SIZE, query = "")
@@ -165,6 +197,7 @@ class RecipeListRepositoryImpl @Inject constructor(
 
     private suspend fun getRecipesFromNetwork(page: Int, query: String, size: Int): List<Recipe> {
         val recipes = recipeApi.search(page = page, query = query, size = size).results
+        Timber.d("category1 getRecipesFromNetwork= ${recipes}")
         return dtoMapper.toDomainList(recipes)
     }
 }
