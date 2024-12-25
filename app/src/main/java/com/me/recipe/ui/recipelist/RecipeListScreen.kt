@@ -76,27 +76,28 @@ private fun RecipeListScreen(
         }
     }
 
-    Scaffold(
-        snackbarHost = {
-            DefaultSnackbar(snackbarHostState = snackbarHostState) {
-                snackbarHostState.currentSnackbarData?.dismiss()
-            }
-        },
-        topBar = {
-            RecipeListAppBar(
-                category = state.selectedCategory?.value.orEmpty(),
-                onBackPress = onBackPress,
-            )
-        },
-        modifier = modifier,
-    ) { padding ->
-
-        SearchContent(
-            padding = padding,
-            state = state,
-            event = event,
-        )
-    }
+    // todo fix me
+//    Scaffold(
+//        snackbarHost = {
+//            DefaultSnackbar(snackbarHostState = snackbarHostState) {
+//                snackbarHostState.currentSnackbarData?.dismiss()
+//            }
+//        },
+//        topBar = {
+//            RecipeListAppBar(
+//                category = state.selectedCategory?.value.orEmpty(),
+//                onBackPress = onBackPress,
+//            )
+//        },
+//        modifier = modifier,
+//    ) { padding ->
+//
+//        SearchContent(
+//            padding = padding,
+//            state = state,
+//            event = event,
+//        )
+//    }
 }
 
 @Preview

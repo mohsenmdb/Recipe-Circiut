@@ -15,6 +15,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import com.me.recipe.R
 import com.me.recipe.ui.home.MainUiScreen
+import com.me.recipe.ui.search.SearchScreen
 import com.slack.circuit.runtime.Navigator
 
 @Composable
@@ -50,7 +51,7 @@ internal fun NavBottomBar(
                         navigator.resetRoot(
                             newRoot = getScreenForTab(tab),
                             saveState = true,
-                            restoreState = true
+                            restoreState = false
                         )
                     },
                 )
@@ -61,7 +62,7 @@ internal fun NavBottomBar(
 
 fun getScreenForTab(tab: NavigationDestination) = when (tab) {
     HomeDestination -> MainUiScreen("888")
-    SearchDestination -> MainUiScreen("888")
+    SearchDestination -> SearchScreen("888")
 //    SplashDestination -> MobileVitrineScreen
 //    RecipeListDestination -> MobileProfileScreen
 //    RecipeDestination -> MobileProfileScreen

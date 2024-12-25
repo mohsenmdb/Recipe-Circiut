@@ -18,6 +18,8 @@ import androidx.compose.ui.unit.dp
 import com.me.recipe.ui.component.util.GenericDialog
 import com.me.recipe.ui.component.util.SharedTransitionLayoutPreview
 import com.me.recipe.ui.search.SearchContract
+import com.me.recipe.ui.search.SearchEventSink
+import com.me.recipe.ui.search.SearchUiState
 import com.me.recipe.ui.search.component.shimmer.SearchShimmer
 import com.me.recipe.ui.search.showLoadingProgressBar
 import com.me.recipe.ui.search.showShimmer
@@ -26,8 +28,8 @@ import com.me.recipe.ui.theme.RecipeTheme
 @Composable
 internal fun SearchContent(
     padding: PaddingValues,
-    state: SearchContract.State,
-    event: (SearchContract.Event) -> Unit,
+    state: SearchUiState,
+    event: SearchEventSink,
 ) {
     Box(
         modifier = Modifier
@@ -40,7 +42,7 @@ internal fun SearchContent(
         } else {
             RecipeList(
                 recipes = state.recipes,
-                event = event,
+                event = { /*todo fix me by event*/ },
             )
 
             LoadingView(isVisible = state.showLoadingProgressBar)
@@ -57,7 +59,7 @@ private fun SearchContentPreview() {
         SharedTransitionLayoutPreview {
             SearchContent(
                 padding = PaddingValues(16.dp),
-                state = SearchContract.State.testData(),
+                state = SearchUiState.testData(),
                 event = {},
             )
         }

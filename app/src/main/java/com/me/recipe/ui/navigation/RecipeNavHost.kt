@@ -51,8 +51,8 @@ internal fun RecipeNavHost(
         }
         composable(route = SearchDestination.route) {
             SearchScreen(
-                navigateToRecipePage = { navigateToRecipePage(it) },
-                navigateToHomePage = { navController.navigateSingleTopTo(HomeDestination.route) },
+//                navigateToRecipePage = { navigateToRecipePage(it) },
+//                navigateToHomePage = { navController.navigateSingleTopTo(HomeDestination.route) },
             )
         }
         composable(

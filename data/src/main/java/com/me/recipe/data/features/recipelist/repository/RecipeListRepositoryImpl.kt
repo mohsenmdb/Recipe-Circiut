@@ -67,26 +67,35 @@ class RecipeListRepositoryImpl @Inject constructor(
 
     override fun categoriesRecipes(categories: ImmutableList<FoodCategory>): Flow<ImmutableList<CategoryRecipe>> =
         flow {
-            withContext(ioDispatcher) {
-                launch {
-                    val runningTasks = categories.map { category ->
-                        async { // this will allow us to run multiple tasks in parallel
-                            val apiResponse = getRecipesFromNetwork(
-                                page = 1,
-                                query = category.name,
-                                size = RECIPE_CATEGORY_PAGE_SIZE,
-                            )
-                            category to apiResponse // associate category and response for later
-                        }
-                    }
-                    val responses = runningTasks.awaitAll()
-                    Timber.d("categoriesRecipes responses = ${responses.size}")
-                    responses.forEach {
-                        recipeDao.insertRecipes(entityMapper.toEntityList(it.second))
-                    }
-                }
+            categories.forEach {
+                val apiResponse = getRecipesFromNetwork(
+                    page = 1,
+                    query = it.name,
+                    size = RECIPE_CATEGORY_PAGE_SIZE,
+                )
+                recipeDao.insertRecipes(entityMapper.toEntityList(apiResponse))
             }
 
+//
+//            withContext(ioDispatcher) {
+//                launch {
+//                    val runningTasks = categories.map { category ->
+//                        async { // this will allow us to run multiple tasks in parallel
+//                            val apiResponse = getRecipesFromNetwork(
+//                                page = 1,
+//                                query = category.name,
+//                                size = RECIPE_CATEGORY_PAGE_SIZE,
+//                            )
+//                            category to apiResponse // associate category and response for later
+//                        }
+//                    }
+//                    val responses = runningTasks.awaitAll()
+//                    Timber.d("categoriesRecipes responses = ${responses.size}")
+//                    responses.forEach {
+//                        recipeDao.insertRecipes(entityMapper.toEntityList(it.second))
+//                    }
+//                }
+//            }
             val list = buildList {
                 categories.forEach { category ->
                     val cacheResult = recipeDao.searchRecipes(
@@ -99,8 +108,9 @@ class RecipeListRepositoryImpl @Inject constructor(
                 }
             }.toPersistentList()
 
-            Timber.d("categoriesRecipes list= $list")
+            Timber.d("categoriesRecipes list= ${list.size}")
             emit(list)
+
         }.flowOn(ioDispatcher)
 
     override fun slider(): Flow<ImmutableList<Recipe>> = flow {
