@@ -32,7 +32,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.launch
 
-@CircuitInject(MainUiScreen::class, SingletonComponent::class)
+@CircuitInject(RecipeUiScreen::class, SingletonComponent::class)
 @Composable
 internal fun RecipeScreen(
     state: RecipeUiState,

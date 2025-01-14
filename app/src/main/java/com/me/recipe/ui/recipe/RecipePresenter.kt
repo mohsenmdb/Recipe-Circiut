@@ -4,14 +4,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import com.me.recipe.domain.features.recipe.model.CategoryRecipe
 import com.me.recipe.domain.features.recipe.model.Recipe
 import com.me.recipe.domain.features.recipe.usecases.GetRecipeUsecase
-import com.me.recipe.domain.features.recipelist.usecases.CategoriesRecipesUsecase
-import com.me.recipe.domain.features.recipelist.usecases.SliderRecipesUsecase
-import com.slack.circuit.retained.collectAsRetainedState
-import com.me.recipe.shared.utils.getAllFoodCategories
-import com.me.recipe.ui.home.MainUiEvent.OnPlayClicked
 import com.slack.circuit.codegen.annotations.CircuitInject
 import com.slack.circuit.runtime.Navigator
 import com.slack.circuit.runtime.internal.rememberStableCoroutineScope
@@ -21,8 +15,6 @@ import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
 import dagger.hilt.components.SingletonComponent
-import kotlinx.collections.immutable.ImmutableList
-import kotlinx.collections.immutable.persistentListOf
 import timber.log.Timber
 
 class RecipePresenter @AssistedInject constructor(

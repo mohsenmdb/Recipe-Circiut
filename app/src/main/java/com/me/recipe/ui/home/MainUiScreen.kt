@@ -3,6 +3,7 @@ package com.me.recipe.ui.home
 import androidx.compose.runtime.Stable
 import com.me.recipe.domain.features.recipe.model.CategoryRecipe
 import com.me.recipe.domain.features.recipe.model.Recipe
+import com.me.recipe.shared.utils.FoodCategory
 import com.me.recipe.ui.component.util.GenericDialogInfo
 import com.me.recipe.ui.home.HomeContract.State
 import com.slack.circuit.runtime.CircuitUiEvent
@@ -43,7 +44,9 @@ data class MainUiState(
 
 sealed interface MainUiEvent : CircuitUiEvent {
 
-    data object OnPlayClicked : MainUiEvent
+    data class OnRecipeClicked(val recipe: Recipe) : MainUiEvent
+    data class OnCategoryClicked(val category: FoodCategory) : MainUiEvent
+    data class OnRecipeLongClick(val title: String) : MainUiEvent
 }
 
 

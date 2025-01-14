@@ -16,16 +16,22 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.me.recipe.domain.features.recipe.model.Recipe
+import com.me.recipe.shared.utils.FoodCategory
 import com.me.recipe.ui.component.util.SharedTransitionLayoutPreview
 import com.me.recipe.ui.home.HomeContract
+import com.me.recipe.ui.home.MainUiEvent
 import com.me.recipe.ui.home.MainUiState
 import com.me.recipe.ui.theme.RecipeTheme
+
+typealias OnRecipeClick = (Recipe) -> Unit
+typealias OnCategoryClick = (FoodCategory) -> Unit
+typealias OnRecipeLongClick = (String) -> Unit
 
 @Composable
 internal fun HomeContent(
     padding: PaddingValues,
     state: MainUiState,
-    event: (HomeContract.Event) -> Unit = {},
 ) {
     LazyColumn(
         modifier = Modifier
@@ -37,7 +43,7 @@ internal fun HomeContent(
             item {
                 HomeSlider(
                     recipes = state.sliderRecipes,
-                    event = event,
+                    onRecipeClick = { state.eventSink.invoke(MainUiEvent.OnRecipeClicked(it)) },
                 )
             }
         }
@@ -47,13 +53,17 @@ internal fun HomeContent(
                 if (index == 0) {
                     RecipeCategoryHorizontalItem(
                         category = category,
-                        event = event,
+                        onRecipeClick = { state.eventSink.invoke(MainUiEvent.OnRecipeClicked(it)) },
+                        onCategoryClick = { state.eventSink.invoke(MainUiEvent.OnCategoryClicked(it)) },
+                        onRecipeLongClick = { state.eventSink.invoke(MainUiEvent.OnRecipeLongClick(it)) },
                     )
                     return@itemsIndexed
                 }
                 RecipeCategoryVerticalItem(
                     category = category,
-                    event = event,
+                    onRecipeClick = { state.eventSink.invoke(MainUiEvent.OnRecipeClicked(it)) },
+                    onCategoryClick = { state.eventSink.invoke(MainUiEvent.OnCategoryClicked(it)) },
+                    onRecipeLongClick = { state.eventSink.invoke(MainUiEvent.OnRecipeLongClick(it)) },
                 )
             }
         }
@@ -67,7 +77,6 @@ private fun HomeContentPreview() {
         HomeContent(
             padding = PaddingValues(16.dp),
             state = MainUiState.testData(),
-            event = {},
         )
     }
 }

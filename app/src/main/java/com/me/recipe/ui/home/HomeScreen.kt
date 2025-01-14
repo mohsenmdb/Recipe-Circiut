@@ -34,9 +34,8 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.launch
 
-@CircuitInject(MainUiScreen::class, SingletonComponent::class)
 @Composable
-internal fun HomeScreen(
+internal fun HomeScreenOld(
     state: MainUiState,
     modifier: Modifier = Modifier,
 ) {
@@ -45,8 +44,6 @@ internal fun HomeScreen(
     HomeScreen(
         state = state,
         modifier = modifier,
-        navigateToRecipePage = {  },
-        navigateToRecipeListPage = {  },
     )
 }
 //@Composable
@@ -67,12 +64,10 @@ internal fun HomeScreen(
 //    )
 //}
 
+@CircuitInject(MainUiScreen::class, SingletonComponent::class)
 @Composable
-@OptIn(InternalCoroutinesApi::class)
-private fun HomeScreen(
+fun HomeScreen(
     state: MainUiState,
-    navigateToRecipePage: NavigateToRecipePage,
-    navigateToRecipeListPage: NavigateToRecipeListPage,
     modifier: Modifier = Modifier,
 ) {
     val snackbarHostState = remember { SnackbarHostState() }

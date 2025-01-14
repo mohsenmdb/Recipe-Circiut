@@ -27,8 +27,9 @@ import kotlinx.collections.immutable.ImmutableList
 @Composable
 fun HomeSlider(
     recipes: ImmutableList<Recipe>,
-    event: (HomeContract.Event) -> Unit,
     modifier: Modifier = Modifier,
+    onRecipeClick: OnRecipeClick = {},
+    onRecipeLongClick: OnRecipeLongClick = {},
 ) {
     val pagerState = rememberPagerState(pageCount = recipes::size)
 
@@ -48,10 +49,10 @@ fun HomeSlider(
             SliderCard(
                 recipe = recipes[index],
                 onClick = {
-                    event.invoke(HomeContract.Event.OnRecipeClick(recipes[index]))
+                    onRecipeClick(recipes[index])
                 },
                 onLongClick = {
-                    event.invoke(HomeContract.Event.OnRecipeLongClick(recipes[index].title))
+                    onRecipeLongClick(recipes[index].title)
                 },
                 modifier = Modifier.then(
                     if (pagerState.currentPage == index) {
