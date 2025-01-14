@@ -20,41 +20,36 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.me.recipe.ui.component.util.DefaultSnackbar
 import com.me.recipe.ui.component.util.SharedTransitionLayoutPreview
+import com.me.recipe.ui.home.MainUiScreen
 import com.me.recipe.ui.recipe.components.RecipeDetail
 import com.me.recipe.ui.theme.RecipeTheme
 import com.me.recipe.util.compose.collectInLaunchedEffect
 import com.me.recipe.util.compose.use
+import com.slack.circuit.codegen.annotations.CircuitInject
+import dagger.hilt.components.SingletonComponent
 import kotlinx.coroutines.InternalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.launch
 
+@CircuitInject(MainUiScreen::class, SingletonComponent::class)
 @Composable
 internal fun RecipeScreen(
-    viewModel: RecipeViewModel = hiltViewModel(),
-) {
-    val (state, effect, event) = use(viewModel = viewModel)
-    RecipeScreen(effect, state, event)
-}
-
-@Composable
-internal fun RecipeScreen(
-    effect: Flow<RecipeContract.Effect>,
-    state: RecipeContract.State,
-    event: (RecipeContract.Event) -> Unit,
+    state: RecipeUiState,
+    modifier: Modifier = Modifier,
 ) {
     val snackbarHostState = remember { SnackbarHostState() }
     val coroutineScope = rememberCoroutineScope()
 
-    effect.collectInLaunchedEffect { effect ->
-        when (effect) {
-            is RecipeContract.Effect.ShowSnackbar -> {
-                coroutineScope.launch {
-                    snackbarHostState.showSnackbar(effect.message, "Ok")
-                }
-            }
-        }
-    }
+//    effect.collectInLaunchedEffect { effect ->
+//        when (effect) {
+//            is RecipeContract.Effect.ShowSnackbar -> {
+//                coroutineScope.launch {
+//                    snackbarHostState.showSnackbar(effect.message, "Ok")
+//                }
+//            }
+//        }
+//    }
 
     Scaffold(
         snackbarHost = {
@@ -65,7 +60,7 @@ internal fun RecipeScreen(
     ) { padding ->
         RecipeDetail(
             recipe = state.recipe,
-            isLoading = state.loading,
+            isLoading = state.recipesLoading,
             modifier = Modifier.padding(padding),
         )
     }
@@ -76,9 +71,7 @@ internal fun RecipeScreen(
 private fun RecipeScreenPreview() {
     RecipeTheme(true) {
         RecipeScreen(
-            event = {},
-            effect = flowOf(),
-            state = RecipeContract.State.testData(),
+            state = RecipeUiState.testData(),
         )
     }
 }

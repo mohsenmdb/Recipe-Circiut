@@ -35,7 +35,6 @@ import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.launch
 
 @CircuitInject(MainUiScreen::class, SingletonComponent::class)
-@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter", "RememberReturnType")
 @Composable
 internal fun HomeScreen(
     state: MainUiState,

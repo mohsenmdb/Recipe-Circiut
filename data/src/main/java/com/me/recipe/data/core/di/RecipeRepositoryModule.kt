@@ -11,6 +11,7 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import javax.inject.Singleton
+import kotlinx.coroutines.CoroutineDispatcher
 
 @Module
 @InstallIn(SingletonComponent::class)
@@ -18,7 +19,7 @@ object RecipeRepositoryModule {
 
     @Singleton
     @Provides
-    fun provideRecipeRepository(recipeDao: RecipeDao, recipeApi: RecipeApi, recipeDtoMapper: RecipeDtoMapper, entityMapper: RecipeEntityMapper): RecipeRepository {
-        return RecipeRepositoryImpl(recipeDao, recipeApi, entityMapper, recipeDtoMapper)
+    fun provideRecipeRepository(recipeDao: RecipeDao, recipeApi: RecipeApi, recipeDtoMapper: RecipeDtoMapper, entityMapper: RecipeEntityMapper, @IoDispatcher ioDispatcher: CoroutineDispatcher): RecipeRepository {
+        return RecipeRepositoryImpl(recipeDao, recipeApi, entityMapper, recipeDtoMapper, ioDispatcher)
     }
 }

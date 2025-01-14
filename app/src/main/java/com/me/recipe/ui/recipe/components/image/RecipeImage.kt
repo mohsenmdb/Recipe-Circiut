@@ -21,11 +21,9 @@ import timber.log.Timber
 
 @Composable
 internal fun RecipeImage(
-    uid: String,
     image: String,
     modifier: Modifier = Modifier,
 ) {
-    Timber.d("RecipeImage RecipeUid = $uid")
     CoilImage(
         data = image,
         contentDescription = "Recipe Featured Image",
@@ -42,7 +40,6 @@ internal fun RecipeImage(
 private fun RecipeImagePreview() {
     RecipeTheme(true) {
         RecipeImage(
-            uid = Recipe.testData().uid,
             image = Recipe.testData().featuredImage,
         )
     }

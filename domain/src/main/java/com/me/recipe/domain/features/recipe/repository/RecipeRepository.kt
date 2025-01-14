@@ -5,8 +5,8 @@ import com.me.recipe.shared.data.DataState
 import kotlinx.coroutines.flow.Flow
 
 interface RecipeRepository {
-    suspend fun getRecipe(
+     fun getRecipe(
         recipeId: Int,
         uid: String,
-    ): Flow<DataState<Recipe>>
+    ): Flow<Recipe>
 }
