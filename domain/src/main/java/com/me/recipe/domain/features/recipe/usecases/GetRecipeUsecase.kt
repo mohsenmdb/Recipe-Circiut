@@ -2,20 +2,28 @@ package com.me.recipe.domain.features.recipe.usecases
 
 import com.me.recipe.domain.features.recipe.model.Recipe
 import com.me.recipe.domain.features.recipe.repository.RecipeRepository
+import com.me.recipe.domain.features.recipelist.repository.RecipeListRepository
+import com.me.recipe.domain.util.SubjectInteractor
 import com.me.recipe.shared.data.DataState
 import javax.inject.Inject
+import kotlinx.collections.immutable.ImmutableList
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.map
 
-/**
- * Retrieve a recipe from the cache given it's unique id.
- */
+
 class GetRecipeUsecase @Inject constructor(
     private val recipeRepository: RecipeRepository,
-) {
-    suspend operator fun invoke(
-        recipeId: Int,
-        uid: String,
-    ): Flow<DataState<Recipe>> {
-        return recipeRepository.getRecipe(recipeId, uid)
+) : SubjectInteractor<GetRecipeUsecase.Params, Result<Recipe>>() {
+    data class Params(
+        val recipeId: Int,
+        val uid: String,
+    )
+    override fun createObservable(params: Params): Flow<Result<Recipe>> {
+        return recipeRepository.getRecipe(params.recipeId, params.uid)
+            .map(Result.Companion::success)
+            .catch {
+                emit(Result.failure(it))
+            }
     }
 }

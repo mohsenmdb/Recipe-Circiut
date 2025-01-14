@@ -35,10 +35,8 @@ import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.launch
 import timber.log.Timber
 
-@CircuitInject(MainUiScreen::class, SingletonComponent::class)
-@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter", "RememberReturnType")
 @Composable
-internal fun HomeScreen(
+internal fun HomeScreenOld(
     state: MainUiState,
     modifier: Modifier = Modifier,
 ) {
@@ -48,8 +46,6 @@ internal fun HomeScreen(
     HomeScreen(
         state = state,
         modifier = modifier,
-        navigateToRecipePage = {  },
-        navigateToRecipeListPage = {  },
     )
 }
 //@Composable
@@ -70,12 +66,10 @@ internal fun HomeScreen(
 //    )
 //}
 
+@CircuitInject(MainUiScreen::class, SingletonComponent::class)
 @Composable
-@OptIn(InternalCoroutinesApi::class)
-private fun HomeScreen(
+fun HomeScreen(
     state: MainUiState,
-    navigateToRecipePage: NavigateToRecipePage,
-    navigateToRecipeListPage: NavigateToRecipeListPage,
     modifier: Modifier = Modifier,
 ) {
     val snackbarHostState = remember { SnackbarHostState() }

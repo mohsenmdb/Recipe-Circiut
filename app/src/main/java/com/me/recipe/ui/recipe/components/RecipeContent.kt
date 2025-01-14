@@ -7,6 +7,7 @@ import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentWidth
@@ -21,6 +22,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.me.recipe.R
+import com.me.recipe.domain.features.recipe.model.Recipe
 import com.me.recipe.ui.component.util.SharedTransitionLayoutPreview
 import com.me.recipe.ui.recipe.components.chip.LoadingRankChip
 import com.me.recipe.ui.recipe.components.chip.RankChip
@@ -30,7 +32,7 @@ import kotlinx.collections.immutable.ImmutableList
 
 @Composable
 internal fun RecipeContent(
-    recipe: com.me.recipe.domain.features.recipe.model.Recipe,
+    recipe: Recipe?,
     isLoading: Boolean,
     modifier: Modifier = Modifier,
 ) {
@@ -40,18 +42,17 @@ internal fun RecipeContent(
             .padding(16.dp),
     ) {
         TitleRow(
-            uid = recipe.uid,
-            title = recipe.title,
-            rank = recipe.rating.toString(),
+            title = recipe?.title,
+            rank = recipe?.rating.toString(),
             isLoading = isLoading,
         )
-        if (!isLoading) {
+        if (recipe != null) {
             RecipeInfoView(
                 dateUpdated = recipe.date,
                 publisher = recipe.publisher,
                 ingredients = recipe.ingredients,
             )
-        } else {
+        } else if (isLoading) {
             LoadingRecipeShimmer()
         }
     }
@@ -59,9 +60,8 @@ internal fun RecipeContent(
 
 @Composable
 private fun TitleRow(
-    uid: String,
-    title: String,
-    rank: String,
+    title: String?,
+    rank: String?,
     isLoading: Boolean,
 ) {
     Row(
@@ -69,21 +69,28 @@ private fun TitleRow(
             .fillMaxWidth()
             .testTag("testTag_TitleRow"),
     ) {
-        Text(
-            text = title,
-            style = MaterialTheme.typography.titleLarge,
-            color = MaterialTheme.colorScheme.onSurface,
-            modifier = Modifier
-                .wrapContentWidth(Alignment.Start)
-                .weight(1f)
-                .testTag("testTag_TitleRow_Text"),
-        )
-        if (isLoading) {
-            LoadingRankChip()
-        } else {
-            RankChip(rank)
+        if (!title.isNullOrEmpty()) {
+            TitleText(title)
+            if (!rank.isNullOrEmpty()) {
+                RankChip(rank)
+            } else if (isLoading) {
+                LoadingRankChip()
+            }
         }
     }
+}
+
+@Composable
+private fun RowScope.TitleText(title: String) {
+    Text(
+        text = title,
+        style = MaterialTheme.typography.titleLarge,
+        color = MaterialTheme.colorScheme.onSurface,
+        modifier = Modifier
+            .wrapContentWidth(Alignment.Start)
+            .weight(1f)
+            .testTag("testTag_TitleRow_Text"),
+    )
 }
 
 @Composable

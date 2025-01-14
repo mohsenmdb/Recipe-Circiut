@@ -10,7 +10,7 @@ import com.me.recipe.domain.features.recipelist.usecases.CategoriesRecipesUsecas
 import com.me.recipe.domain.features.recipelist.usecases.SliderRecipesUsecase
 import com.slack.circuit.retained.collectAsRetainedState
 import com.me.recipe.shared.utils.getAllFoodCategories
-import com.me.recipe.ui.home.MainUiEvent.OnPlayClicked
+import com.me.recipe.ui.recipe.RecipeUiScreen
 import com.slack.circuit.codegen.annotations.CircuitInject
 import com.slack.circuit.runtime.Navigator
 import com.slack.circuit.runtime.internal.rememberStableCoroutineScope
@@ -21,8 +21,6 @@ import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
 import dagger.hilt.components.SingletonComponent
 import kotlinx.collections.immutable.ImmutableList
-import kotlinx.collections.immutable.persistentListOf
-import timber.log.Timber
 
 class MainViewPresenter @AssistedInject constructor(
     @Assisted private val screen: MainUiScreen,
@@ -39,20 +37,29 @@ class MainViewPresenter @AssistedInject constructor(
             getRecipesUsecase.get().invoke(CategoriesRecipesUsecase.Params(getAllFoodCategories()))
             sliderRecipesUsecase.get().invoke(Unit)
         }
+        val categoryRows: Result<ImmutableList<CategoryRecipe>>? by
+        getRecipesUsecase.get().flow.collectAsState(initial = null)
+        val sliders: Result<ImmutableList<Recipe>>? by
+        sliderRecipesUsecase.get().flow.collectAsRetainedState(initial = null)
 
-        val categoryRows: Result<ImmutableList<CategoryRecipe>>? by getRecipesUsecase.get().flow.collectAsState(initial = null)
-        val sliders: Result<ImmutableList<Recipe>>? by sliderRecipesUsecase.get().flow.collectAsRetainedState(initial = null)
-
-        Timber.d("MainViewPresenter categoriesRecipes = ${categoryRows?.getOrNull()}")
-        Timber.d("MainViewPresenter sliders getOrNull= ${sliders?.getOrNull()}")
-
-        navigator.toString()
         return MainUiState(
             sliderRecipes = sliders?.getOrNull(),
             categoriesRecipes = categoryRows?.getOrNull(),
             eventSink = { event ->
                 when (event) {
-                    OnPlayClicked -> {}
+                    is MainUiEvent.OnRecipeClicked -> {
+                        navigator.goTo(
+                            RecipeUiScreen(
+                                itemImage = event.recipe.featuredImage,
+                                itemTitle = event.recipe.title,
+                                itemId = event.recipe.id,
+                                itemUid = event.recipe.uid
+                            )
+                        )
+                    }
+
+                    is MainUiEvent.OnCategoryClicked -> {}
+                    is MainUiEvent.OnRecipeLongClick -> {}
                 }
             },
         )

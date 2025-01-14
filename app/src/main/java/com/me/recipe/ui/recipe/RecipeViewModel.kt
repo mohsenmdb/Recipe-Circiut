@@ -3,6 +3,7 @@ package com.me.recipe.ui.recipe
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.me.recipe.domain.features.recipe.usecases.GetRecipeUsecase
 import com.me.recipe.ui.navigation.RecipeDestination
 import dagger.Lazy
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -20,7 +21,7 @@ import kotlinx.coroutines.launch
 
 @HiltViewModel
 class RecipeViewModel @Inject constructor(
-    private val getRecipeUsecase: Lazy<com.me.recipe.domain.features.recipe.usecases.GetRecipeUsecase>,
+//    private val getRecipeUsecase: Lazy<GetRecipeUsecase>,
     savedStateHandle: SavedStateHandle,
 ) : ViewModel(), RecipeContract {
 
@@ -42,7 +43,7 @@ class RecipeViewModel @Inject constructor(
         viewModelScope.launch {
             setOfflineData()
             try {
-                getRecipe(itemId, itemUid)
+//                getRecipe(itemId, itemUid)
             } catch (e: Exception) {
                 _state.update { it.copy(loading = false) }
                 if (e.message != null) {
@@ -61,18 +62,18 @@ class RecipeViewModel @Inject constructor(
         }
     }
 
-    private suspend fun getRecipe(id: Int, uid: String) {
-        getRecipeUsecase.get().invoke(id, uid).onEach { dataState ->
-            _state.update { it.copy(loading = dataState.loading) }
-
-            dataState.data?.let { recipe ->
-                _state.update { it.copy(recipe = recipe) }
-            }
-
-            dataState.error?.let { error ->
-//                dialogQueue.appendErrorMessage("An Error Occurred", error)
-            }
-        }.launchIn(viewModelScope)
-        _state.update { it.copy(loading = false) }
-    }
+//    private suspend fun getRecipe(id: Int, uid: String) {
+//        getRecipeUsecase.get().invoke(id, uid).onEach { dataState ->
+//            _state.update { it.copy(loading = dataState.loading) }
+//
+//            dataState.data?.let { recipe ->
+//                _state.update { it.copy(recipe = recipe) }
+//            }
+//
+//            dataState.error?.let { error ->
+////                dialogQueue.appendErrorMessage("An Error Occurred", error)
+//            }
+//        }.launchIn(viewModelScope)
+//        _state.update { it.copy(loading = false) }
+//    }
 }

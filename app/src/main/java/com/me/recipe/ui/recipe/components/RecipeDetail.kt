@@ -19,7 +19,7 @@ import com.me.recipe.ui.theme.RecipeTheme
 
 @Composable
 internal fun RecipeDetail(
-    recipe: Recipe,
+    recipe: Recipe?,
     isLoading: Boolean,
     modifier: Modifier = Modifier,
 ) {
@@ -28,10 +28,9 @@ internal fun RecipeDetail(
             .fillMaxSize()
             .background(MaterialTheme.colorScheme.background),
     ) {
-        RecipeImage(
-            uid = recipe.uid,
-            image = recipe.featuredImage,
-        )
+        if (!recipe?.featuredImage.isNullOrEmpty()) {
+            RecipeImage(image = recipe?.featuredImage!!)
+        }
         RecipeContent(
             recipe = recipe,
             isLoading = isLoading,

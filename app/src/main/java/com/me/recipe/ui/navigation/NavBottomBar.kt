@@ -63,8 +63,5 @@ internal fun NavBottomBar(
 fun getScreenForTab(tab: NavigationDestination) = when (tab) {
     HomeDestination -> MainUiScreen("888")
     SearchDestination -> SearchScreen("888")
-//    SplashDestination -> MobileVitrineScreen
-//    RecipeListDestination -> MobileProfileScreen
-//    RecipeDestination -> MobileProfileScreen
     else -> MainUiScreen("888")
 }

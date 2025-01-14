@@ -37,7 +37,9 @@ import com.me.recipe.ui.theme.RecipeTheme
 @Composable
 internal fun RecipeCategoryHorizontalItem(
     category: CategoryRecipe,
-    event: (HomeContract.Event) -> Unit,
+    onRecipeClick: OnRecipeClick = {},
+    onCategoryClick: OnCategoryClick = {},
+    onRecipeLongClick: OnRecipeLongClick = {},
 ) {
     Column(
         modifier = Modifier
@@ -48,7 +50,7 @@ internal fun RecipeCategoryHorizontalItem(
         CategoryTitleRow(
             category = category.category,
             onCategoryClicked = {
-                event.invoke(HomeContract.Event.OnCategoryClick(it))
+                onCategoryClick(it)
             },
         )
         LazyRow(
@@ -59,10 +61,10 @@ internal fun RecipeCategoryHorizontalItem(
                 CategoryCardHorizontal(
                     recipe = it,
                     onClick = {
-                        event.invoke(HomeContract.Event.OnRecipeClick(it))
+                        onRecipeClick(it)
                     },
                     onLongClick = {
-                        event.invoke(HomeContract.Event.OnRecipeLongClick(it.title))
+                        onRecipeLongClick(it.title)
                     },
                 )
             }

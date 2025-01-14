@@ -69,7 +69,7 @@ internal fun RecipeNavHost(
             arguments = RecipeDestination.arguments,
             deepLinks = RecipeDestination.deepLinks,
         ) {
-            RecipeScreen()
+//            RecipeScreen()
         }
     }
 }
