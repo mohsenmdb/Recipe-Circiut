@@ -9,12 +9,15 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
+import com.me.recipe.R
 import com.me.recipe.domain.features.recipe.model.Recipe
 import com.me.recipe.domain.features.recipelist.usecases.SearchRecipesUsecase
 import com.me.recipe.shared.utils.FoodCategory
 import com.me.recipe.shared.utils.RECIPE_PAGINATION_FIRST_PAGE
 import com.me.recipe.shared.utils.RECIPE_PAGINATION_PAGE_SIZE
 import com.me.recipe.shared.utils.getFoodCategory
+import com.me.recipe.ui.component.util.GenericDialogInfo
+import com.me.recipe.ui.component.util.PositiveAction
 import com.me.recipe.ui.component.util.UiMessage
 import com.me.recipe.ui.component.util.UiMessageManager
 import com.me.recipe.ui.recipe.RecipeUiScreen
@@ -27,6 +30,7 @@ import com.me.recipe.ui.search.SearchUiEvent.OnRecipeLongClick
 import com.me.recipe.ui.search.SearchUiEvent.OnSelectedCategoryChanged
 import com.me.recipe.ui.search.SearchUiEvent.SearchClearEvent
 import com.me.recipe.ui.search.SearchViewModel.Companion.INITIAL_RECIPE_LIST_POSITION
+import com.me.recipe.util.errorformater.ErrorFormatter
 import com.slack.circuit.codegen.annotations.CircuitInject
 import com.slack.circuit.runtime.Navigator
 import com.slack.circuit.runtime.internal.rememberStableCoroutineScope
@@ -39,6 +43,7 @@ import dagger.hilt.components.SingletonComponent
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toPersistentList
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import timber.log.Timber
 
@@ -46,6 +51,7 @@ class SearchViewPresenter @AssistedInject constructor(
     @Assisted private val screen: SearchScreen,
     @Assisted internal val navigator: Navigator,
     private val searchRecipesUsecase: Lazy<SearchRecipesUsecase>,
+    private val errorFormatter: Lazy<ErrorFormatter>,
 ) : Presenter<SearchUiState> {
 
     @Composable
@@ -53,6 +59,8 @@ class SearchViewPresenter @AssistedInject constructor(
         val stableScope = rememberStableCoroutineScope()
         val uiMessageManager = remember { UiMessageManager() }
         val message by uiMessageManager.message.collectAsState(null)
+        var errorDialogInfo by remember { mutableStateOf<GenericDialogInfo?>(null) }
+
         var recipeListPage by rememberSaveable { mutableIntStateOf(RECIPE_PAGINATION_FIRST_PAGE) }
         var recipeScrollPosition by rememberSaveable { mutableIntStateOf(INITIAL_RECIPE_LIST_POSITION) }
         var selectedCategory by rememberSaveable { mutableStateOf<FoodCategory?>(null) }
@@ -74,6 +82,21 @@ class SearchViewPresenter @AssistedInject constructor(
         }
         val loading by rememberSaveable(appendedRecipes) { mutableStateOf(appendedRecipes.isEmpty() && recipes?.exceptionOrNull() == null) }
 
+        LaunchedEffect(recipes?.exceptionOrNull()) {
+            if (recipes?.exceptionOrNull() != null) {
+                errorDialogInfo = GenericDialogInfo.Builder()
+                    .title(R.string.error)
+                    .description(errorFormatter.get().format(recipes?.exceptionOrNull()))
+                    .positive(
+                        PositiveAction(
+                            positiveBtnTxt = R.string.ok,
+                            onPositiveAction = { errorDialogInfo = null },
+                        ),
+                    )
+                    .onDismiss { errorDialogInfo = null }
+                    .build()
+            }
+        }
         fun resetSearchState() {
             appendedRecipes = persistentListOf()
             recipeListPage = RECIPE_PAGINATION_FIRST_PAGE
@@ -120,6 +143,7 @@ class SearchViewPresenter @AssistedInject constructor(
             categoryScrollPosition = categoriesScrollPosition,
             query = searchText,
             message = message,
+            errors = errorDialogInfo,
             eventSink = { event ->
                 when (event) {
                     is OnSelectedCategoryChanged -> {
