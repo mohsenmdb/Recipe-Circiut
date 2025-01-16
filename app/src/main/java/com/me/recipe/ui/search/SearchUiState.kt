@@ -4,6 +4,7 @@ import androidx.compose.runtime.Stable
 import com.me.recipe.domain.features.recipe.model.Recipe
 import com.me.recipe.shared.utils.FoodCategory
 import com.me.recipe.ui.component.util.GenericDialogInfo
+import com.me.recipe.ui.component.util.UiMessage
 import com.slack.circuit.runtime.CircuitUiEvent
 import com.slack.circuit.runtime.CircuitUiState
 import com.slack.circuit.runtime.screen.Screen
@@ -22,6 +23,7 @@ typealias SearchEventSink = (SearchUiEvent) -> Unit
 data class SearchUiState(
     val recipes: ImmutableList<Recipe>,
     val errors: GenericDialogInfo? = null,
+    val message: UiMessage? = null,
     val query: String = "",
     val selectedCategory: FoodCategory? = null,
     val loading: Boolean = false,
@@ -49,6 +51,7 @@ sealed interface SearchUiEvent : CircuitUiEvent {
     data class OnRecipeLongClick(val title: String) : SearchUiEvent
     data class OnRecipeClick(val recipe: Recipe) : SearchUiEvent
     data class OnChangeRecipeScrollPosition(val index: Int) : SearchUiEvent
+    data class ClearMessage(val id: Long) : SearchUiEvent
 }
 
 

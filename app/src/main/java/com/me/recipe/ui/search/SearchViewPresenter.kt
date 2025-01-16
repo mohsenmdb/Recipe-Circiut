@@ -15,7 +15,17 @@ import com.me.recipe.shared.utils.FoodCategory
 import com.me.recipe.shared.utils.RECIPE_PAGINATION_FIRST_PAGE
 import com.me.recipe.shared.utils.RECIPE_PAGINATION_PAGE_SIZE
 import com.me.recipe.shared.utils.getFoodCategory
+import com.me.recipe.ui.component.util.UiMessage
+import com.me.recipe.ui.component.util.UiMessageManager
 import com.me.recipe.ui.recipe.RecipeUiScreen
+import com.me.recipe.ui.search.SearchUiEvent.ClearMessage
+import com.me.recipe.ui.search.SearchUiEvent.NewSearchEvent
+import com.me.recipe.ui.search.SearchUiEvent.OnChangeRecipeScrollPosition
+import com.me.recipe.ui.search.SearchUiEvent.OnQueryChanged
+import com.me.recipe.ui.search.SearchUiEvent.OnRecipeClick
+import com.me.recipe.ui.search.SearchUiEvent.OnRecipeLongClick
+import com.me.recipe.ui.search.SearchUiEvent.OnSelectedCategoryChanged
+import com.me.recipe.ui.search.SearchUiEvent.SearchClearEvent
 import com.me.recipe.ui.search.SearchViewModel.Companion.INITIAL_RECIPE_LIST_POSITION
 import com.slack.circuit.codegen.annotations.CircuitInject
 import com.slack.circuit.runtime.Navigator
@@ -29,6 +39,7 @@ import dagger.hilt.components.SingletonComponent
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toPersistentList
+import kotlinx.coroutines.launch
 import timber.log.Timber
 
 class SearchViewPresenter @AssistedInject constructor(
@@ -40,6 +51,8 @@ class SearchViewPresenter @AssistedInject constructor(
     @Composable
     override fun present(): SearchUiState {
         val stableScope = rememberStableCoroutineScope()
+        val uiMessageManager = remember { UiMessageManager() }
+        val message by uiMessageManager.message.collectAsState(null)
         var recipeListPage by rememberSaveable { mutableIntStateOf(RECIPE_PAGINATION_FIRST_PAGE) }
         var recipeScrollPosition by rememberSaveable { mutableIntStateOf(INITIAL_RECIPE_LIST_POSITION) }
         var selectedCategory by rememberSaveable { mutableStateOf<FoodCategory?>(null) }
@@ -106,22 +119,27 @@ class SearchViewPresenter @AssistedInject constructor(
             selectedCategory = selectedCategory,
             categoryScrollPosition = categoriesScrollPosition,
             query = searchText,
+            message = message,
             eventSink = { event ->
                 when (event) {
-                    is SearchUiEvent.OnSelectedCategoryChanged -> {
+                    is OnSelectedCategoryChanged -> {
                         onSelectedCategoryChanged(event.category, event.position, event.offset)
                     }
-                    is SearchUiEvent.OnQueryChanged -> {
+                    is OnQueryChanged -> {
                         searchText = event.query
                     }
-                    SearchUiEvent.SearchClearEvent -> {
+                    SearchClearEvent -> {
                         searchText = ""
                         query = ""
                     }
-                    SearchUiEvent.NewSearchEvent -> onNewSearchEvent()
-                    is SearchUiEvent.OnRecipeClick -> navigateToRecipePage(event.recipe)
-                    is SearchUiEvent.OnChangeRecipeScrollPosition -> handleRecipeListPositionChanged(event.index)
-                    is SearchUiEvent.OnRecipeLongClick -> {}
+                    NewSearchEvent -> onNewSearchEvent()
+                    is OnRecipeClick -> navigateToRecipePage(event.recipe)
+                    is OnChangeRecipeScrollPosition -> handleRecipeListPositionChanged(event.index)
+                    is OnRecipeLongClick -> {
+                        Timber.d("OnRecipeLongClick ${event.title}")
+                        stableScope.launch { uiMessageManager.emitMessage(UiMessage.createToast(event.title)) }
+                    }
+                    is ClearMessage -> stableScope.launch { uiMessageManager.clearMessage() }
                     SearchUiEvent.RestoreStateEvent -> TODO()
                 }
             },

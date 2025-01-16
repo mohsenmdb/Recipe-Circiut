@@ -11,8 +11,13 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -21,9 +26,12 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.me.recipe.R
 import com.me.recipe.ui.component.util.DefaultSnackbar
 import com.me.recipe.ui.component.util.GenericDialog
+import com.me.recipe.ui.component.util.Message
 import com.me.recipe.ui.component.util.NavigateToHomePage
 import com.me.recipe.ui.component.util.NavigateToRecipePage
 import com.me.recipe.ui.component.util.SharedTransitionLayoutPreview
+import com.me.recipe.ui.component.util.SnackbarEffect
+import com.me.recipe.ui.component.util.UiMessage
 import com.me.recipe.ui.home.MainUiScreen
 import com.me.recipe.ui.home.MainUiState
 import com.me.recipe.ui.search.component.SearchAppBar
@@ -37,6 +45,7 @@ import kotlinx.coroutines.InternalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.launch
+import timber.log.Timber
 
 @CircuitInject(SearchScreen::class, SingletonComponent::class)
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter", "RememberReturnType")
@@ -45,27 +54,15 @@ internal fun SearchScreen(
     state: SearchUiState,
     modifier: Modifier = Modifier,
 ) {
-    val snackbarHostState = remember { SnackbarHostState() }
-    val coroutineScope = rememberCoroutineScope()
-    val actionOk = stringResource(id = R.string.ok)
-
-    BackHandler {
+//    BackHandler {
 //        navigateToHomePage.invoke()
-    }
-
-//    effect.collectInLaunchedEffect { effect ->
-//        when (effect) {
-//            is SearchContract.Effect.ShowSnackbar -> {
-//                coroutineScope.launch {
-//                    snackbarHostState.showSnackbar(effect.message, actionOk)
-//                }
-//            }
-//            is SearchContract.Effect.NavigateToRecipePage -> {
-//                navigateToRecipePage(effect.recipe)
-//            }
-//        }
 //    }
-
+    val snackbarHostState = remember { SnackbarHostState() }
+    SnackbarEffect(
+        snackbarHostState = snackbarHostState,
+        message = state.message,
+        onClearMessage = { state.eventSink.invoke(SearchUiEvent.ClearMessage(it)) }
+    )
     Scaffold(
         snackbarHost = {
             DefaultSnackbar(snackbarHostState = snackbarHostState) {
@@ -87,7 +84,7 @@ internal fun SearchScreen(
                 },
             )
         },
-        modifier = modifier,
+        modifier = modifier.padding(bottom = 80.dp),
     ) { padding ->
         SearchContent(
             recipes = state.recipes,
@@ -96,12 +93,13 @@ internal fun SearchScreen(
             onRecipeClicked = { state.eventSink.invoke(SearchUiEvent.OnRecipeClick(it)) },
             onRecipeLongClicked = { state.eventSink.invoke(SearchUiEvent.OnRecipeLongClick(it)) },
             onChangeRecipeScrollPosition = { state.eventSink.invoke(SearchUiEvent.OnChangeRecipeScrollPosition(it)) },
-            modifier = Modifier.padding(top = padding.calculateTopPadding(), bottom = 80.dp)
+            modifier = Modifier.padding(padding)
         )
 
         state.errors?.let { GenericDialog(it) }
     }
 }
+
 
 @Preview
 @Composable
