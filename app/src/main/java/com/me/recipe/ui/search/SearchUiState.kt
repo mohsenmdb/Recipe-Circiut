@@ -26,9 +26,6 @@ data class SearchUiState(
     val selectedCategory: FoodCategory? = null,
     val loading: Boolean = false,
     val appendingLoading: Boolean = false,
-    // Pagination starts at '1' (-1 = exhausted)
-    val page: Int = 1,
-    var recipeListScrollPosition: Int = 0,
     var categoryScrollPosition: Pair<Int, Int> = 0 to 0,
     val eventSink: SearchEventSink,
 ) : CircuitUiState {

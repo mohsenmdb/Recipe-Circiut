@@ -45,7 +45,7 @@ class SearchViewPresenter @AssistedInject constructor(
         var selectedCategory by rememberSaveable { mutableStateOf<FoodCategory?>(null) }
         var searchText by rememberSaveable { mutableStateOf("") }
         var query by rememberSaveable { mutableStateOf("") }
-        var categoriesScrollPosition by rememberSaveable { mutableStateOf<Pair<Int, Int>?>(null) }
+        var categoriesScrollPosition by rememberSaveable { mutableStateOf(0 to 0) }
         val recipes by searchRecipesUsecase.get().flow.collectAsState(initial = null)
         val recipesResult = recipes?.getOrNull()
         var appendedRecipes by remember { mutableStateOf<ImmutableList<Recipe>>(persistentListOf()) }
@@ -104,6 +104,7 @@ class SearchViewPresenter @AssistedInject constructor(
             loading = loading,
             appendingLoading = appendingLoading,
             selectedCategory = selectedCategory,
+            categoryScrollPosition = categoriesScrollPosition,
             query = searchText,
             eventSink = { event ->
                 when (event) {
