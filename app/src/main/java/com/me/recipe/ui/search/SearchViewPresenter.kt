@@ -8,7 +8,6 @@ import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.lifecycle.viewModelScope
 import com.me.recipe.domain.features.recipe.model.Recipe
 import com.me.recipe.domain.features.recipelist.usecases.SearchRecipesUsecase
 import com.me.recipe.shared.utils.FoodCategory
@@ -27,7 +26,6 @@ import dagger.hilt.components.SingletonComponent
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toPersistentList
-import kotlinx.coroutines.launch
 import timber.log.Timber
 
 class SearchViewPresenter @AssistedInject constructor(
@@ -43,10 +41,11 @@ class SearchViewPresenter @AssistedInject constructor(
         var recipeListPage by remember { mutableIntStateOf(RECIPE_PAGINATION_FIRST_PAGE) }
         var recipeScrollPosition by remember { mutableIntStateOf(INITIAL_RECIPE_LIST_POSITION) }
         var selectedCategory by remember { mutableStateOf<FoodCategory?>(null) }
-        var searchQuery by remember { mutableStateOf("") }
+        var searchText by remember { mutableStateOf("") }
+        var query by remember { mutableStateOf("") }
         var categoriesScrollPosition by remember { mutableStateOf<Pair<Int, Int>?>(null) }
-        LaunchedEffect(key1 = searchQuery) {
-            searchRecipesUsecase.get().invoke(SearchRecipesUsecase.Params(query = searchQuery))
+        LaunchedEffect(key1 = query) {
+            searchRecipesUsecase.get().invoke(SearchRecipesUsecase.Params(query = query))
         }
         val recipes by searchRecipesUsecase.get().flow.collectAsState(initial = null)
         val recipesResult = recipes?.getOrNull()
@@ -57,39 +56,45 @@ class SearchViewPresenter @AssistedInject constructor(
             }
         }
         Timber.d("SearchViewPresenter appendedRecipes = $recipesResult")
-        fun isNewSearchSetBySelectingFromCategoryList(): Boolean {
-            return selectedCategory?.value == searchQuery
-        }
         fun resetSearchState() {
             appendedRecipes = persistentListOf()
             recipeListPage = RECIPE_PAGINATION_FIRST_PAGE
             recipeScrollPosition = INITIAL_RECIPE_LIST_POSITION
-//            if (!isNewSearchSetBySelectingFromCategoryList()) {
-//                selectedCategory = null
-//            }
         }
         fun onSelectedCategoryChanged(category: String, position: Int, offset: Int) {
             resetSearchState()
             selectedCategory = getFoodCategory(category)
-            searchQuery = category
+            query = category
             categoriesScrollPosition = position to offset
         }
+        fun onNewSearchEvent() {
+            selectedCategory = null
+            resetSearchState()
+            query = searchText
+        }
+
         return SearchUiState(
             recipes = appendedRecipes,
             loading = appendedRecipes.isEmpty() && recipes?.exceptionOrNull() == null,
             selectedCategory = selectedCategory,
+            query = searchText,
             eventSink = { event ->
                 when (event) {
                     is SearchUiEvent.OnSelectedCategoryChanged -> {
                         onSelectedCategoryChanged(event.category, event.position, event.offset)
                     }
-                    SearchUiEvent.NewSearchEvent -> TODO()
+                    is SearchUiEvent.OnQueryChanged -> {
+                        searchText = event.query
+                    }
+                    SearchUiEvent.SearchClearEvent -> {
+                        searchText = ""
+                        query = ""
+                    }
+                    SearchUiEvent.NewSearchEvent -> onNewSearchEvent()
                     is SearchUiEvent.OnChangeRecipeScrollPosition -> TODO()
-                    is SearchUiEvent.OnQueryChanged -> TODO()
                     is SearchUiEvent.OnRecipeClick -> TODO()
                     is SearchUiEvent.OnRecipeLongClick -> TODO()
                     SearchUiEvent.RestoreStateEvent -> TODO()
-                    SearchUiEvent.SearchClearEvent -> TODO()
                 }
             },
         )
