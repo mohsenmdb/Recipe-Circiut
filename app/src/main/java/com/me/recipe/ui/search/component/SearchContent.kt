@@ -15,6 +15,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.me.recipe.domain.features.recipe.model.Recipe
 import com.me.recipe.ui.component.util.GenericDialog
 import com.me.recipe.ui.component.util.SharedTransitionLayoutPreview
 import com.me.recipe.ui.search.SearchContract
@@ -24,30 +25,36 @@ import com.me.recipe.ui.search.component.shimmer.SearchShimmer
 import com.me.recipe.ui.search.showLoadingProgressBar
 import com.me.recipe.ui.search.showShimmer
 import com.me.recipe.ui.theme.RecipeTheme
+import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.persistentListOf
 
 @Composable
 internal fun SearchContent(
-    padding: PaddingValues,
-    state: SearchUiState,
-    event: SearchEventSink,
+    recipes: ImmutableList<Recipe>,
+    showShimmer: Boolean,
+    showLoadingProgressBar: Boolean,
+    onRecipeClicked: (Recipe) -> Unit,
+    onRecipeLongClicked: (String) -> Unit,
+    onChangeRecipeScrollPosition: (Int) -> Unit,
+    modifier: Modifier = Modifier
 ) {
     Box(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxSize()
-            .padding(padding)
             .background(MaterialTheme.colorScheme.background),
     ) {
-        if (state.showShimmer) {
+        if (showShimmer) {
             SearchShimmer(250.dp)
         } else {
             RecipeList(
-                recipes = state.recipes,
-                event = { /*todo fix me by event*/ },
+                recipes = recipes,
+                onRecipeClicked = onRecipeClicked,
+                onRecipeLongClicked = onRecipeLongClicked,
+                onChangeRecipeScrollPosition = onChangeRecipeScrollPosition,
             )
 
-            LoadingView(isVisible = state.showLoadingProgressBar)
+            LoadingView(isVisible = showLoadingProgressBar)
 
-            state.errors?.let { GenericDialog(it) }
         }
     }
 }
@@ -58,9 +65,29 @@ private fun SearchContentPreview() {
     RecipeTheme(true) {
         SharedTransitionLayoutPreview {
             SearchContent(
-                padding = PaddingValues(16.dp),
-                state = SearchUiState.testData(),
-                event = {},
+                recipes = SearchUiState.testData().recipes,
+                showShimmer = false,
+                showLoadingProgressBar = false,
+                onRecipeClicked = {},
+                onRecipeLongClicked = {},
+                onChangeRecipeScrollPosition = {},
+            )
+        }
+    }
+}
+
+@Preview
+@Composable
+private fun SearchContentShimmerPreview() {
+    RecipeTheme(true) {
+        SharedTransitionLayoutPreview {
+            SearchContent(
+                recipes = persistentListOf(),
+                showShimmer = true,
+                showLoadingProgressBar = false,
+                onRecipeClicked = {},
+                onRecipeLongClicked = {},
+                onChangeRecipeScrollPosition = {},
             )
         }
     }

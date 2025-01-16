@@ -13,6 +13,7 @@ import com.me.recipe.domain.features.recipelist.usecases.SearchRecipesUsecase
 import com.me.recipe.shared.utils.FoodCategory
 import com.me.recipe.shared.utils.RECIPE_PAGINATION_FIRST_PAGE
 import com.me.recipe.shared.utils.getFoodCategory
+import com.me.recipe.ui.recipe.RecipeUiScreen
 import com.me.recipe.ui.search.SearchViewModel.Companion.INITIAL_RECIPE_LIST_POSITION
 import com.slack.circuit.codegen.annotations.CircuitInject
 import com.slack.circuit.runtime.Navigator
@@ -91,9 +92,18 @@ class SearchViewPresenter @AssistedInject constructor(
                         query = ""
                     }
                     SearchUiEvent.NewSearchEvent -> onNewSearchEvent()
-                    is SearchUiEvent.OnChangeRecipeScrollPosition -> TODO()
-                    is SearchUiEvent.OnRecipeClick -> TODO()
-                    is SearchUiEvent.OnRecipeLongClick -> TODO()
+                    is SearchUiEvent.OnRecipeClick ->{
+                        navigator.goTo(
+                            RecipeUiScreen(
+                                itemImage = event.recipe.featuredImage,
+                                itemTitle = event.recipe.title,
+                                itemId = event.recipe.id,
+                                itemUid = event.recipe.uid
+                            )
+                        )
+                    }
+                    is SearchUiEvent.OnChangeRecipeScrollPosition -> {}
+                    is SearchUiEvent.OnRecipeLongClick -> {}
                     SearchUiEvent.RestoreStateEvent -> TODO()
                 }
             },

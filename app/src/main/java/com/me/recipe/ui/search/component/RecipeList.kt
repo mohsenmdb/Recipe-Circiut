@@ -22,7 +22,9 @@ import kotlinx.collections.immutable.ImmutableList
 @Composable
 internal fun RecipeList(
     recipes: ImmutableList<Recipe>,
-    event: (SearchContract.Event) -> Unit,
+    onRecipeClicked: (Recipe) -> Unit,
+    onRecipeLongClicked: (String) -> Unit,
+    onChangeRecipeScrollPosition: (Int) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     LazyColumn(
@@ -31,15 +33,16 @@ internal fun RecipeList(
             .testTag("testTag_recipeList"),
     ) {
         itemsIndexed(recipes) { index, recipe ->
-            event.invoke(SearchContract.Event.OnChangeRecipeScrollPosition(index))
+            //Todo  fix me
+            onChangeRecipeScrollPosition(index)
 
             RecipeCard(
                 recipe = recipe,
                 onClick = {
-                    event.invoke(SearchContract.Event.OnRecipeClick(recipe))
+                    onRecipeClicked(recipe)
                 },
                 onLongClick = {
-                    event.invoke(SearchContract.Event.OnRecipeLongClick(recipe.title))
+                    onRecipeLongClicked(recipe.title)
                 },
             )
         }
@@ -52,7 +55,9 @@ private fun SearchContentPreview() {
     RecipeTheme(true) {
         RecipeList(
             recipes = SearchContract.State.testData().recipes,
-            event = {},
+            onRecipeClicked = {},
+            onRecipeLongClicked = {},
+            onChangeRecipeScrollPosition = {},
         )
     }
 }

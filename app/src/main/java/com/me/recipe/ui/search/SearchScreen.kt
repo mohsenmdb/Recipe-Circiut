@@ -7,6 +7,7 @@ import androidx.activity.compose.BackHandler
 import androidx.compose.animation.AnimatedVisibilityScope
 import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.animation.SharedTransitionScope
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
@@ -18,6 +19,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.me.recipe.R
 import com.me.recipe.ui.component.util.DefaultSnackbar
+import com.me.recipe.ui.component.util.GenericDialog
 import com.me.recipe.ui.component.util.NavigateToHomePage
 import com.me.recipe.ui.component.util.NavigateToRecipePage
 import com.me.recipe.ui.component.util.SharedTransitionLayoutPreview
@@ -86,12 +88,17 @@ internal fun SearchScreen(
         },
         modifier = modifier,
     ) { padding ->
-
         SearchContent(
-            padding = padding,
-            state = state,
-            event = state.eventSink,
+            recipes = state.recipes,
+            showShimmer = state.showShimmer,
+            showLoadingProgressBar = state.showLoadingProgressBar,
+            onRecipeClicked = { state.eventSink.invoke(SearchUiEvent.OnRecipeClick(it)) },
+            onRecipeLongClicked = { state.eventSink.invoke(SearchUiEvent.OnRecipeLongClick(it)) },
+            onChangeRecipeScrollPosition = { state.eventSink.invoke(SearchUiEvent.OnChangeRecipeScrollPosition(it)) },
+            modifier = Modifier.padding(padding)
         )
+
+        state.errors?.let { GenericDialog(it) }
     }
 }
 
