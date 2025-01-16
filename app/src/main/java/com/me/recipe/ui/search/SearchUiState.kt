@@ -56,6 +56,6 @@ sealed interface SearchUiEvent : CircuitUiEvent {
 
 
 val SearchUiState.showShimmer: Boolean
-    get() = loading && recipes.isEmpty()
+    get() = loading
 val SearchUiState.showLoadingProgressBar: Boolean
     get() = loading && recipes.isNotEmpty()
