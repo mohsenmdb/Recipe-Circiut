@@ -20,7 +20,7 @@ typealias SearchEventSink = (SearchUiEvent) -> Unit
 
 @Stable
 data class SearchUiState(
-    val recipes: ImmutableList<Recipe> = persistentListOf(),
+    val recipes: ImmutableList<Recipe>,
     val errors: GenericDialogInfo? = null,
     val query: String = "",
     val selectedCategory: FoodCategory? = null,

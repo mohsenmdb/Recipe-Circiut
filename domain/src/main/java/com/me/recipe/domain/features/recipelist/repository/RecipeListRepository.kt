@@ -8,8 +8,8 @@ import kotlinx.collections.immutable.ImmutableList
 import kotlinx.coroutines.flow.Flow
 
 interface RecipeListRepository {
-    suspend fun search(page: Int, query: String, size: Int): Flow<DataState<ImmutableList<Recipe>>>
-    suspend fun restore(page: Int, query: String): Flow<DataState<ImmutableList<Recipe>>>
+    fun search(page: Int, query: String, size: Int): Flow<ImmutableList<Recipe>>
+    fun restore(page: Int, query: String): Flow<ImmutableList<Recipe>>
     fun categoriesRecipes(categories: ImmutableList<FoodCategory>): Flow<ImmutableList<CategoryRecipe>>
     fun slider(): Flow<ImmutableList<Recipe>>
     suspend fun getTopRecipe(): Recipe

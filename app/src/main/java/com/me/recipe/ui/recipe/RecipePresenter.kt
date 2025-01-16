@@ -30,7 +30,6 @@ class RecipePresenter @AssistedInject constructor(
         LaunchedEffect(key1 = Unit) {
             getRecipeUsecase.get().invoke(GetRecipeUsecase.Params(recipeId = screen.itemId, uid = screen.itemUid))
         }
-
         val recipe: Result<Recipe>? by getRecipeUsecase.get().flow.collectAsState(initial = null)
         Timber.d("RecipePresenter recipe = ${recipe?.getOrNull()}")
 

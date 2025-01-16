@@ -47,8 +47,8 @@ import timber.log.Timber
 
 @HiltViewModel
 class SearchViewModel @Inject constructor(
-    private val searchRecipesUsecase: Lazy<SearchRecipesUsecase>,
-    private val restoreRecipesUsecase: Lazy<RestoreRecipesUsecase>,
+//    private val searchRecipesUsecase: Lazy<SearchRecipesUsecase>,
+//    private val restoreRecipesUsecase: Lazy<RestoreRecipesUsecase>,
     private val savedStateHandle: SavedStateHandle,
     private val errorFormatter: Lazy<ErrorFormatter>,
 ) : ViewModel(), SearchContract {
@@ -159,18 +159,18 @@ class SearchViewModel @Inject constructor(
     }
 
     private suspend fun restoreState() {
-        restoreRecipesUsecase.get().invoke(page = state.value.page, query = state.value.query)
-            .onEach { dataState ->
-                _state.update { it.copy(loading = dataState.loading) }
-
-                dataState.data?.let { list ->
-                    _state.update { it.copy(recipes = list) }
-                }
-
-                dataState.error?.let { error ->
-//                dialogQueue.appendErrorMessage("An Error Occurred", error)
-                }
-            }.launchIn(viewModelScope)
+//        restoreRecipesUsecase.get().invoke(page = state.value.page, query = state.value.query)
+//            .onEach { dataState ->
+//                _state.update { it.copy(loading = dataState.loading) }
+//
+//                dataState.data?.let { list ->
+//                    _state.update { it.copy(recipes = list) }
+//                }
+//
+//                dataState.error?.let { error ->
+////                dialogQueue.appendErrorMessage("An Error Occurred", error)
+//                }
+//            }.launchIn(viewModelScope)
     }
 
     private suspend fun fetchNewSearchRecipes() {
@@ -179,19 +179,19 @@ class SearchViewModel @Inject constructor(
     }
 
     private suspend fun fetchRecipes() {
-        Timber.d("fetchRecipes page[%s] query[%s]", state.value.page, state.value.query)
-        searchRecipesUsecase.get().invoke(page = state.value.page, query = state.value.query)
-            .onEach { dataState ->
-                _state.update { it.copy(loading = dataState.loading) }
-
-                dataState.data?.let { list ->
-                    appendRecipes(list)
-                }
-
-                dataState.error?.let { error ->
-                    showErrorDialog(errorFormatter.get().format(error))
-                }
-            }.launchIn(viewModelScope)
+//        Timber.d("fetchRecipes page[%s] query[%s]", state.value.page, state.value.query)
+//        searchRecipesUsecase.get().invoke(page = state.value.page, query = state.value.query)
+//            .onEach { dataState ->
+//                _state.update { it.copy(loading = dataState.loading) }
+//
+//                dataState.data?.let { list ->
+//                    appendRecipes(list)
+//                }
+//
+//                dataState.error?.let { error ->
+//                    showErrorDialog(errorFormatter.get().format(error))
+//                }
+//            }.launchIn(viewModelScope)
     }
 
     private fun showErrorDialog(error: String) {

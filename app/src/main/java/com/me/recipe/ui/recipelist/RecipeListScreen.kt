@@ -1,11 +1,5 @@
-@file:OptIn(ExperimentalSharedTransitionApi::class)
-
 package com.me.recipe.ui.recipelist
 
-import androidx.compose.animation.AnimatedVisibilityScope
-import androidx.compose.animation.ExperimentalSharedTransitionApi
-import androidx.compose.animation.SharedTransitionScope
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
@@ -15,13 +9,9 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.me.recipe.R
-import com.me.recipe.ui.component.util.DefaultSnackbar
 import com.me.recipe.ui.component.util.NavigateToRecipePage
-import com.me.recipe.ui.component.util.SharedTransitionLayoutPreview
-import com.me.recipe.ui.recipelist.components.RecipeListAppBar
 import com.me.recipe.ui.search.SearchContract
 import com.me.recipe.ui.search.SearchViewModel
-import com.me.recipe.ui.search.component.SearchContent
 import com.me.recipe.ui.theme.RecipeTheme
 import com.me.recipe.util.compose.OnClick
 import com.me.recipe.util.compose.collectInLaunchedEffect
