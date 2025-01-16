@@ -38,24 +38,20 @@ internal fun SearchContent(
     onChangeRecipeScrollPosition: (Int) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    Box(
-        modifier = modifier
-            .fillMaxSize()
-            .background(MaterialTheme.colorScheme.background),
-    ) {
-        if (showShimmer) {
-            SearchShimmer(250.dp)
-        } else {
-            RecipeList(
-                recipes = recipes,
-                onRecipeClicked = onRecipeClicked,
-                onRecipeLongClicked = onRecipeLongClicked,
-                onChangeRecipeScrollPosition = onChangeRecipeScrollPosition,
-            )
-
-            LoadingView(isVisible = showLoadingProgressBar)
-
-        }
+    if (showShimmer) {
+        SearchShimmer(
+            imageHeight = 250.dp,
+            modifier = modifier
+        )
+    } else {
+        RecipeList(
+            recipes = recipes,
+            onRecipeClicked = onRecipeClicked,
+            onRecipeLongClicked = onRecipeLongClicked,
+            onChangeRecipeScrollPosition = onChangeRecipeScrollPosition,
+            showLoadingProgressBar = showLoadingProgressBar,
+            modifier = modifier,
+        )
     }
 }
 

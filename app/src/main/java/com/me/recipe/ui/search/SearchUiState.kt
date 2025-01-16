@@ -25,6 +25,7 @@ data class SearchUiState(
     val query: String = "",
     val selectedCategory: FoodCategory? = null,
     val loading: Boolean = false,
+    val appendingLoading: Boolean = false,
     // Pagination starts at '1' (-1 = exhausted)
     val page: Int = 1,
     var recipeListScrollPosition: Int = 0,
@@ -58,4 +59,4 @@ sealed interface SearchUiEvent : CircuitUiEvent {
 val SearchUiState.showShimmer: Boolean
     get() = loading
 val SearchUiState.showLoadingProgressBar: Boolean
-    get() = loading && recipes.isNotEmpty()
+    get() = appendingLoading

@@ -7,11 +7,13 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import com.me.recipe.domain.features.recipe.model.Recipe
 import com.me.recipe.domain.features.recipelist.usecases.SearchRecipesUsecase
 import com.me.recipe.shared.utils.FoodCategory
 import com.me.recipe.shared.utils.RECIPE_PAGINATION_FIRST_PAGE
+import com.me.recipe.shared.utils.RECIPE_PAGINATION_PAGE_SIZE
 import com.me.recipe.shared.utils.getFoodCategory
 import com.me.recipe.ui.recipe.RecipeUiScreen
 import com.me.recipe.ui.search.SearchViewModel.Companion.INITIAL_RECIPE_LIST_POSITION
@@ -38,25 +40,27 @@ class SearchViewPresenter @AssistedInject constructor(
     @Composable
     override fun present(): SearchUiState {
         val stableScope = rememberStableCoroutineScope()
-
-        var recipeListPage by remember { mutableIntStateOf(RECIPE_PAGINATION_FIRST_PAGE) }
-        var recipeScrollPosition by remember { mutableIntStateOf(INITIAL_RECIPE_LIST_POSITION) }
-        var selectedCategory by remember { mutableStateOf<FoodCategory?>(null) }
-        var searchText by remember { mutableStateOf("") }
-        var query by remember { mutableStateOf("") }
-        var categoriesScrollPosition by remember { mutableStateOf<Pair<Int, Int>?>(null) }
-        LaunchedEffect(key1 = query) {
-            searchRecipesUsecase.get().invoke(SearchRecipesUsecase.Params(query = query))
-        }
+        var recipeListPage by rememberSaveable { mutableIntStateOf(RECIPE_PAGINATION_FIRST_PAGE) }
+        var recipeScrollPosition by rememberSaveable { mutableIntStateOf(INITIAL_RECIPE_LIST_POSITION) }
+        var selectedCategory by rememberSaveable { mutableStateOf<FoodCategory?>(null) }
+        var searchText by rememberSaveable { mutableStateOf("") }
+        var query by rememberSaveable { mutableStateOf("") }
+        var categoriesScrollPosition by rememberSaveable { mutableStateOf<Pair<Int, Int>?>(null) }
         val recipes by searchRecipesUsecase.get().flow.collectAsState(initial = null)
         val recipesResult = recipes?.getOrNull()
         var appendedRecipes by remember { mutableStateOf<ImmutableList<Recipe>>(persistentListOf()) }
+        var appendingLoading by rememberSaveable { mutableStateOf(false) }
+        LaunchedEffect(key1 = query, key2 = recipeListPage) {
+            searchRecipesUsecase.get().invoke(SearchRecipesUsecase.Params(query = query, page = recipeListPage))
+        }
         LaunchedEffect(recipesResult) {
             recipesResult?.let { newRecipes ->
                 appendedRecipes = (appendedRecipes + newRecipes).toPersistentList()
             }
+            appendingLoading = false
         }
-        Timber.d("SearchViewPresenter appendedRecipes = $recipesResult")
+        val loading by rememberSaveable(appendedRecipes) { mutableStateOf(appendedRecipes.isEmpty() && recipes?.exceptionOrNull() == null) }
+
         fun resetSearchState() {
             appendedRecipes = persistentListOf()
             recipeListPage = RECIPE_PAGINATION_FIRST_PAGE
@@ -73,10 +77,32 @@ class SearchViewPresenter @AssistedInject constructor(
             resetSearchState()
             query = searchText
         }
-
+        fun navigateToRecipePage(recipe: Recipe) {
+            navigator.goTo(
+                RecipeUiScreen(
+                    itemImage = recipe.featuredImage,
+                    itemTitle = recipe.title,
+                    itemId = recipe.id,
+                    itemUid = recipe.uid
+                )
+            )
+        }
+        fun checkReachEndOfTheList(position: Int): Boolean {
+            if ((position + 1) < (recipeListPage * RECIPE_PAGINATION_PAGE_SIZE) || loading) return false
+            if ((recipeScrollPosition + 1) < (recipeListPage * RECIPE_PAGINATION_PAGE_SIZE)) return false
+            return true
+        }
+        fun handleRecipeListPositionChanged(position: Int) {
+            recipeScrollPosition = position
+            if (checkReachEndOfTheList(position)) {
+                appendingLoading = true
+                recipeListPage += 1
+            }
+        }
         return SearchUiState(
             recipes = appendedRecipes,
-            loading = appendedRecipes.isEmpty() && recipes?.exceptionOrNull() == null,
+            loading = loading,
+            appendingLoading = appendingLoading,
             selectedCategory = selectedCategory,
             query = searchText,
             eventSink = { event ->
@@ -92,17 +118,8 @@ class SearchViewPresenter @AssistedInject constructor(
                         query = ""
                     }
                     SearchUiEvent.NewSearchEvent -> onNewSearchEvent()
-                    is SearchUiEvent.OnRecipeClick ->{
-                        navigator.goTo(
-                            RecipeUiScreen(
-                                itemImage = event.recipe.featuredImage,
-                                itemTitle = event.recipe.title,
-                                itemId = event.recipe.id,
-                                itemUid = event.recipe.uid
-                            )
-                        )
-                    }
-                    is SearchUiEvent.OnChangeRecipeScrollPosition -> {}
+                    is SearchUiEvent.OnRecipeClick -> navigateToRecipePage(event.recipe)
+                    is SearchUiEvent.OnChangeRecipeScrollPosition -> handleRecipeListPositionChanged(event.index)
                     is SearchUiEvent.OnRecipeLongClick -> {}
                     SearchUiEvent.RestoreStateEvent -> TODO()
                 }
