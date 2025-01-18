@@ -47,7 +47,6 @@ sealed interface SearchUiEvent : CircuitUiEvent {
     data object SearchClearEvent : SearchUiEvent
     data class OnQueryChanged(val query: String) : SearchUiEvent
     data class OnSelectedCategoryChanged(val category: String, val position: Int = 0, val offset: Int = 0) : SearchUiEvent
-    data object RestoreStateEvent : SearchUiEvent
     data class OnRecipeLongClick(val title: String) : SearchUiEvent
     data class OnRecipeClick(val recipe: Recipe) : SearchUiEvent
     data class OnChangeRecipeScrollPosition(val index: Int) : SearchUiEvent

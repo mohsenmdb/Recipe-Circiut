@@ -182,7 +182,6 @@ class SearchViewPresenter @AssistedInject constructor(
                         stableScope.launch { uiMessageManager.emitMessage(UiMessage.createSnackbar(event.title)) }
                     }
                     ClearMessage -> stableScope.launch { uiMessageManager.clearMessage() }
-                    SearchUiEvent.RestoreStateEvent -> TODO()
                 }
             },
         )
