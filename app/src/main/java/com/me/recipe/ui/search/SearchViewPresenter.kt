@@ -82,12 +82,10 @@ class SearchViewPresenter @AssistedInject constructor(
                 return@LaunchedEffect
             }
 
-            Timber.d("appendingloding = invok page=$recipeListPage")
             searchRecipesUsecase.get().invoke(SearchRecipesUsecase.Params(query = query, page = recipeListPage, refresher = forceRefresher))
         }
         LaunchedEffect(recipesResult, restoredRecipesResult) {
-            Timber.d("appendingloding = appending $restoredRecipesResult")
-            if (!restoredRecipesResult.isNullOrEmpty()){
+            if (!restoredRecipesResult.isNullOrEmpty() && recipesResult.isNullOrEmpty()){
                 appendedRecipes = restoredRecipesResult
                 return@LaunchedEffect
             }
@@ -96,7 +94,7 @@ class SearchViewPresenter @AssistedInject constructor(
             }
             appendingLoading = false
         }
-        var loading by rememberSaveable(appendedRecipes, recipes?.exceptionOrNull()) { mutableStateOf(appendedRecipes.isEmpty() && recipes?.exceptionOrNull() == null) }
+        var loading by remember(appendedRecipes, recipes?.exceptionOrNull()) { mutableStateOf(appendedRecipes.isEmpty() && recipes?.exceptionOrNull() == null) }
 
         LaunchedEffect(recipes?.exceptionOrNull()) {
             if (recipes?.exceptionOrNull() != null) {
@@ -151,7 +149,6 @@ class SearchViewPresenter @AssistedInject constructor(
         fun handleRecipeListPositionChanged(position: Int) {
             recipeScrollPosition = position
             if (checkReachEndOfTheList(position)) {
-                Timber.d("appendingloding = start")
                 appendingLoading = true
                 recipeListPage += 1
             }
