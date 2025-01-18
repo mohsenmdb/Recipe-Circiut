@@ -72,9 +72,7 @@ class SearchViewPresenter @AssistedInject constructor(
         val recipesResult = recipes?.getOrNull()
         var appendedRecipes by remember { mutableStateOf<ImmutableList<Recipe>>(persistentListOf()) }
         var appendingLoading by rememberSaveable { mutableStateOf(false) }
-        Timber.d("shouldRefresh = ${forceRefresher?.shouldRefresh()}")
-        LaunchedEffect(key1 = query, key2 = recipeListPage, key3 = forceRefresher?.shouldRefresh()) {
-            Timber.d("shouldRefresh =invoke")
+        LaunchedEffect(key1 = query, key2 = recipeListPage, key3 = forceRefresher) {
             searchRecipesUsecase.get().invoke(SearchRecipesUsecase.Params(query = query, page = recipeListPage, refresher = forceRefresher))
         }
         LaunchedEffect(recipesResult) {
@@ -83,7 +81,7 @@ class SearchViewPresenter @AssistedInject constructor(
             }
             appendingLoading = false
         }
-        val loading by rememberSaveable(appendedRecipes) { mutableStateOf(appendedRecipes.isEmpty() && recipes?.exceptionOrNull() == null) }
+        var loading by rememberSaveable(appendedRecipes, recipes?.exceptionOrNull()) { mutableStateOf(appendedRecipes.isEmpty() && recipes?.exceptionOrNull() == null) }
 
         LaunchedEffect(recipes?.exceptionOrNull()) {
             if (recipes?.exceptionOrNull() != null) {
@@ -95,6 +93,7 @@ class SearchViewPresenter @AssistedInject constructor(
                             positiveBtnTxt = R.string.try_again,
                             onPositiveAction = {
                                 forceRefresher = ForceFresh.refresh()
+                                loading = true
                                 errorDialogInfo = null
                             },
                         ),
