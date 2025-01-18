@@ -51,7 +51,7 @@ sealed interface SearchUiEvent : CircuitUiEvent {
     data class OnRecipeLongClick(val title: String) : SearchUiEvent
     data class OnRecipeClick(val recipe: Recipe) : SearchUiEvent
     data class OnChangeRecipeScrollPosition(val index: Int) : SearchUiEvent
-    data class ClearMessage(val id: Long) : SearchUiEvent
+    data object ClearMessage : SearchUiEvent
 }
 
 

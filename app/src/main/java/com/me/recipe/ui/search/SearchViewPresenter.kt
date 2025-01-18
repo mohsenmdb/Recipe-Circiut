@@ -16,6 +16,7 @@ import com.me.recipe.shared.utils.FoodCategory
 import com.me.recipe.shared.utils.RECIPE_PAGINATION_FIRST_PAGE
 import com.me.recipe.shared.utils.RECIPE_PAGINATION_PAGE_SIZE
 import com.me.recipe.shared.utils.getFoodCategory
+import com.me.recipe.domain.util.ForceFresh
 import com.me.recipe.ui.component.util.GenericDialogInfo
 import com.me.recipe.ui.component.util.PositiveAction
 import com.me.recipe.ui.component.util.UiMessage
@@ -43,7 +44,6 @@ import dagger.hilt.components.SingletonComponent
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toPersistentList
-import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import timber.log.Timber
 
@@ -60,6 +60,7 @@ class SearchViewPresenter @AssistedInject constructor(
         val uiMessageManager = remember { UiMessageManager() }
         val message by uiMessageManager.message.collectAsState(null)
         var errorDialogInfo by remember { mutableStateOf<GenericDialogInfo?>(null) }
+        var forceRefresher by remember { mutableStateOf<ForceFresh?>(null) }
 
         var recipeListPage by rememberSaveable { mutableIntStateOf(RECIPE_PAGINATION_FIRST_PAGE) }
         var recipeScrollPosition by rememberSaveable { mutableIntStateOf(INITIAL_RECIPE_LIST_POSITION) }
@@ -71,8 +72,10 @@ class SearchViewPresenter @AssistedInject constructor(
         val recipesResult = recipes?.getOrNull()
         var appendedRecipes by remember { mutableStateOf<ImmutableList<Recipe>>(persistentListOf()) }
         var appendingLoading by rememberSaveable { mutableStateOf(false) }
-        LaunchedEffect(key1 = query, key2 = recipeListPage) {
-            searchRecipesUsecase.get().invoke(SearchRecipesUsecase.Params(query = query, page = recipeListPage))
+        Timber.d("shouldRefresh = ${forceRefresher?.shouldRefresh()}")
+        LaunchedEffect(key1 = query, key2 = recipeListPage, key3 = forceRefresher?.shouldRefresh()) {
+            Timber.d("shouldRefresh =invoke")
+            searchRecipesUsecase.get().invoke(SearchRecipesUsecase.Params(query = query, page = recipeListPage, refresher = forceRefresher))
         }
         LaunchedEffect(recipesResult) {
             recipesResult?.let { newRecipes ->
@@ -89,8 +92,11 @@ class SearchViewPresenter @AssistedInject constructor(
                     .description(errorFormatter.get().format(recipes?.exceptionOrNull()))
                     .positive(
                         PositiveAction(
-                            positiveBtnTxt = R.string.ok,
-                            onPositiveAction = { errorDialogInfo = null },
+                            positiveBtnTxt = R.string.try_again,
+                            onPositiveAction = {
+                                forceRefresher = ForceFresh.refresh()
+                                errorDialogInfo = null
+                            },
                         ),
                     )
                     .onDismiss { errorDialogInfo = null }
@@ -161,9 +167,9 @@ class SearchViewPresenter @AssistedInject constructor(
                     is OnChangeRecipeScrollPosition -> handleRecipeListPositionChanged(event.index)
                     is OnRecipeLongClick -> {
                         Timber.d("OnRecipeLongClick ${event.title}")
-                        stableScope.launch { uiMessageManager.emitMessage(UiMessage.createToast(event.title)) }
+                        stableScope.launch { uiMessageManager.emitMessage(UiMessage.createSnackbar(event.title)) }
                     }
-                    is ClearMessage -> stableScope.launch { uiMessageManager.clearMessage() }
+                    ClearMessage -> stableScope.launch { uiMessageManager.clearMessage() }
                     SearchUiEvent.RestoreStateEvent -> TODO()
                 }
             },

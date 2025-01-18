@@ -62,11 +62,11 @@ internal fun DefaultSnackbar(
  fun SnackbarEffect(
     snackbarHostState: SnackbarHostState,
     message: UiMessage?,
-    onClearMessage: (messageId: Long) -> Unit
+    onClearMessage: () -> Unit
 ) {
     val actionOk = stringResource(id = R.string.ok)
     var showMessage: UiMessage? by remember { mutableStateOf(null) }
-    LaunchedEffect(showMessage?.id) {
+    LaunchedEffect(showMessage) {
         when (showMessage?.message) {
             is Message.Toast -> {
                 snackbarHostState.currentSnackbarData?.dismiss()
@@ -81,7 +81,7 @@ internal fun DefaultSnackbar(
     message?.let {
         LaunchedEffect(message) {
             showMessage = it
-            onClearMessage(it.id)
+            onClearMessage()
         }
     }
 }

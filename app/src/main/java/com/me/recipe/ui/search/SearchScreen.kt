@@ -61,7 +61,7 @@ internal fun SearchScreen(
     SnackbarEffect(
         snackbarHostState = snackbarHostState,
         message = state.message,
-        onClearMessage = { state.eventSink.invoke(SearchUiEvent.ClearMessage(it)) }
+        onClearMessage = { state.eventSink.invoke(SearchUiEvent.ClearMessage) }
     )
     Scaffold(
         snackbarHost = {

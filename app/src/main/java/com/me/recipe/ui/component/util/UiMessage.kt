@@ -1,6 +1,5 @@
 package com.me.recipe.ui.component.util
 
-import java.util.UUID
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.sync.Mutex
@@ -15,41 +14,32 @@ sealed interface Message {
 data class UiMessage(
     val message: Message,
     val throwable: Throwable? = null,
-    val id: Long = UUID.randomUUID().mostSignificantBits,
 ) {
     companion object {
-        fun createDialog(
+        fun createToast(
             t: Throwable,
-            id: Long = UUID.randomUUID().mostSignificantBits,
         ): UiMessage = UiMessage(
             message = Message.Dialog(t.message ?: "Error occurred: $t"),
             throwable = t,
-            id = id,
-        )
-
-        fun createDialog(
-            message: String,
-            id: Long = UUID.randomUUID().mostSignificantBits,
-        ): UiMessage = UiMessage(
-            message = Message.Dialog(message),
-            id = id,
         )
 
         fun createToast(
+            message: String,
+        ): UiMessage = UiMessage(
+            message = Message.Dialog(message),
+        )
+
+        fun createSnackbar(
             t: Throwable,
-            id: Long = UUID.randomUUID().mostSignificantBits,
         ): UiMessage = UiMessage(
             message = Message.Toast(t.message ?: "Error occurred: $t"),
             throwable = t,
-            id = id,
         )
 
-        fun createToast(
+        fun createSnackbar(
             message: String,
-            id: Long = UUID.randomUUID().mostSignificantBits,
         ): UiMessage = UiMessage(
             message = Message.Toast(message),
-            id = id,
         )
     }
 }

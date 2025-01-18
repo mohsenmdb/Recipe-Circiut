@@ -18,6 +18,7 @@
     <string name="recipe_date_and_publisher">Updated %1$s by %2$s</string>
     <string name="something_went_wrong">something went wrong</string>
     <string name="ok">OK</string>
+    <string name="try_again">Try again</string>
     <string name="error">Error</string>
     <string name="loading">Loading…</string>
     <string name="see_all">See all</string>
