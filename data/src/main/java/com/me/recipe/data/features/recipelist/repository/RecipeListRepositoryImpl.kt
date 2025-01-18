@@ -30,18 +30,14 @@ class RecipeListRepositoryImpl @Inject constructor(
     private val dtoMapper: RecipeDtoMapper,
     @IoDispatcher private var ioDispatcher: CoroutineDispatcher,
 ) : RecipeListRepository {
-    override suspend fun search(
+    override fun search(
         page: Int,
         query: String,
         size: Int,
-    ): Flow<DataState<ImmutableList<Recipe>>> = flow {
-        try {
-            emit(DataState.loading())
-            val recipes = getRecipesFromNetwork(page = page, query = query, size = size)
-            recipeDao.insertRecipes(entityMapper.toEntityList(recipes))
-        } catch (e: Exception) {
-            emit(DataState.error(e))
-        }
+    ): Flow<ImmutableList<Recipe>> = flow {
+
+        val recipes = getRecipesFromNetwork(page = page, query = query, size = size)
+        recipeDao.insertRecipes(entityMapper.toEntityList(recipes))
 
         // query the cache
         val cacheResult = if (query.isBlank()) {
@@ -58,8 +54,8 @@ class RecipeListRepositoryImpl @Inject constructor(
         }
 
         val list = entityMapper.toDomainList(cacheResult).toPersistentList()
-        emit(DataState.success(list))
-    }
+        emit(list)
+    }.flowOn(ioDispatcher)
 
 
 //    val list = buildList {
@@ -157,35 +153,29 @@ class RecipeListRepositoryImpl @Inject constructor(
         emit(list)
     }.flowOn(ioDispatcher)
 
-    override suspend fun restore(page: Int, query: String): Flow<DataState<ImmutableList<Recipe>>> =
+    override fun restore(page: Int, query: String): Flow<ImmutableList<Recipe>> =
         flow {
-            try {
-                emit(DataState.loading())
+            // just to show pagination, api is fast
+            delay(1000)
 
-                // just to show pagination, api is fast
-                delay(1000)
-
-                // query the cache
-                val cacheResult = if (query.isBlank()) {
-                    recipeDao.restoreAllRecipes(
-                        pageSize = RECIPE_PAGINATION_PAGE_SIZE,
-                        page = page,
-                    )
-                } else {
-                    recipeDao.restoreRecipes(
-                        query = query,
-                        pageSize = RECIPE_PAGINATION_PAGE_SIZE,
-                        page = page,
-                    )
-                }
-
-                // emit List<Recipe> from cache
-                val list = entityMapper.toDomainList(cacheResult).toPersistentList()
-                emit(DataState.success(list))
-            } catch (e: Exception) {
-                emit(DataState.error(e))
+            // query the cache
+            val cacheResult = if (query.isBlank()) {
+                recipeDao.restoreAllRecipes(
+                    pageSize = RECIPE_PAGINATION_PAGE_SIZE,
+                    page = page,
+                )
+            } else {
+                recipeDao.restoreRecipes(
+                    query = query,
+                    pageSize = RECIPE_PAGINATION_PAGE_SIZE,
+                    page = page,
+                )
             }
-        }
+
+            // emit List<Recipe> from cache
+            val list = entityMapper.toDomainList(cacheResult).toPersistentList()
+            emit(list)
+        }.flowOn(ioDispatcher)
 
     override suspend fun getTopRecipe(): Recipe {
         return try {
