@@ -11,6 +11,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import com.me.recipe.R
 import com.me.recipe.domain.features.recipe.model.Recipe
+import com.me.recipe.domain.features.recipelist.usecases.RestoreRecipesUsecase
 import com.me.recipe.domain.features.recipelist.usecases.SearchRecipesUsecase
 import com.me.recipe.shared.utils.FoodCategory
 import com.me.recipe.shared.utils.RECIPE_PAGINATION_FIRST_PAGE
@@ -51,6 +52,7 @@ class SearchViewPresenter @AssistedInject constructor(
     @Assisted private val screen: SearchScreen,
     @Assisted internal val navigator: Navigator,
     private val searchRecipesUsecase: Lazy<SearchRecipesUsecase>,
+    private val restoreRecipesUsecase: Lazy<RestoreRecipesUsecase>,
     private val errorFormatter: Lazy<ErrorFormatter>,
 ) : Presenter<SearchUiState> {
 
@@ -69,19 +71,30 @@ class SearchViewPresenter @AssistedInject constructor(
         var query by rememberSaveable { mutableStateOf("") }
         var categoriesScrollPosition by rememberSaveable { mutableStateOf(0 to 0) }
         val recipes by searchRecipesUsecase.get().flow.collectAsState(initial = null)
+        val restoredRecipes by restoreRecipesUsecase.get().flow.collectAsState(initial = null)
         val recipesResult = recipes?.getOrNull()
+        val restoredRecipesResult = restoredRecipes?.getOrNull()
         var appendedRecipes by remember { mutableStateOf<ImmutableList<Recipe>>(persistentListOf()) }
         var appendingLoading by rememberSaveable { mutableStateOf(false) }
         LaunchedEffect(key1 = query, key2 = recipeListPage, key3 = forceRefresher) {
+            if (recipeListPage > 1 && appendedRecipes.isEmpty()) {
+                restoreRecipesUsecase.get().invoke(RestoreRecipesUsecase.Params(query = query, page = recipeListPage))
+                return@LaunchedEffect
+            }
+
             searchRecipesUsecase.get().invoke(SearchRecipesUsecase.Params(query = query, page = recipeListPage, refresher = forceRefresher))
         }
-        LaunchedEffect(recipesResult) {
+        LaunchedEffect(recipesResult, restoredRecipesResult) {
+            if (!restoredRecipesResult.isNullOrEmpty() && recipesResult.isNullOrEmpty()){
+                appendedRecipes = restoredRecipesResult
+                return@LaunchedEffect
+            }
             recipesResult?.let { newRecipes ->
                 appendedRecipes = (appendedRecipes + newRecipes).toPersistentList()
             }
             appendingLoading = false
         }
-        var loading by rememberSaveable(appendedRecipes, recipes?.exceptionOrNull()) { mutableStateOf(appendedRecipes.isEmpty() && recipes?.exceptionOrNull() == null) }
+        var loading by remember(appendedRecipes, recipes?.exceptionOrNull()) { mutableStateOf(appendedRecipes.isEmpty() && recipes?.exceptionOrNull() == null) }
 
         LaunchedEffect(recipes?.exceptionOrNull()) {
             if (recipes?.exceptionOrNull() != null) {
@@ -169,7 +182,6 @@ class SearchViewPresenter @AssistedInject constructor(
                         stableScope.launch { uiMessageManager.emitMessage(UiMessage.createSnackbar(event.title)) }
                     }
                     ClearMessage -> stableScope.launch { uiMessageManager.clearMessage() }
-                    SearchUiEvent.RestoreStateEvent -> TODO()
                 }
             },
         )
