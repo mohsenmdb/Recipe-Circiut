@@ -48,7 +48,6 @@ import kotlinx.coroutines.launch
 import timber.log.Timber
 
 @CircuitInject(SearchScreen::class, SingletonComponent::class)
-@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter", "RememberReturnType")
 @Composable
 internal fun SearchScreen(
     state: SearchUiState,
@@ -88,8 +87,8 @@ internal fun SearchScreen(
     ) { padding ->
         SearchContent(
             recipes = state.recipes,
-            showShimmer = state.showShimmer,
-            showLoadingProgressBar = state.showLoadingProgressBar,
+            showShimmer = state.loading,
+            showLoadingProgressBar = state.appendingLoading,
             onRecipeClicked = { state.eventSink.invoke(SearchUiEvent.OnRecipeClick(it)) },
             onRecipeLongClicked = { state.eventSink.invoke(SearchUiEvent.OnRecipeLongClick(it)) },
             onChangeRecipeScrollPosition = { state.eventSink.invoke(SearchUiEvent.OnChangeRecipeScrollPosition(it)) },

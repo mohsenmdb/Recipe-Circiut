@@ -31,6 +31,7 @@ import com.me.recipe.ui.search.SearchUiEvent.OnRecipeClick
 import com.me.recipe.ui.search.SearchUiEvent.OnRecipeLongClick
 import com.me.recipe.ui.search.SearchUiEvent.OnSelectedCategoryChanged
 import com.me.recipe.ui.search.SearchUiEvent.SearchClearEvent
+import com.me.recipe.ui.search.SearchUiEvent.SetQueryForRecipeListPage
 import com.me.recipe.ui.search.SearchViewModel.Companion.INITIAL_RECIPE_LIST_POSITION
 import com.me.recipe.util.errorformater.ErrorFormatter
 import com.slack.circuit.codegen.annotations.CircuitInject
@@ -170,6 +171,9 @@ class SearchViewPresenter @AssistedInject constructor(
                     is OnQueryChanged -> {
                         searchText = event.query
                     }
+                    is SetQueryForRecipeListPage -> {
+                        query = event.query
+                    }
                     SearchClearEvent -> {
                         searchText = ""
                         query = ""
@@ -186,10 +190,10 @@ class SearchViewPresenter @AssistedInject constructor(
             },
         )
     }
+    @CircuitInject(SearchScreen::class, SingletonComponent::class)
+    @AssistedFactory
+    interface Factory {
+        fun create(screen: SearchScreen, navigator: Navigator): SearchViewPresenter
+    }
 }
 
-@CircuitInject(SearchScreen::class, SingletonComponent::class)
-@AssistedFactory
-interface Factory {
-    fun create(screen: SearchScreen, navigator: Navigator): SearchViewPresenter
-}

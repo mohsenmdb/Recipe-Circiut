@@ -1,4 +1,4 @@
-package com.me.recipe.ui.search
+package com.me.recipe.ui.recipelist
 
 import androidx.compose.runtime.Stable
 import com.me.recipe.domain.features.recipe.model.Recipe
@@ -13,14 +13,15 @@ import kotlinx.collections.immutable.persistentListOf
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
-data class SearchScreen(
-    val title: String? = null,
+data class RecipeListScreen(
+    val query: String,
 ) : Screen
 
-typealias SearchEventSink = (SearchUiEvent) -> Unit
+
+typealias RecipeListEventSink = (RecipeListUiEvent) -> Unit
 
 @Stable
-data class SearchUiState(
+data class RecipeListUiState(
     val recipes: ImmutableList<Recipe>,
     val errors: GenericDialogInfo? = null,
     val message: UiMessage? = null,
@@ -29,10 +30,10 @@ data class SearchUiState(
     val loading: Boolean = false,
     val appendingLoading: Boolean = false,
     var categoryScrollPosition: Pair<Int, Int> = 0 to 0,
-    val eventSink: SearchEventSink,
+    val eventSink: RecipeListEventSink,
 ) : CircuitUiState {
     companion object {
-        fun testData() = SearchUiState(
+        fun testData() = RecipeListUiState(
             recipes = persistentListOf(Recipe.testData()),
             query = FoodCategory.CHICKEN.name,
             selectedCategory = FoodCategory.CHICKEN,
@@ -41,16 +42,10 @@ data class SearchUiState(
     }
 }
 
-sealed interface SearchUiEvent : CircuitUiEvent {
-
-    data object NewSearchEvent : SearchUiEvent
-    data object SearchClearEvent : SearchUiEvent
-    data class OnQueryChanged(val query: String) : SearchUiEvent
-    data class OnSelectedCategoryChanged(val category: String, val position: Int = 0, val offset: Int = 0) : SearchUiEvent
-    data class OnRecipeLongClick(val title: String) : SearchUiEvent
-    data class OnRecipeClick(val recipe: Recipe) : SearchUiEvent
-    data class OnChangeRecipeScrollPosition(val index: Int) : SearchUiEvent
-    data object ClearMessage : SearchUiEvent
-
-    data class SetQueryForRecipeListPage(val query: String) : SearchUiEvent
+sealed interface RecipeListUiEvent : CircuitUiEvent {
+    data object OnNavigateBackClicked : RecipeListUiEvent
+    data class OnChangeRecipeScrollPosition(val index: Int) : RecipeListUiEvent
+    data class OnRecipeLongClick(val title: String) : RecipeListUiEvent
+    data class OnRecipeClick(val recipe: Recipe) : RecipeListUiEvent
+    data object ClearMessage : RecipeListUiEvent
 }

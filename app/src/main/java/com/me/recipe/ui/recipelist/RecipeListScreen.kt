@@ -1,93 +1,61 @@
 package com.me.recipe.ui.recipelist
 
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.hilt.navigation.compose.hiltViewModel
-import com.me.recipe.R
-import com.me.recipe.ui.component.util.NavigateToRecipePage
-import com.me.recipe.ui.search.SearchContract
-import com.me.recipe.ui.search.SearchViewModel
+import com.me.recipe.ui.component.util.DefaultSnackbar
+import com.me.recipe.ui.component.util.GenericDialog
+import com.me.recipe.ui.component.util.SnackbarEffect
+import com.me.recipe.ui.recipelist.components.RecipeListAppBar
+import com.me.recipe.ui.search.SearchScreen
+import com.me.recipe.ui.search.component.SearchContent
 import com.me.recipe.ui.theme.RecipeTheme
-import com.me.recipe.util.compose.OnClick
-import com.me.recipe.util.compose.collectInLaunchedEffect
-import com.me.recipe.util.compose.use
-import kotlinx.coroutines.InternalCoroutinesApi
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flowOf
-import kotlinx.coroutines.launch
+import com.slack.circuit.codegen.annotations.CircuitInject
+import dagger.hilt.components.SingletonComponent
 
+
+@CircuitInject(RecipeListScreen::class, SingletonComponent::class)
 @Composable
 internal fun RecipeListScreen(
-    navigateToRecipePage: NavigateToRecipePage,
-    onBackPress: OnClick,
-    modifier: Modifier = Modifier,
-    viewModel: SearchViewModel = hiltViewModel(),
+    state: RecipeListUiState,
+    modifier: Modifier = Modifier
 ) {
-    val (state, effect, event) = use(viewModel = viewModel)
-    RecipeListScreen(
-        effect = effect,
-        state = state,
-        event = event,
-        modifier = modifier,
-        navigateToRecipePage = navigateToRecipePage,
-        onBackPress = onBackPress,
-    )
-}
 
-@Composable
-@OptIn(InternalCoroutinesApi::class)
-private fun RecipeListScreen(
-    effect: Flow<SearchContract.Effect>,
-    state: SearchContract.State,
-    event: (SearchContract.Event) -> Unit,
-    navigateToRecipePage: NavigateToRecipePage,
-    onBackPress: OnClick,
-    modifier: Modifier = Modifier,
-) {
     val snackbarHostState = remember { SnackbarHostState() }
-    val coroutineScope = rememberCoroutineScope()
-    val actionOk = stringResource(id = R.string.ok)
-
-    effect.collectInLaunchedEffect { effect ->
-        when (effect) {
-            is SearchContract.Effect.ShowSnackbar -> {
-                coroutineScope.launch {
-                    snackbarHostState.showSnackbar(effect.message, actionOk)
-                }
+    SnackbarEffect(
+        snackbarHostState = snackbarHostState,
+        message = state.message,
+        onClearMessage = { state.eventSink.invoke(RecipeListUiEvent.ClearMessage) }
+    )
+    Scaffold(
+        modifier = modifier,
+        snackbarHost = {
+            DefaultSnackbar(snackbarHostState = snackbarHostState) {
+                snackbarHostState.currentSnackbarData?.dismiss()
             }
-            is SearchContract.Effect.NavigateToRecipePage -> {
-                navigateToRecipePage(effect.recipe)
-            }
-        }
+        },
+        topBar = {
+            RecipeListAppBar(
+                category = state.query,
+                onBackPress = { state.eventSink.invoke(RecipeListUiEvent.OnNavigateBackClicked) },
+            )
+        },
+    ) { padding ->
+        SearchContent(
+            recipes = state.recipes,
+            showShimmer = state.loading,
+            showLoadingProgressBar = state.appendingLoading,
+            onRecipeClicked = { state.eventSink.invoke(RecipeListUiEvent.OnRecipeClick(it)) },
+            onRecipeLongClicked = { state.eventSink.invoke(RecipeListUiEvent.OnRecipeLongClick(it)) },
+            onChangeRecipeScrollPosition = { state.eventSink.invoke(RecipeListUiEvent.OnChangeRecipeScrollPosition(it)) },
+            modifier = Modifier.padding(padding)
+        )
+        state.errors?.let { GenericDialog(it) }
     }
-
-    // todo fix me
-//    Scaffold(
-//        snackbarHost = {
-//            DefaultSnackbar(snackbarHostState = snackbarHostState) {
-//                snackbarHostState.currentSnackbarData?.dismiss()
-//            }
-//        },
-//        topBar = {
-//            RecipeListAppBar(
-//                category = state.selectedCategory?.value.orEmpty(),
-//                onBackPress = onBackPress,
-//            )
-//        },
-//        modifier = modifier,
-//    ) { padding ->
-//
-//        SearchContent(
-//            padding = padding,
-//            state = state,
-//            event = event,
-//        )
-//    }
 }
 
 @Preview
@@ -95,11 +63,7 @@ private fun RecipeListScreen(
 private fun RecipeListScreenPreview() {
     RecipeTheme(true) {
         RecipeListScreen(
-            event = {},
-            effect = flowOf(),
-            state = SearchContract.State.testData(),
-            navigateToRecipePage = { _ -> },
-            onBackPress = { },
+            state = RecipeListUiState.testData()
         )
     }
 }

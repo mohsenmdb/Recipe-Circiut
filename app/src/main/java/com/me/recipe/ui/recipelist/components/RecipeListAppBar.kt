@@ -8,6 +8,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material3.CenterAlignedTopAppBar
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -20,20 +22,23 @@ import androidx.compose.ui.unit.dp
 import com.me.recipe.ui.theme.RecipeTheme
 import com.me.recipe.util.compose.OnClick
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 internal fun RecipeListAppBar(
     category: String,
     onBackPress: OnClick,
     modifier: Modifier = Modifier,
 ) {
-    Surface(
+    CenterAlignedTopAppBar(
         modifier = modifier.fillMaxWidth(),
-        color = MaterialTheme.colorScheme.primaryContainer,
-    ) {
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier.padding(16.dp),
-        ) {
+        title = {
+            Text(
+                text = category,
+                style = MaterialTheme.typography.titleMedium,
+                color = MaterialTheme.colorScheme.onBackground,
+            )
+        },
+        navigationIcon = {
             Icon(
                 imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                 contentDescription = "Back",
@@ -42,14 +47,8 @@ internal fun RecipeListAppBar(
                     onBackPress.invoke()
                 },
             )
-            Spacer(modifier = Modifier.width(8.dp))
-            Text(
-                text = category,
-                style = MaterialTheme.typography.titleMedium,
-                color = MaterialTheme.colorScheme.onBackground,
-            )
         }
-    }
+    )
 }
 
 @Preview

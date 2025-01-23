@@ -11,6 +11,7 @@ import com.me.recipe.domain.features.recipelist.usecases.SliderRecipesUsecase
 import com.slack.circuit.retained.collectAsRetainedState
 import com.me.recipe.shared.utils.getAllFoodCategories
 import com.me.recipe.ui.recipe.RecipeUiScreen
+import com.me.recipe.ui.recipelist.RecipeListScreen
 import com.slack.circuit.codegen.annotations.CircuitInject
 import com.slack.circuit.runtime.Navigator
 import com.slack.circuit.runtime.internal.rememberStableCoroutineScope
@@ -58,7 +59,9 @@ class MainViewPresenter @AssistedInject constructor(
                         )
                     }
 
-                    is MainUiEvent.OnCategoryClicked -> {}
+                    is MainUiEvent.OnCategoryClicked -> {
+                        navigator.goTo(RecipeListScreen(event.category.value))
+                    }
                     is MainUiEvent.OnRecipeLongClick -> {}
                 }
             },

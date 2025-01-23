@@ -55,15 +55,15 @@ internal fun RecipeNavHost(
 //                navigateToHomePage = { navController.navigateSingleTopTo(HomeDestination.route) },
             )
         }
-        composable(
-            route = RecipeListDestination.routeWithArgs,
-            arguments = RecipeListDestination.arguments,
-        ) {
-            RecipeListScreen(
-                navigateToRecipePage = { navigateToRecipePage(it) },
-                onBackPress = { navController.popBackStack() },
-            )
-        }
+//        composable(
+//            route = RecipeListDestination.routeWithArgs,
+//            arguments = RecipeListDestination.arguments,
+//        ) {
+//            RecipeListScreen(
+//                navigateToRecipePage = { navigateToRecipePage(it) },
+//                onBackPress = { navController.popBackStack() },
+//            )
+//        }
         composable(
             route = RecipeDestination.routeWithArgs,
             arguments = RecipeDestination.arguments,
