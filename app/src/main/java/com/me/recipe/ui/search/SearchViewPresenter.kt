@@ -13,11 +13,11 @@ import com.me.recipe.R
 import com.me.recipe.domain.features.recipe.model.Recipe
 import com.me.recipe.domain.features.recipelist.usecases.RestoreRecipesUsecase
 import com.me.recipe.domain.features.recipelist.usecases.SearchRecipesUsecase
+import com.me.recipe.domain.util.ForceFresh
 import com.me.recipe.shared.utils.FoodCategory
 import com.me.recipe.shared.utils.RECIPE_PAGINATION_FIRST_PAGE
 import com.me.recipe.shared.utils.RECIPE_PAGINATION_PAGE_SIZE
 import com.me.recipe.shared.utils.getFoodCategory
-import com.me.recipe.domain.util.ForceFresh
 import com.me.recipe.ui.component.util.GenericDialogInfo
 import com.me.recipe.ui.component.util.PositiveAction
 import com.me.recipe.ui.component.util.UiMessage
@@ -31,8 +31,6 @@ import com.me.recipe.ui.search.SearchUiEvent.OnRecipeClick
 import com.me.recipe.ui.search.SearchUiEvent.OnRecipeLongClick
 import com.me.recipe.ui.search.SearchUiEvent.OnSelectedCategoryChanged
 import com.me.recipe.ui.search.SearchUiEvent.SearchClearEvent
-import com.me.recipe.ui.search.SearchUiEvent.SetQueryForRecipeListPage
-import com.me.recipe.ui.search.SearchViewModel.Companion.INITIAL_RECIPE_LIST_POSITION
 import com.me.recipe.util.errorformater.ErrorFormatter
 import com.slack.circuit.codegen.annotations.CircuitInject
 import com.slack.circuit.runtime.Navigator
@@ -69,7 +67,7 @@ class SearchViewPresenter @AssistedInject constructor(
         var recipeScrollPosition by rememberSaveable { mutableIntStateOf(INITIAL_RECIPE_LIST_POSITION) }
         var selectedCategory by rememberSaveable { mutableStateOf<FoodCategory?>(null) }
         var searchText by rememberSaveable { mutableStateOf("") }
-        var query by rememberSaveable { mutableStateOf("") }
+        var query by rememberSaveable { mutableStateOf(screen.query) }
         var categoriesScrollPosition by rememberSaveable { mutableStateOf(0 to 0) }
         val recipes by searchRecipesUsecase.get().flow.collectAsState(initial = null)
         val restoredRecipes by restoreRecipesUsecase.get().flow.collectAsState(initial = null)
@@ -86,7 +84,7 @@ class SearchViewPresenter @AssistedInject constructor(
             searchRecipesUsecase.get().invoke(SearchRecipesUsecase.Params(query = query, page = recipeListPage, refresher = forceRefresher))
         }
         LaunchedEffect(recipesResult, restoredRecipesResult) {
-            if (!restoredRecipesResult.isNullOrEmpty() && recipesResult.isNullOrEmpty()){
+            if (!restoredRecipesResult.isNullOrEmpty() && recipesResult.isNullOrEmpty()) {
                 appendedRecipes = restoredRecipesResult
                 return@LaunchedEffect
             }
@@ -138,8 +136,8 @@ class SearchViewPresenter @AssistedInject constructor(
                     itemImage = recipe.featuredImage,
                     itemTitle = recipe.title,
                     itemId = recipe.id,
-                    itemUid = recipe.uid
-                )
+                    itemUid = recipe.uid,
+                ),
             )
         }
         fun checkReachEndOfTheList(position: Int): Boolean {
@@ -171,9 +169,6 @@ class SearchViewPresenter @AssistedInject constructor(
                     is OnQueryChanged -> {
                         searchText = event.query
                     }
-                    is SetQueryForRecipeListPage -> {
-                        query = event.query
-                    }
                     SearchClearEvent -> {
                         searchText = ""
                         query = ""
@@ -190,10 +185,13 @@ class SearchViewPresenter @AssistedInject constructor(
             },
         )
     }
+
     @CircuitInject(SearchScreen::class, SingletonComponent::class)
     @AssistedFactory
     interface Factory {
         fun create(screen: SearchScreen, navigator: Navigator): SearchViewPresenter
     }
+    companion object {
+        const val INITIAL_RECIPE_LIST_POSITION = 0
+    }
 }
-

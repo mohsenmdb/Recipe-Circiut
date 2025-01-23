@@ -11,25 +11,22 @@ import com.me.recipe.ui.component.util.DefaultSnackbar
 import com.me.recipe.ui.component.util.GenericDialog
 import com.me.recipe.ui.component.util.SnackbarEffect
 import com.me.recipe.ui.recipelist.components.RecipeListAppBar
-import com.me.recipe.ui.search.SearchScreen
 import com.me.recipe.ui.search.component.SearchContent
 import com.me.recipe.ui.theme.RecipeTheme
 import com.slack.circuit.codegen.annotations.CircuitInject
 import dagger.hilt.components.SingletonComponent
 
-
 @CircuitInject(RecipeListScreen::class, SingletonComponent::class)
 @Composable
 internal fun RecipeListScreen(
     state: RecipeListUiState,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
-
     val snackbarHostState = remember { SnackbarHostState() }
     SnackbarEffect(
         snackbarHostState = snackbarHostState,
         message = state.message,
-        onClearMessage = { state.eventSink.invoke(RecipeListUiEvent.ClearMessage) }
+        onClearMessage = { state.eventSink.invoke(RecipeListUiEvent.ClearMessage) },
     )
     Scaffold(
         modifier = modifier,
@@ -52,7 +49,7 @@ internal fun RecipeListScreen(
             onRecipeClicked = { state.eventSink.invoke(RecipeListUiEvent.OnRecipeClick(it)) },
             onRecipeLongClicked = { state.eventSink.invoke(RecipeListUiEvent.OnRecipeLongClick(it)) },
             onChangeRecipeScrollPosition = { state.eventSink.invoke(RecipeListUiEvent.OnChangeRecipeScrollPosition(it)) },
-            modifier = Modifier.padding(padding)
+            modifier = Modifier.padding(padding),
         )
         state.errors?.let { GenericDialog(it) }
     }
@@ -63,7 +60,7 @@ internal fun RecipeListScreen(
 private fun RecipeListScreenPreview() {
     RecipeTheme(true) {
         RecipeListScreen(
-            state = RecipeListUiState.testData()
+            state = RecipeListUiState.testData(),
         )
     }
 }

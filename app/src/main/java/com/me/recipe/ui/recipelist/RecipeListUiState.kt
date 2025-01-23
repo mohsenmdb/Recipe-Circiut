@@ -17,7 +17,6 @@ data class RecipeListScreen(
     val query: String,
 ) : Screen
 
-
 typealias RecipeListEventSink = (RecipeListUiEvent) -> Unit
 
 @Stable
@@ -37,7 +36,7 @@ data class RecipeListUiState(
             recipes = persistentListOf(Recipe.testData()),
             query = FoodCategory.CHICKEN.name,
             selectedCategory = FoodCategory.CHICKEN,
-            eventSink = {}
+            eventSink = {},
         )
     }
 }

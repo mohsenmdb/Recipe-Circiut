@@ -9,13 +9,13 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
 import androidx.compose.runtime.setValue
-import androidx.compose.runtime.getValue
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.unit.dp
 import com.me.recipe.shared.datastore.SettingsDataStore
 import com.me.recipe.shared.datastore.UserDataStore
 import com.me.recipe.ui.home.MainUiScreen
@@ -51,7 +51,7 @@ class MainActivityCircuit : AppCompatActivity() {
         setUserLoginInfo(userDataStore)
         getPushNotificationPermission()
         setContent {
-            val backstack = rememberSaveableBackStack(root = MainUiScreen(title = "title"))
+            val backstack = rememberSaveableBackStack(root = MainUiScreen())
             val navigator = rememberCircuitNavigator(backstack)
             var selectedIndex by remember { mutableIntStateOf(0) }
             CircuitCompositionLocals(circuit = circuit) {
@@ -62,16 +62,16 @@ class MainActivityCircuit : AppCompatActivity() {
                             NavBottomBar(
                                 selectedIndex = selectedIndex,
                                 onIndexChanged = { selectedIndex = it },
-                                navigator = navigator
+                                navigator = navigator,
                             )
                         },
                         content = { paddingValues ->
                             Content(
                                 paddingValues = PaddingValues(bottom = 0.dp),
                                 navigator = navigator,
-                                backstack = backstack
+                                backstack = backstack,
                             )
-                        }
+                        },
                     )
                 }
             }
@@ -83,7 +83,7 @@ class MainActivityCircuit : AppCompatActivity() {
 private fun Content(
     paddingValues: PaddingValues,
     navigator: Navigator,
-    backstack: SaveableBackStack
+    backstack: SaveableBackStack,
 ) {
     val gestureNavigationDecoration = remember(navigator) {
         GestureNavigationDecoration(onBackInvoked = navigator::pop)
@@ -91,13 +91,13 @@ private fun Content(
     ContentWithOverlays(
         modifier = Modifier
             .fillMaxSize()
-            .padding(paddingValues)
+            .padding(paddingValues),
     ) {
         NavigableCircuitContent(
             modifier = Modifier.background(Color.Transparent),
             navigator = navigator,
             backStack = backstack,
-            decoration = gestureNavigationDecoration
+            decoration = gestureNavigationDecoration,
         )
     }
 }

@@ -22,7 +22,7 @@ internal fun AppendingLoadingView(
 ) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = modifier.fillMaxWidth()
+        modifier = modifier.fillMaxWidth(),
     ) {
         CircularProgressIndicator(
             modifier = Modifier

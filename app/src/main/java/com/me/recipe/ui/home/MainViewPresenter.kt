@@ -8,11 +8,11 @@ import com.me.recipe.domain.features.recipe.model.CategoryRecipe
 import com.me.recipe.domain.features.recipe.model.Recipe
 import com.me.recipe.domain.features.recipelist.usecases.CategoriesRecipesUsecase
 import com.me.recipe.domain.features.recipelist.usecases.SliderRecipesUsecase
-import com.slack.circuit.retained.collectAsRetainedState
 import com.me.recipe.shared.utils.getAllFoodCategories
 import com.me.recipe.ui.recipe.RecipeUiScreen
 import com.me.recipe.ui.recipelist.RecipeListScreen
 import com.slack.circuit.codegen.annotations.CircuitInject
+import com.slack.circuit.retained.collectAsRetainedState
 import com.slack.circuit.runtime.Navigator
 import com.slack.circuit.runtime.internal.rememberStableCoroutineScope
 import com.slack.circuit.runtime.presenter.Presenter
@@ -39,9 +39,9 @@ class MainViewPresenter @AssistedInject constructor(
             sliderRecipesUsecase.get().invoke(Unit)
         }
         val categoryRows: Result<ImmutableList<CategoryRecipe>>? by
-        getRecipesUsecase.get().flow.collectAsState(initial = null)
+            getRecipesUsecase.get().flow.collectAsState(initial = null)
         val sliders: Result<ImmutableList<Recipe>>? by
-        sliderRecipesUsecase.get().flow.collectAsRetainedState(initial = null)
+            sliderRecipesUsecase.get().flow.collectAsRetainedState(initial = null)
 
         return MainUiState(
             sliderRecipes = sliders?.getOrNull(),
@@ -54,8 +54,8 @@ class MainViewPresenter @AssistedInject constructor(
                                 itemImage = event.recipe.featuredImage,
                                 itemTitle = event.recipe.title,
                                 itemId = event.recipe.id,
-                                itemUid = event.recipe.uid
-                            )
+                                itemUid = event.recipe.uid,
+                            ),
                         )
                     }
 

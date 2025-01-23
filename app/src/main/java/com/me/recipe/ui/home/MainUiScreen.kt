@@ -5,22 +5,15 @@ import com.me.recipe.domain.features.recipe.model.CategoryRecipe
 import com.me.recipe.domain.features.recipe.model.Recipe
 import com.me.recipe.shared.utils.FoodCategory
 import com.me.recipe.ui.component.util.GenericDialogInfo
-import com.me.recipe.ui.home.HomeContract.State
 import com.slack.circuit.runtime.CircuitUiEvent
 import com.slack.circuit.runtime.CircuitUiState
 import com.slack.circuit.runtime.screen.Screen
-import com.slack.circuitx.android.AndroidScreen
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
-data class MainUiScreen(
-    val title: String? = null,
-) : Screen
-
-@Parcelize
-data object HomeScreen1 : AndroidScreen
+data class MainUiScreen(val title: String? = null) : Screen
 
 typealias MainUiSink = (MainUiEvent) -> Unit
 
@@ -37,7 +30,7 @@ data class MainUiState(
     companion object {
         fun testData() = MainUiState(
             sliderRecipes = persistentListOf(Recipe.testData()),
-            eventSink = {}
+            eventSink = {},
         )
     }
 }
@@ -48,7 +41,6 @@ sealed interface MainUiEvent : CircuitUiEvent {
     data class OnCategoryClicked(val category: FoodCategory) : MainUiEvent
     data class OnRecipeLongClick(val title: String) : MainUiEvent
 }
-
 
 val MainUiState.showShimmer: Boolean
     get() = categoriesLoading

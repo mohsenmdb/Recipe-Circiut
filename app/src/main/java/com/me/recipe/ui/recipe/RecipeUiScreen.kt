@@ -1,16 +1,10 @@
 package com.me.recipe.ui.recipe
 
 import androidx.compose.runtime.Stable
-import com.me.recipe.domain.features.recipe.model.CategoryRecipe
 import com.me.recipe.domain.features.recipe.model.Recipe
-import com.me.recipe.ui.component.util.GenericDialogInfo
-import com.me.recipe.ui.home.HomeContract.State
 import com.slack.circuit.runtime.CircuitUiEvent
 import com.slack.circuit.runtime.CircuitUiState
 import com.slack.circuit.runtime.screen.Screen
-import com.slack.circuitx.android.AndroidScreen
-import kotlinx.collections.immutable.ImmutableList
-import kotlinx.collections.immutable.persistentListOf
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
@@ -34,7 +28,7 @@ data class RecipeUiState(
     companion object {
         fun testData() = RecipeUiState(
             recipe = Recipe.testData(),
-            eventSink = {}
+            eventSink = {},
         )
     }
 }

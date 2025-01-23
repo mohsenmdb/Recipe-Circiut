@@ -59,10 +59,10 @@ internal fun DefaultSnackbar(
 }
 
 @Composable
- fun SnackbarEffect(
+fun SnackbarEffect(
     snackbarHostState: SnackbarHostState,
     message: UiMessage?,
-    onClearMessage: () -> Unit
+    onClearMessage: () -> Unit,
 ) {
     val actionOk = stringResource(id = R.string.ok)
     var showMessage: UiMessage? by remember { mutableStateOf(null) }

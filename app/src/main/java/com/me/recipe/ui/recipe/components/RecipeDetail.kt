@@ -2,9 +2,7 @@
 
 package com.me.recipe.ui.recipe.components
 
-import androidx.compose.animation.AnimatedVisibilityScope
 import androidx.compose.animation.ExperimentalSharedTransitionApi
-import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -13,7 +11,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.me.recipe.domain.features.recipe.model.Recipe
-import com.me.recipe.ui.component.util.SharedTransitionLayoutPreview
 import com.me.recipe.ui.recipe.components.image.RecipeImage
 import com.me.recipe.ui.theme.RecipeTheme
 

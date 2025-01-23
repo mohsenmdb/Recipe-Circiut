@@ -1,8 +1,7 @@
 package com.me.recipe.domain.util
 
-
-
-
+import kotlin.time.Duration
+import kotlin.time.Duration.Companion.minutes
 import kotlinx.atomicfu.atomic
 import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.flow.Flow
@@ -13,9 +12,6 @@ import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withTimeout
-import kotlin.time.Duration
-import kotlin.time.Duration.Companion.minutes
-
 
 abstract class Interactor1<in P, R> {
     private val count = atomic(0)

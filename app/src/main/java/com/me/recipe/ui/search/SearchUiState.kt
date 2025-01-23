@@ -13,9 +13,7 @@ import kotlinx.collections.immutable.persistentListOf
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
-data class SearchScreen(
-    val title: String? = null,
-) : Screen
+data class SearchScreen(val query: String = "") : Screen
 
 typealias SearchEventSink = (SearchUiEvent) -> Unit
 
@@ -36,7 +34,7 @@ data class SearchUiState(
             recipes = persistentListOf(Recipe.testData()),
             query = FoodCategory.CHICKEN.name,
             selectedCategory = FoodCategory.CHICKEN,
-            eventSink = {}
+            eventSink = {},
         )
     }
 }
@@ -51,6 +49,4 @@ sealed interface SearchUiEvent : CircuitUiEvent {
     data class OnRecipeClick(val recipe: Recipe) : SearchUiEvent
     data class OnChangeRecipeScrollPosition(val index: Int) : SearchUiEvent
     data object ClearMessage : SearchUiEvent
-
-    data class SetQueryForRecipeListPage(val query: String) : SearchUiEvent
 }

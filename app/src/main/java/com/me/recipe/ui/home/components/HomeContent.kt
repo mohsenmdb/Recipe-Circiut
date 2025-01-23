@@ -2,9 +2,7 @@
 
 package com.me.recipe.ui.home.components
 
-import androidx.compose.animation.AnimatedVisibilityScope
 import androidx.compose.animation.ExperimentalSharedTransitionApi
-import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
@@ -18,8 +16,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.me.recipe.domain.features.recipe.model.Recipe
 import com.me.recipe.shared.utils.FoodCategory
-import com.me.recipe.ui.component.util.SharedTransitionLayoutPreview
-import com.me.recipe.ui.home.HomeContract
 import com.me.recipe.ui.home.MainUiEvent
 import com.me.recipe.ui.home.MainUiState
 import com.me.recipe.ui.theme.RecipeTheme
@@ -39,7 +35,7 @@ internal fun HomeContent(
             .padding(padding)
             .background(MaterialTheme.colorScheme.background),
     ) {
-        if (!state.sliderRecipes.isNullOrEmpty()){
+        if (!state.sliderRecipes.isNullOrEmpty()) {
             item {
                 HomeSlider(
                     recipes = state.sliderRecipes,

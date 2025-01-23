@@ -8,7 +8,6 @@ import com.me.recipe.domain.features.recipe.model.CategoryRecipe
 import com.me.recipe.domain.features.recipe.model.Recipe
 import com.me.recipe.domain.features.recipelist.repository.RecipeListRepository
 import com.me.recipe.network.features.recipe.RecipeApi
-import com.me.recipe.shared.data.DataState
 import com.me.recipe.shared.utils.FoodCategory
 import com.me.recipe.shared.utils.RECIPE_CATEGORY_PAGE_SIZE
 import com.me.recipe.shared.utils.RECIPE_PAGINATION_PAGE_SIZE
@@ -35,7 +34,6 @@ class RecipeListRepositoryImpl @Inject constructor(
         query: String,
         size: Int,
     ): Flow<ImmutableList<Recipe>> = flow {
-
         val recipes = getRecipesFromNetwork(page = page, query = query, size = size)
         recipeDao.insertRecipes(entityMapper.toEntityList(recipes))
 
@@ -56,7 +54,6 @@ class RecipeListRepositoryImpl @Inject constructor(
         val list = entityMapper.toDomainList(cacheResult).toPersistentList()
         emit(list)
     }.flowOn(ioDispatcher)
-
 
 //    val list = buildList {
 //        categories.forEach { category ->
@@ -139,8 +136,6 @@ class RecipeListRepositoryImpl @Inject constructor(
 //            }
         }.flowOn(ioDispatcher)
 
-
-
     override fun slider(): Flow<ImmutableList<Recipe>> = flow {
         val recipes = getRecipesFromNetwork(page = 1, size = RECIPE_SLIDER_PAGE_SIZE, query = "")
         recipeDao.insertRecipes(entityMapper.toEntityList(recipes))
@@ -187,7 +182,7 @@ class RecipeListRepositoryImpl @Inject constructor(
 
     private suspend fun getRecipesFromNetwork(page: Int, query: String, size: Int): List<Recipe> {
         val recipes = recipeApi.search(page = page, query = query, size = size).results
-        Timber.d("category1 getRecipesFromNetwork= ${recipes}")
+        Timber.d("category1 getRecipesFromNetwork= $recipes")
         return dtoMapper.toDomainList(recipes)
     }
 }

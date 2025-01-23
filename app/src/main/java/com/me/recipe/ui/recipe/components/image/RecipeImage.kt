@@ -2,9 +2,7 @@
 
 package com.me.recipe.ui.recipe.components.image
 
-import androidx.compose.animation.AnimatedVisibilityScope
 import androidx.compose.animation.ExperimentalSharedTransitionApi
-import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.runtime.Composable
@@ -15,9 +13,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.me.recipe.domain.features.recipe.model.Recipe
 import com.me.recipe.ui.component.image.CoilImage
-import com.me.recipe.ui.component.util.SharedTransitionLayoutPreview
 import com.me.recipe.ui.theme.RecipeTheme
-import timber.log.Timber
 
 @Composable
 internal fun RecipeImage(

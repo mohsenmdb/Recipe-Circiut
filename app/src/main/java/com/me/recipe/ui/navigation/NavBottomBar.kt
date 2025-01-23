@@ -13,7 +13,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import com.me.recipe.R
 import com.me.recipe.ui.home.MainUiScreen
 import com.me.recipe.ui.search.SearchScreen
 import com.slack.circuit.runtime.Navigator
@@ -22,7 +21,7 @@ import com.slack.circuit.runtime.Navigator
 internal fun NavBottomBar(
     selectedIndex: Int,
     onIndexChanged: (Int) -> Unit,
-    navigator: Navigator
+    navigator: Navigator,
 ) {
     val itemColors = NavigationBarItemDefaults.colors(
         indicatorColor = MaterialTheme.colorScheme.tertiary,
@@ -32,13 +31,13 @@ internal fun NavBottomBar(
         unselectedTextColor = MaterialTheme.colorScheme.onSurfaceVariant,
     )
     AnimatedVisibility(
-        visible = bottomNavigationScreens.any { it.route == HomeDestination.route },//todo fix me
+        visible = bottomNavigationScreens.any { it.route == HomeDestination.route },
         enter = expandVertically(),
         exit = shrinkVertically(),
     ) {
         NavigationBar(
             containerColor = MaterialTheme.colorScheme.primaryContainer,
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth(),
         ) {
             bottomNavigationScreens.forEachIndexed { index, tab ->
                 NavigationBarItem(
@@ -51,7 +50,7 @@ internal fun NavBottomBar(
                         navigator.resetRoot(
                             newRoot = getScreenForTab(tab),
                             saveState = true,
-                            restoreState = false
+                            restoreState = false,
                         )
                     },
                 )
@@ -61,7 +60,7 @@ internal fun NavBottomBar(
 }
 
 fun getScreenForTab(tab: NavigationDestination) = when (tab) {
-    HomeDestination -> MainUiScreen("888")
-    SearchDestination -> SearchScreen("888")
-    else -> MainUiScreen("888")
+    HomeDestination -> MainUiScreen()
+    SearchDestination -> SearchScreen()
+    else -> MainUiScreen()
 }

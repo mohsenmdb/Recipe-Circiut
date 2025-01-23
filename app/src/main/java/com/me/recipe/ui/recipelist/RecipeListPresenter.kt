@@ -2,7 +2,6 @@ package com.me.recipe.ui.recipelist
 
 import android.annotation.SuppressLint
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import com.me.recipe.ui.search.SearchScreen
 import com.me.recipe.ui.search.SearchUiEvent
 import com.me.recipe.ui.search.SearchViewPresenter
@@ -21,7 +20,7 @@ class RecipeListPresenter @AssistedInject constructor(
 ) : Presenter<RecipeListUiState> {
 
     private val searchPresenter = searchPresenterFactory.create(
-        screen = SearchScreen(title = null),
+        screen = SearchScreen(screen.query),
         navigator = navigator,
     )
 
@@ -29,9 +28,6 @@ class RecipeListPresenter @AssistedInject constructor(
     @Composable
     override fun present(): RecipeListUiState {
         val searchState = searchPresenter.present()
-        LaunchedEffect(screen.query) {
-            searchState.eventSink.invoke(SearchUiEvent.SetQueryForRecipeListPage(screen.query))
-        }
         return RecipeListUiState(
             query = screen.query,
             recipes = searchState.recipes,
@@ -64,5 +60,3 @@ class RecipeListPresenter @AssistedInject constructor(
         fun create(screen: RecipeListScreen, navigator: Navigator): RecipeListPresenter
     }
 }
-
-

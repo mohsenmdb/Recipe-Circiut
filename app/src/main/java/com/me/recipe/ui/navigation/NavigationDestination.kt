@@ -15,12 +15,6 @@ interface NavigationDestination {
     val icon: ImageVector?
 }
 
-object SplashDestination : NavigationDestination {
-    override val route = "splash"
-    override val titleRes = R.string.navigate_splash_title
-    override val icon = null
-}
-
 object HomeDestination : NavigationDestination {
     override val route = "Home"
     override val titleRes = R.string.navigate_home_title

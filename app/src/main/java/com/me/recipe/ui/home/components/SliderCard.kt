@@ -3,9 +3,7 @@
 package com.me.recipe.ui.home.components
 
 import android.content.res.Configuration
-import androidx.compose.animation.AnimatedVisibilityScope
 import androidx.compose.animation.ExperimentalSharedTransitionApi
-import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.combinedClickable
@@ -30,7 +28,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.me.recipe.domain.features.recipe.model.Recipe
 import com.me.recipe.ui.component.image.CoilImage
-import com.me.recipe.ui.component.util.SharedTransitionLayoutPreview
 import com.me.recipe.ui.theme.RecipeTheme
 
 @Composable
@@ -49,7 +46,6 @@ internal fun SliderCard(
             .combinedClickable(onClick = onClick, onLongClick = onLongClick),
     ) {
         BoxWithConstraints(modifier = Modifier.fillMaxSize()) {
-
             CoilImage(
                 data = recipe.featuredImage,
                 contentDescription = "recipe image",
