@@ -21,6 +21,7 @@ import com.me.recipe.shared.datastore.UserDataStore
 import com.me.recipe.ui.home.MainUiScreen
 import com.me.recipe.ui.navigation.NavBottomBar
 import com.me.recipe.ui.theme.RecipeTheme
+import com.me.recipe.util.extention.getPushNotificationPermission
 import com.slack.circuit.backstack.SaveableBackStack
 import com.slack.circuit.backstack.rememberSaveableBackStack
 import com.slack.circuit.foundation.Circuit
@@ -48,6 +49,7 @@ class MainActivityCircuit : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setUserLoginInfo(userDataStore)
+        getPushNotificationPermission()
         setContent {
             val backstack = rememberSaveableBackStack(root = MainUiScreen(title = "title"))
             val navigator = rememberCircuitNavigator(backstack)
