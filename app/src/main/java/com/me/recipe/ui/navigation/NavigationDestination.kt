@@ -27,42 +27,4 @@ object SearchDestination : NavigationDestination {
     override val icon = Icons.Filled.Search
 }
 
-object RecipeListDestination : NavigationDestination {
-    override val route = "RecipeList"
-    override val titleRes = R.string.navigate_recipe_list_title
-    override val icon = null
-    const val CATEGORY_TITLE_ARG = "categoryTitleArg"
-    val routeWithArgs =
-        "$route/{$CATEGORY_TITLE_ARG}"
-    val arguments = listOf(
-        navArgument(CATEGORY_TITLE_ARG) { type = NavType.StringType },
-    )
-}
-
-object RecipeDestination : NavigationDestination {
-    override val route = "Recipe"
-    override val titleRes = R.string.navigate_recipe_title
-    override val icon = null
-    const val ITEM_ID_ARG = "itemId"
-    const val ITEM_TITLE_ARG = "itemTitle"
-    const val ITEM_IMAGE_ARG = "itemImage"
-    const val ITEM_UID_ARG = "itemUid"
-    val routeWithArgs =
-        "$route/{$ITEM_ID_ARG}/{$ITEM_TITLE_ARG}/{$ITEM_IMAGE_ARG}/{$ITEM_UID_ARG}"
-    val arguments = listOf(
-        navArgument(ITEM_ID_ARG) { type = NavType.IntType },
-        navArgument(ITEM_TITLE_ARG) { type = NavType.StringType },
-        navArgument(ITEM_IMAGE_ARG) { type = NavType.StringType },
-        navArgument(ITEM_UID_ARG) {
-            type = NavType.StringType
-            nullable = true
-            defaultValue = ""
-        },
-    )
-    val deepLinks = listOf(
-        navDeepLink {
-            uriPattern =
-                "recipe://composables.com/{$ITEM_ID_ARG}/{$ITEM_TITLE_ARG}/{$ITEM_IMAGE_ARG}"
-        },
-    )
-}
+val bottomNavigationScreens = listOf(HomeDestination, SearchDestination)
