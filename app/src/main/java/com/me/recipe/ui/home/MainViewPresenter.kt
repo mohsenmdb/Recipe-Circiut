@@ -11,6 +11,8 @@ import com.me.recipe.domain.features.recipelist.usecases.CategoriesRecipesUsecas
 import com.me.recipe.domain.features.recipelist.usecases.SliderRecipesUsecase
 import com.me.recipe.shared.datastore.SettingsDataStore
 import com.me.recipe.shared.utils.getAllFoodCategories
+import com.me.recipe.ui.component.util.UiMessage
+import com.me.recipe.ui.component.util.UiMessageManager
 import com.me.recipe.ui.recipe.RecipeUiScreen
 import com.me.recipe.ui.recipelist.RecipeListScreen
 import com.slack.circuit.codegen.annotations.CircuitInject
@@ -24,6 +26,7 @@ import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
 import dagger.hilt.components.SingletonComponent
 import kotlinx.collections.immutable.ImmutableList
+import kotlinx.coroutines.launch
 
 class MainViewPresenter @AssistedInject constructor(
     @Assisted private val screen: MainUiScreen,
@@ -36,6 +39,8 @@ class MainViewPresenter @AssistedInject constructor(
     @Composable
     override fun present(): MainUiState {
         val stableScope = rememberStableCoroutineScope()
+        val uiMessageManager = remember { UiMessageManager() }
+        val message by uiMessageManager.message.collectAsState(null)
 
         LaunchedEffect(key1 = Unit) {
             getRecipesUsecase.get().invoke(CategoriesRecipesUsecase.Params(getAllFoodCategories()))
@@ -51,6 +56,7 @@ class MainViewPresenter @AssistedInject constructor(
             sliderRecipes = sliders?.getOrNull(),
             categoriesRecipes = categoryRows?.getOrNull(),
             isDark = isDarkTheme,
+            message = message,
             eventSink = { event ->
                 when (event) {
                     is MainUiEvent.OnRecipeClicked -> {
@@ -67,8 +73,11 @@ class MainViewPresenter @AssistedInject constructor(
                     is MainUiEvent.OnCategoryClicked -> {
                         navigator.goTo(RecipeListScreen(event.category.value))
                     }
-                    is MainUiEvent.OnRecipeLongClick -> {}
+                    is MainUiEvent.OnRecipeLongClick -> {
+                        stableScope.launch { uiMessageManager.emitMessage(UiMessage.createSnackbar(event.title)) }
+                    }
                     MainUiEvent.ToggleDarkTheme -> settingsDataStore.get().toggleTheme()
+                    MainUiEvent.ClearMessage -> stableScope.launch { uiMessageManager.clearMessage() }
                 }
             },
         )

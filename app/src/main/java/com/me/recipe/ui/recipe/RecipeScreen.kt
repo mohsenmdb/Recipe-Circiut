@@ -5,10 +5,10 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.me.recipe.ui.component.util.DefaultSnackbar
+import com.me.recipe.ui.component.util.MessageEffect
 import com.me.recipe.ui.recipe.components.RecipeDetail
 import com.me.recipe.ui.theme.RecipeTheme
 import com.slack.circuit.codegen.annotations.CircuitInject
@@ -21,17 +21,11 @@ internal fun RecipeScreen(
     modifier: Modifier = Modifier,
 ) {
     val snackbarHostState = remember { SnackbarHostState() }
-    val coroutineScope = rememberCoroutineScope()
-
-//    effect.collectInLaunchedEffect { effect ->
-//        when (effect) {
-//            is RecipeContract.Effect.ShowSnackbar -> {
-//                coroutineScope.launch {
-//                    snackbarHostState.showSnackbar(effect.message, "Ok")
-//                }
-//            }
-//        }
-//    }
+    MessageEffect(
+        snackbarHostState = snackbarHostState,
+        message = state.message,
+        onClearMessage = { state.eventSink(RecipeUiEvent.ClearMessage) },
+    )
 
     Scaffold(
         snackbarHost = {
@@ -39,11 +33,13 @@ internal fun RecipeScreen(
                 snackbarHostState.currentSnackbarData?.dismiss()
             }
         },
+        modifier = modifier,
     ) { padding ->
         RecipeDetail(
             recipe = state.recipe,
             isLoading = state.recipesLoading,
             modifier = Modifier.padding(padding),
+            onLikeClicked = {state.eventSink(RecipeUiEvent.OnLikeClicked)}
         )
     }
 }

@@ -5,6 +5,8 @@ import com.me.recipe.domain.features.recipe.model.CategoryRecipe
 import com.me.recipe.domain.features.recipe.model.Recipe
 import com.me.recipe.shared.utils.FoodCategory
 import com.me.recipe.ui.component.util.GenericDialogInfo
+import com.me.recipe.ui.component.util.UiMessage
+import com.me.recipe.ui.search.SearchUiEvent
 import com.slack.circuit.runtime.CircuitUiEvent
 import com.slack.circuit.runtime.CircuitUiState
 import com.slack.circuit.runtime.screen.Screen
@@ -25,6 +27,7 @@ data class MainUiState(
     val sliderLoading: Boolean = sliderRecipes == null,
     val categoriesLoading: Boolean = categoriesRecipes.isNullOrEmpty(),
     val isDark: Boolean = false,
+    val message: UiMessage? = null,
     val eventSink: MainUiSink,
 ) : CircuitUiState {
     companion object {
@@ -42,6 +45,7 @@ sealed interface MainUiEvent : CircuitUiEvent {
     data class OnCategoryClicked(val category: FoodCategory) : MainUiEvent
     data class OnRecipeLongClick(val title: String) : MainUiEvent
     data object ToggleDarkTheme : MainUiEvent
+    data object ClearMessage : MainUiEvent
 }
 
 val MainUiState.showShimmer: Boolean

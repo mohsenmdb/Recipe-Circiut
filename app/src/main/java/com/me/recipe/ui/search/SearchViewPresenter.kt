@@ -177,7 +177,6 @@ class SearchViewPresenter @AssistedInject constructor(
                     is OnRecipeClick -> navigateToRecipePage(event.recipe)
                     is OnChangeRecipeScrollPosition -> handleRecipeListPositionChanged(event.index)
                     is OnRecipeLongClick -> {
-                        Timber.d("OnRecipeLongClick ${event.title}")
                         stableScope.launch { uiMessageManager.emitMessage(UiMessage.createSnackbar(event.title)) }
                     }
                     ClearMessage -> stableScope.launch { uiMessageManager.clearMessage() }

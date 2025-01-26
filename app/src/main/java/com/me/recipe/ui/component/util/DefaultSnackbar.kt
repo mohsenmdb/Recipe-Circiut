@@ -14,7 +14,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.me.recipe.R
@@ -29,12 +29,13 @@ internal fun DefaultSnackbar(
         hostState = snackbarHostState,
         snackbar = { data ->
             Snackbar(
+                containerColor = MaterialTheme.colorScheme.surface,
+                contentColor = MaterialTheme.colorScheme.onSurface,
                 modifier = Modifier.padding(16.dp),
                 content = {
                     Text(
                         text = data.visuals.message,
                         style = MaterialTheme.typography.bodyMedium,
-                        color = Color.White,
                     )
                 },
                 action = {
@@ -47,7 +48,6 @@ internal fun DefaultSnackbar(
                             Text(
                                 text = actionLabel,
                                 style = MaterialTheme.typography.bodyMedium,
-                                color = Color.White,
                             )
                         }
                     }
@@ -59,22 +59,25 @@ internal fun DefaultSnackbar(
 }
 
 @Composable
-fun SnackbarEffect(
+fun MessageEffect(
     snackbarHostState: SnackbarHostState,
     message: UiMessage?,
     onClearMessage: () -> Unit,
 ) {
+    val context = LocalContext.current
     val actionOk = stringResource(id = R.string.ok)
     var showMessage: UiMessage? by remember { mutableStateOf(null) }
     LaunchedEffect(showMessage) {
         when (showMessage?.message) {
-            is Message.Toast -> {
+            is Message.Snackbar -> {
                 snackbarHostState.currentSnackbarData?.dismiss()
-                snackbarHostState.showSnackbar(showMessage!!.message.message, actionOk)
+                snackbarHostState.showSnackbar(showMessage!!.message.text, actionOk)
                 showMessage = null
             }
 
-            is Message.Dialog -> {}
+            is Message.Toast -> {
+                toast(context, showMessage!!.message.text)
+            }
             else -> {}
         }
     }
