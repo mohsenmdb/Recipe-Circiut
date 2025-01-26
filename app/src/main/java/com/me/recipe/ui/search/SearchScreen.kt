@@ -23,9 +23,6 @@ internal fun SearchScreen(
     state: SearchUiState,
     modifier: Modifier = Modifier,
 ) {
-//    BackHandler {
-//        navigateToHomePage.invoke()
-//    }
     val snackbarHostState = remember { SnackbarHostState() }
     SnackbarEffect(
         snackbarHostState = snackbarHostState,
