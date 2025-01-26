@@ -4,10 +4,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import com.me.recipe.domain.features.recipe.model.CategoryRecipe
 import com.me.recipe.domain.features.recipe.model.Recipe
 import com.me.recipe.domain.features.recipelist.usecases.CategoriesRecipesUsecase
 import com.me.recipe.domain.features.recipelist.usecases.SliderRecipesUsecase
+import com.me.recipe.shared.datastore.SettingsDataStore
 import com.me.recipe.shared.utils.getAllFoodCategories
 import com.me.recipe.ui.recipe.RecipeUiScreen
 import com.me.recipe.ui.recipelist.RecipeListScreen
@@ -26,6 +28,7 @@ import kotlinx.collections.immutable.ImmutableList
 class MainViewPresenter @AssistedInject constructor(
     @Assisted private val screen: MainUiScreen,
     @Assisted internal val navigator: Navigator,
+    private val settingsDataStore: Lazy<SettingsDataStore>,
     private val getRecipesUsecase: Lazy<CategoriesRecipesUsecase>,
     private val sliderRecipesUsecase: Lazy<SliderRecipesUsecase>,
 ) : Presenter<MainUiState> {
@@ -42,10 +45,12 @@ class MainViewPresenter @AssistedInject constructor(
             getRecipesUsecase.get().flow.collectAsState(initial = null)
         val sliders: Result<ImmutableList<Recipe>>? by
             sliderRecipesUsecase.get().flow.collectAsRetainedState(initial = null)
+        val isDarkTheme by remember { settingsDataStore.get().isDark }
 
         return MainUiState(
             sliderRecipes = sliders?.getOrNull(),
             categoriesRecipes = categoryRows?.getOrNull(),
+            isDark = isDarkTheme,
             eventSink = { event ->
                 when (event) {
                     is MainUiEvent.OnRecipeClicked -> {
@@ -63,6 +68,7 @@ class MainViewPresenter @AssistedInject constructor(
                         navigator.goTo(RecipeListScreen(event.category.value))
                     }
                     is MainUiEvent.OnRecipeLongClick -> {}
+                    MainUiEvent.ToggleDarkTheme -> settingsDataStore.get().toggleTheme()
                 }
             },
         )

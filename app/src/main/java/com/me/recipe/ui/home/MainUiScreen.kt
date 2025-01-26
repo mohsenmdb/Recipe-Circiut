@@ -30,6 +30,7 @@ data class MainUiState(
     companion object {
         fun testData() = MainUiState(
             sliderRecipes = persistentListOf(Recipe.testData()),
+            categoriesRecipes= persistentListOf(CategoryRecipe.testData(), CategoryRecipe.testData()),
             eventSink = {},
         )
     }
@@ -40,6 +41,7 @@ sealed interface MainUiEvent : CircuitUiEvent {
     data class OnRecipeClicked(val recipe: Recipe) : MainUiEvent
     data class OnCategoryClicked(val category: FoodCategory) : MainUiEvent
     data class OnRecipeLongClick(val title: String) : MainUiEvent
+    data object ToggleDarkTheme : MainUiEvent
 }
 
 val MainUiState.showShimmer: Boolean

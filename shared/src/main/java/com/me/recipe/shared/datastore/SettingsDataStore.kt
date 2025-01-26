@@ -14,6 +14,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers.Main
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 
@@ -47,9 +48,13 @@ constructor(@ApplicationContext val context: Context) {
         }.launchIn(scope)
     }
 
-    fun observeIsDark() = context.dataStore.data.filter { preferences ->
-        preferences[DARK_THEME_KEY] != null
-    }
+    fun observeIsDark() = context.dataStore.data
+        .filter { preferences ->
+            preferences[DARK_THEME_KEY] != null
+        }
+        .map { preferences ->
+            preferences[DARK_THEME_KEY]
+        }
 
     companion object {
         val DARK_THEME_KEY = booleanPreferencesKey("dark_theme_key")
