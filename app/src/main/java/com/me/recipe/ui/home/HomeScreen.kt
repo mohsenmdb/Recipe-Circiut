@@ -11,11 +11,13 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import com.me.recipe.R
 import com.me.recipe.ui.component.util.DefaultSnackbar
 import com.me.recipe.ui.home.components.HomeAppBar
 import com.me.recipe.ui.home.components.HomeContent
 import com.me.recipe.ui.home.components.shimmer.HomeShimmer
+import com.me.recipe.ui.theme.RecipeTheme
 import com.slack.circuit.codegen.annotations.CircuitInject
 import dagger.hilt.components.SingletonComponent
 import timber.log.Timber
@@ -82,7 +84,7 @@ fun HomeScreen(
         topBar = {
             HomeAppBar(
                 isDark = state.isDark,
-                onToggleTheme = { /*event.invoke(HomeContract.Event.ToggleDarkTheme)*/ },
+                onToggleTheme = { state.eventSink(MainUiEvent.ToggleDarkTheme) },
             )
         },
         modifier = modifier,
@@ -98,18 +100,12 @@ fun HomeScreen(
     }
 }
 
-// @Preview
-// @Composable
-// private fun HomeScreenPreview() {
-//    RecipeTheme(true) {
-//        SharedTransitionLayoutPreview {
-//            HomeScreen(
-//                event = {},
-//                effect = flowOf(),
-//                state = HomeContract.State.testData(),
-//                navigateToRecipePage = { _ -> },
-//                navigateToRecipeListPage = { _ -> },
-//            )
-//        }
-//    }
-// }
+ @Preview
+ @Composable
+ private fun HomeScreenPreview() {
+    RecipeTheme(true) {
+        HomeScreen(
+            state = MainUiState.testData(),
+        )
+    }
+ }

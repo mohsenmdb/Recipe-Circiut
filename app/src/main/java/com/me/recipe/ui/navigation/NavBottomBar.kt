@@ -17,7 +17,6 @@ import com.me.recipe.ui.home.MainUiScreen
 import com.me.recipe.ui.search.SearchScreen
 import com.slack.circuit.runtime.Navigator
 import com.slack.circuit.runtime.screen.Screen
-import timber.log.Timber
 
 @Composable
 internal fun NavBottomBar(
@@ -25,7 +24,6 @@ internal fun NavBottomBar(
     onIndexChanged: (Int) -> Unit,
     navigator: Navigator,
 ) {
-    Timber.d("NavBottomBar navigator = ${navigator.peek()}")
     val itemColors = NavigationBarItemDefaults.colors(
         indicatorColor = MaterialTheme.colorScheme.tertiary,
         selectedIconColor = MaterialTheme.colorScheme.surface,
