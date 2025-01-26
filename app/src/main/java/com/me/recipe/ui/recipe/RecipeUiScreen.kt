@@ -2,6 +2,8 @@ package com.me.recipe.ui.recipe
 
 import androidx.compose.runtime.Stable
 import com.me.recipe.domain.features.recipe.model.Recipe
+import com.me.recipe.ui.component.util.UiMessage
+import com.me.recipe.ui.home.MainUiEvent
 import com.slack.circuit.runtime.CircuitUiEvent
 import com.slack.circuit.runtime.CircuitUiState
 import com.slack.circuit.runtime.screen.Screen
@@ -20,7 +22,7 @@ typealias RecipeUiSink = (RecipeUiEvent) -> Unit
 @Stable
 data class RecipeUiState(
     val recipe: Recipe? = null,
-    val message: String? = null,
+    val message: UiMessage? = null,
     val exception: Throwable? = null,
     val recipesLoading: Boolean = recipe == null && exception == null,
     val eventSink: RecipeUiSink,
@@ -34,6 +36,5 @@ data class RecipeUiState(
 }
 
 sealed interface RecipeUiEvent : CircuitUiEvent {
-
-    data object OnPlayClicked : RecipeUiEvent
+    data object ClearMessage : RecipeUiEvent
 }

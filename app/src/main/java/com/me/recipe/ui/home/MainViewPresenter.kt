@@ -15,7 +15,6 @@ import com.me.recipe.ui.component.util.UiMessage
 import com.me.recipe.ui.component.util.UiMessageManager
 import com.me.recipe.ui.recipe.RecipeUiScreen
 import com.me.recipe.ui.recipelist.RecipeListScreen
-import com.me.recipe.ui.search.SearchUiEvent.ClearMessage
 import com.slack.circuit.codegen.annotations.CircuitInject
 import com.slack.circuit.retained.collectAsRetainedState
 import com.slack.circuit.runtime.Navigator
@@ -28,7 +27,6 @@ import dagger.assisted.AssistedInject
 import dagger.hilt.components.SingletonComponent
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.coroutines.launch
-import timber.log.Timber
 
 class MainViewPresenter @AssistedInject constructor(
     @Assisted private val screen: MainUiScreen,
@@ -76,7 +74,6 @@ class MainViewPresenter @AssistedInject constructor(
                         navigator.goTo(RecipeListScreen(event.category.value))
                     }
                     is MainUiEvent.OnRecipeLongClick -> {
-                        Timber.d("OnRecipeLongClick ${event.title}")
                         stableScope.launch { uiMessageManager.emitMessage(UiMessage.createSnackbar(event.title)) }
                     }
                     MainUiEvent.ToggleDarkTheme -> settingsDataStore.get().toggleTheme()

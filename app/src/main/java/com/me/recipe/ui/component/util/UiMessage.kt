@@ -6,9 +6,9 @@ import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 
 sealed interface Message {
-    val message: String
-    data class Dialog(override val message: String) : Message
-    data class Toast(override val message: String) : Message
+    val text: String
+    data class Toast(override val text: String) : Message
+    data class Snackbar(override val text: String) : Message
 }
 
 data class UiMessage(
@@ -19,27 +19,27 @@ data class UiMessage(
         fun createToast(
             t: Throwable,
         ): UiMessage = UiMessage(
-            message = Message.Dialog(t.message ?: "Error occurred: $t"),
+            message = Message.Toast(t.message ?: "Error occurred: $t"),
             throwable = t,
         )
 
         fun createToast(
             message: String,
         ): UiMessage = UiMessage(
-            message = Message.Dialog(message),
+            message = Message.Toast(message),
         )
 
         fun createSnackbar(
             t: Throwable,
         ): UiMessage = UiMessage(
-            message = Message.Toast(t.message ?: "Error occurred: $t"),
+            message = Message.Snackbar(t.message ?: "Error occurred: $t"),
             throwable = t,
         )
 
         fun createSnackbar(
             message: String,
         ): UiMessage = UiMessage(
-            message = Message.Toast(message),
+            message = Message.Snackbar(message),
         )
     }
 }
