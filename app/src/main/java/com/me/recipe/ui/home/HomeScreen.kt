@@ -8,22 +8,17 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.me.recipe.R
 import com.me.recipe.ui.component.util.DefaultSnackbar
-import com.me.recipe.ui.component.util.SnackbarEffect
+import com.me.recipe.ui.component.util.MessageEffect
 import com.me.recipe.ui.home.components.HomeAppBar
 import com.me.recipe.ui.home.components.HomeContent
 import com.me.recipe.ui.home.components.shimmer.HomeShimmer
-import com.me.recipe.ui.search.SearchUiEvent
 import com.me.recipe.ui.theme.RecipeTheme
 import com.slack.circuit.codegen.annotations.CircuitInject
 import dagger.hilt.components.SingletonComponent
-import timber.log.Timber
 
 
 @CircuitInject(MainUiScreen::class, SingletonComponent::class)
@@ -34,7 +29,7 @@ fun HomeScreen(
 ) {
 
     val snackbarHostState = remember { SnackbarHostState() }
-    SnackbarEffect(
+    MessageEffect(
         snackbarHostState = snackbarHostState,
         message = state.message,
         onClearMessage = { state.eventSink.invoke(MainUiEvent.ClearMessage) },

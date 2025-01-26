@@ -18,8 +18,8 @@ import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
 import dagger.hilt.components.SingletonComponent
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import timber.log.Timber
 
 class RecipePresenter @AssistedInject constructor(
     @Assisted private val screen: RecipeUiScreen,
@@ -34,12 +34,13 @@ class RecipePresenter @AssistedInject constructor(
         val message by uiMessageManager.message.collectAsState(null)
 
         LaunchedEffect(key1 = Unit) {
-            getRecipeUsecase.get().invoke(GetRecipeUsecase.Params(recipeId = screen.itemId, uid = screen.itemUid))
+            getRecipeUsecase.get()
+                .invoke(GetRecipeUsecase.Params(recipeId = screen.itemId, uid = screen.itemUid))
         }
         val recipeResult: Result<Recipe>? by getRecipeUsecase.get().flow.collectAsState(initial = null)
         val recipe = recipeResult?.getOrNull()
         LaunchedEffect(key1 = recipe?.title) {
-            if (recipe?.title != null && recipe.title.isNotEmpty()){
+            if (recipe?.title != null && recipe.title.isNotEmpty()) {
                 uiMessageManager.emitMessage(UiMessage.createToast(recipe.title))
             }
         }
@@ -50,7 +51,16 @@ class RecipePresenter @AssistedInject constructor(
             exception = recipeResult?.exceptionOrNull(),
             eventSink = { event ->
                 when (event) {
-                    RecipeUiEvent.ClearMessage -> stableScope.launch { uiMessageManager.clearMessage() }
+                    RecipeUiEvent.ClearMessage ->
+                        stableScope.launch { uiMessageManager.clearMessage() }
+
+                    RecipeUiEvent.OnLikeClicked -> {
+                        if (recipe?.rating != null) {
+                            stableScope.launch {
+                                uiMessageManager.emitMessage(UiMessage.createSnackbar(recipe.rating.toString()))
+                            }
+                        }
+                    }
                 }
             },
         )

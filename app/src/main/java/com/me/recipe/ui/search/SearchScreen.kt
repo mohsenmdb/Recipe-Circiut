@@ -10,7 +10,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.me.recipe.ui.component.util.DefaultSnackbar
 import com.me.recipe.ui.component.util.GenericDialog
-import com.me.recipe.ui.component.util.SnackbarEffect
+import com.me.recipe.ui.component.util.MessageEffect
 import com.me.recipe.ui.search.component.SearchAppBar
 import com.me.recipe.ui.search.component.SearchContent
 import com.me.recipe.ui.theme.RecipeTheme
@@ -24,7 +24,7 @@ internal fun SearchScreen(
     modifier: Modifier = Modifier,
 ) {
     val snackbarHostState = remember { SnackbarHostState() }
-    SnackbarEffect(
+    MessageEffect(
         snackbarHostState = snackbarHostState,
         message = state.message,
         onClearMessage = { state.eventSink.invoke(SearchUiEvent.ClearMessage) },

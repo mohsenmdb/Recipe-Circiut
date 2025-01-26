@@ -25,12 +25,14 @@ import com.me.recipe.ui.recipe.components.chip.LoadingRankChip
 import com.me.recipe.ui.recipe.components.chip.RankChip
 import com.me.recipe.ui.recipe.components.shimmer.LoadingRecipeShimmer
 import com.me.recipe.ui.theme.RecipeTheme
+import com.me.recipe.util.compose.OnClick
 import kotlinx.collections.immutable.ImmutableList
 
 @Composable
 internal fun RecipeContent(
     recipe: Recipe?,
     isLoading: Boolean,
+    onLikeClicked: OnClick,
     modifier: Modifier = Modifier,
 ) {
     Column(
@@ -42,6 +44,7 @@ internal fun RecipeContent(
             title = recipe?.title,
             rank = recipe?.rating.toString(),
             isLoading = isLoading,
+            onLikeClicked = onLikeClicked,
         )
         if (recipe != null) {
             RecipeInfoView(
@@ -60,6 +63,7 @@ private fun TitleRow(
     title: String?,
     rank: String?,
     isLoading: Boolean,
+    onLikeClicked: OnClick,
 ) {
     Row(
         modifier = Modifier
@@ -69,7 +73,7 @@ private fun TitleRow(
         if (!title.isNullOrEmpty()) {
             TitleText(title)
             if (!rank.isNullOrEmpty()) {
-                RankChip(rank)
+                RankChip(rank = rank, onLikeClicked = onLikeClicked)
             } else if (isLoading) {
                 LoadingRankChip()
             }
@@ -132,8 +136,9 @@ internal fun RecipeInfoView(
 private fun RecipeContentPreview() {
     RecipeTheme(true) {
         RecipeContent(
-            recipe = com.me.recipe.domain.features.recipe.model.Recipe.testData(),
+            recipe = Recipe.testData(),
             isLoading = false,
+            onLikeClicked = {}
         )
     }
 }

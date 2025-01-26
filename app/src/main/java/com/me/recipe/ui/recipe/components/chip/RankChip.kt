@@ -15,15 +15,17 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.tooling.preview.Preview
 import com.me.recipe.ui.theme.RecipeTheme
+import com.me.recipe.util.compose.OnClick
 
 @Composable
 internal fun RankChip(
     rank: String,
+    onLikeClicked: OnClick,
     modifier: Modifier = Modifier,
 ) {
     AssistChip(
         shape = CircleShape,
-        onClick = { },
+        onClick = onLikeClicked,
         label = {
             Text(
                 text = rank,
@@ -48,6 +50,6 @@ internal fun RankChip(
 @Composable
 private fun RankChipPreview() {
     RecipeTheme(true) {
-        RankChip(rank = "1")
+        RankChip(rank = "1", onLikeClicked = {})
     }
 }

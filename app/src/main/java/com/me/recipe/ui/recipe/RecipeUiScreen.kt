@@ -37,4 +37,5 @@ data class RecipeUiState(
 
 sealed interface RecipeUiEvent : CircuitUiEvent {
     data object ClearMessage : RecipeUiEvent
+    data object OnLikeClicked : RecipeUiEvent
 }

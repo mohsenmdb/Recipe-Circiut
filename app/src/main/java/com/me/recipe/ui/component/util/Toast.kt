@@ -1,13 +1,13 @@
 package com.me.recipe.ui.component.util
 
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.platform.LocalContext
+import android.content.Context
+import android.widget.Toast
 
 
-@Composable
-fun Toast(
+fun toast(
+    context: Context,
     message: String,
-    duration: Int = android.widget.Toast.LENGTH_SHORT,
+    duration: Int = Toast.LENGTH_SHORT,
 ) {
-    android.widget.Toast.makeText(LocalContext.current, message, duration).show()
+    Toast.makeText(context, message, duration).show()
 }

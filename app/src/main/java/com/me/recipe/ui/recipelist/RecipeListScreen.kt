@@ -9,7 +9,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.me.recipe.ui.component.util.DefaultSnackbar
 import com.me.recipe.ui.component.util.GenericDialog
-import com.me.recipe.ui.component.util.SnackbarEffect
+import com.me.recipe.ui.component.util.MessageEffect
 import com.me.recipe.ui.recipelist.components.RecipeListAppBar
 import com.me.recipe.ui.search.component.SearchContent
 import com.me.recipe.ui.theme.RecipeTheme
@@ -23,7 +23,7 @@ internal fun RecipeListScreen(
     modifier: Modifier = Modifier,
 ) {
     val snackbarHostState = remember { SnackbarHostState() }
-    SnackbarEffect(
+    MessageEffect(
         snackbarHostState = snackbarHostState,
         message = state.message,
         onClearMessage = { state.eventSink.invoke(RecipeListUiEvent.ClearMessage) },

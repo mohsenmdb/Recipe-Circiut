@@ -1,8 +1,5 @@
-@file:OptIn(ExperimentalSharedTransitionApi::class)
-
 package com.me.recipe.ui.recipe.components
 
-import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -13,11 +10,13 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.me.recipe.domain.features.recipe.model.Recipe
 import com.me.recipe.ui.recipe.components.image.RecipeImage
 import com.me.recipe.ui.theme.RecipeTheme
+import com.me.recipe.util.compose.OnClick
 
 @Composable
 internal fun RecipeDetail(
     recipe: Recipe?,
     isLoading: Boolean,
+    onLikeClicked: OnClick,
     modifier: Modifier = Modifier,
 ) {
     Column(
@@ -31,6 +30,7 @@ internal fun RecipeDetail(
         RecipeContent(
             recipe = recipe,
             isLoading = isLoading,
+            onLikeClicked = onLikeClicked,
         )
     }
 }
@@ -42,6 +42,7 @@ private fun RecipeDetailPreview() {
         RecipeDetail(
             recipe = Recipe.testData(),
             isLoading = false,
+            onLikeClicked = {}
         )
     }
 }

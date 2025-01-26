@@ -14,6 +14,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.me.recipe.R
@@ -58,11 +59,12 @@ internal fun DefaultSnackbar(
 }
 
 @Composable
-fun SnackbarEffect(
+fun MessageEffect(
     snackbarHostState: SnackbarHostState,
     message: UiMessage?,
     onClearMessage: () -> Unit,
 ) {
+    val context = LocalContext.current
     val actionOk = stringResource(id = R.string.ok)
     var showMessage: UiMessage? by remember { mutableStateOf(null) }
     LaunchedEffect(showMessage) {
@@ -73,7 +75,9 @@ fun SnackbarEffect(
                 showMessage = null
             }
 
-            is Message.Toast -> {}
+            is Message.Toast -> {
+                toast(context, showMessage!!.message.text)
+            }
             else -> {}
         }
     }
