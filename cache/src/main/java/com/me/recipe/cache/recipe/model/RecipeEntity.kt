@@ -21,7 +21,7 @@ data class RecipeEntity(
     var featuredImage: String,
 
     @ColumnInfo(name = "rating")
-    var rating: Int,
+    var rating: String,
 
     @ColumnInfo(name = "source_url")
     var sourceUrl: String,

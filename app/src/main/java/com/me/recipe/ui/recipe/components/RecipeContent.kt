@@ -3,6 +3,7 @@
 package com.me.recipe.ui.recipe.components
 
 import androidx.compose.animation.ExperimentalSharedTransitionApi
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
@@ -42,18 +43,18 @@ internal fun RecipeContent(
     ) {
         TitleRow(
             title = recipe?.title,
-            rank = recipe?.rating.toString(),
+            rank = recipe?.rating,
             isLoading = isLoading,
             onLikeClicked = onLikeClicked,
         )
-        if (recipe != null) {
+        if (isLoading) {
+            LoadingRecipeShimmer()
+        } else if (recipe != null) {
             RecipeInfoView(
                 dateUpdated = recipe.date,
                 publisher = recipe.publisher,
                 ingredients = recipe.ingredients,
             )
-        } else if (isLoading) {
-            LoadingRecipeShimmer()
         }
     }
 }
@@ -66,17 +67,18 @@ private fun TitleRow(
     onLikeClicked: OnClick,
 ) {
     Row(
+        horizontalArrangement = Arrangement.End,
         modifier = Modifier
             .fillMaxWidth()
             .testTag("testTag_TitleRow"),
     ) {
         if (!title.isNullOrEmpty()) {
             TitleText(title)
-            if (!rank.isNullOrEmpty()) {
-                RankChip(rank = rank, onLikeClicked = onLikeClicked)
-            } else if (isLoading) {
-                LoadingRankChip()
-            }
+        }
+        if (!rank.isNullOrEmpty()) {
+            RankChip(rank = rank, onLikeClicked = onLikeClicked)
+        } else if (isLoading) {
+            LoadingRankChip()
         }
     }
 }

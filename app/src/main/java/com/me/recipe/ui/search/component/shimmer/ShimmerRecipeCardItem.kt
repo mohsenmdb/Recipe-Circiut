@@ -32,6 +32,7 @@ internal fun ShimmerRecipeCardItem(
     padding: Dp,
     modifier: Modifier = Modifier,
     cardNumber: Int = 0,
+    withSmallView: Boolean = true,
 ) {
     val brush = linearGradient(
         colors,
@@ -53,18 +54,20 @@ internal fun ShimmerRecipeCardItem(
                     .background(brush = brush),
             )
         }
-        Spacer(modifier = Modifier.height(8.dp))
-        Surface(
-            shape = MaterialTheme.shapes.small,
-            modifier = Modifier
-                .padding(vertical = 8.dp),
-        ) {
-            Spacer(
+        if (withSmallView) {
+            Spacer(modifier = Modifier.height(8.dp))
+            Surface(
+                shape = MaterialTheme.shapes.small,
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .height(cardHeight / 10)
-                    .background(brush = brush),
-            )
+                    .padding(vertical = 8.dp),
+            ) {
+                Spacer(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(cardHeight / 10)
+                        .background(brush = brush),
+                )
+            }
         }
     }
 }
@@ -85,6 +88,27 @@ private fun ShimmerRecipeCardItemPreview() {
             gradientWidth = 30f,
             padding = 5.dp,
             cardNumber = 0,
+        )
+    }
+}
+
+@Preview
+@Composable
+private fun ShimmerRecipeCardItemWithOutSmallViewPreview() {
+    RecipeTheme(true) {
+        ShimmerRecipeCardItem(
+            colors = persistentListOf(
+                Color.LightGray.copy(alpha = .9f),
+                Color.LightGray.copy(alpha = .3f),
+                Color.LightGray.copy(alpha = .9f),
+            ),
+            xShimmer = 250f,
+            yShimmer = 250f,
+            cardHeight = 250.dp,
+            gradientWidth = 30f,
+            padding = 5.dp,
+            cardNumber = 0,
+            withSmallView = false
         )
     }
 }

@@ -26,43 +26,23 @@ class RecipeListScreenRobot @Inject constructor() {
 
     context (RobotTestRule)
     fun setRecipeListScreen(
-        state: SearchContract.State,
+        state: SearchUiState,
     ) {
         composeTestRule.setContent {
-            SharedTransitionLayoutPreview {
-                SearchScreen(
-                    event = {},
-                    effect = flowOf(),
-                    state = state,
-                    sharedTransitionScope = this,
-                    animatedVisibilityScope = it,
-                    navigateToRecipePage = { _ -> },
-                    navigateToHomePage = { },
-                )
-            }
+            SearchScreenView(state = state)
         }
     }
 
     context (RobotTestRule)
     fun setRecipeListScreenLoadingThenLoaded(
-        loadingState: SearchContract.State,
-        loadedState: SearchContract.State,
+        loadingState: SearchUiState,
+        loadedState: SearchUiState,
     ) {
         composeTestRule.setContent {
             var state by remember {
                 mutableStateOf(loadingState)
             }
-            SharedTransitionLayoutPreview {
-                SearchScreen(
-                    event = {},
-                    effect = flowOf(),
-                    state = state,
-                    sharedTransitionScope = this,
-                    animatedVisibilityScope = it,
-                    navigateToRecipePage = { _ -> },
-                    navigateToHomePage = { },
-                )
-            }
+            SearchScreenView(state = state)
             LaunchedEffect(Unit) {
                 delay(1000)
                 state = loadedState
@@ -86,7 +66,7 @@ class RecipeListScreenRobot @Inject constructor() {
 
     context (RobotTestRule)
     fun checkScreenWhenStateIsLoaded(
-        state: SearchContract.State,
+        state: SearchUiState,
     ) {
         assertSearchTextFieldIsDisplayed()
         assertFoodChipsRowIsDisplayed()
@@ -173,7 +153,7 @@ class RecipeListScreenRobot @Inject constructor() {
 
     context (RobotTestRule)
     private fun assertFirstRecipeRatingIsDisplayed(recipe: Recipe) {
-        composeTestRule.onNodeWithText(recipe.rating.toString(), useUnmergedTree = true)
+        composeTestRule.onNodeWithText(recipe.rating, useUnmergedTree = true)
             .assertIsDisplayed()
     }
 
@@ -191,7 +171,7 @@ class RecipeListScreenRobot @Inject constructor() {
 
     context (RobotTestRule)
     private fun assertLastRecipeRatingIsDisplayed(recipe: Recipe) {
-        composeTestRule.onNodeWithText(recipe.rating.toString(), useUnmergedTree = true)
+        composeTestRule.onNodeWithText(recipe.rating, useUnmergedTree = true)
             .assertIsDisplayed()
     }
 

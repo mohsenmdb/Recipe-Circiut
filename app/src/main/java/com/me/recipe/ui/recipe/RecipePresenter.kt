@@ -57,7 +57,7 @@ class RecipePresenter @AssistedInject constructor(
                     RecipeUiEvent.OnLikeClicked -> {
                         if (recipe?.rating != null) {
                             stableScope.launch {
-                                uiMessageManager.emitMessage(UiMessage.createSnackbar(recipe.rating.toString()))
+                                uiMessageManager.emitMessage(UiMessage.createSnackbar(recipe.rating))
                             }
                         }
                     }

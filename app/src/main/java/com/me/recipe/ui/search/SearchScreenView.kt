@@ -19,7 +19,7 @@ import dagger.hilt.components.SingletonComponent
 
 @CircuitInject(SearchScreen::class, SingletonComponent::class)
 @Composable
-internal fun SearchScreen(
+internal fun SearchScreenView(
     state: SearchUiState,
     modifier: Modifier = Modifier,
 ) {
@@ -70,7 +70,7 @@ internal fun SearchScreen(
 @Composable
 private fun SearchScreenPreview() {
     RecipeTheme(true) {
-        SearchScreen(
+        SearchScreenView(
             state = SearchUiState.testData(),
         )
     }

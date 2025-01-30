@@ -10,9 +10,7 @@ import androidx.compose.ui.unit.dp
 import com.me.recipe.domain.features.recipe.model.Recipe
 import com.me.recipe.ui.component.util.SharedTransitionLayoutPreview
 import com.me.recipe.ui.search.SearchUiState
-import com.me.recipe.ui.search.component.shimmer.SearchShimmer
-import com.me.recipe.ui.search.showLoadingProgressBar
-import com.me.recipe.ui.search.showShimmer
+import com.me.recipe.ui.search.component.shimmer.RecipeShimmer
 import com.me.recipe.ui.theme.RecipeTheme
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
@@ -28,7 +26,7 @@ internal fun SearchContent(
     modifier: Modifier = Modifier,
 ) {
     if (showShimmer) {
-        SearchShimmer(
+        RecipeShimmer(
             imageHeight = 250.dp,
             modifier = modifier,
         )

@@ -9,7 +9,7 @@ data class RecipeDto(
     @Json(name = "title") var title: String?,
     @Json(name = "publisher") var publisher: String?,
     @Json(name = "featured_image") var featuredImage: String?,
-    @Json(name = "rating") var rating: Int = 0,
+    @Json(name = "rating") var rating: String = "0",
     @Json(name = "source_url") var sourceUrl: String?,
     @Json(name = "ingredients") var ingredients: List<String> = emptyList(),
     @Json(name = "long_date_updated") var dateUpdatedTimeStamp: Long?,
