@@ -1,6 +1,7 @@
 package com.me.recipe.ui.recipe
 
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
@@ -28,6 +29,7 @@ internal fun RecipeScreen(
     )
 
     Scaffold(
+        containerColor = MaterialTheme.colorScheme.background,
         snackbarHost = {
             DefaultSnackbar(snackbarHostState = snackbarHostState) {
                 snackbarHostState.currentSnackbarData?.dismiss()

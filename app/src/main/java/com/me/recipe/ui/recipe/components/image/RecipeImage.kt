@@ -1,5 +1,3 @@
-@file:OptIn(ExperimentalSharedTransitionApi::class)
-
 package com.me.recipe.ui.recipe.components.image
 
 import androidx.compose.animation.ExperimentalSharedTransitionApi

@@ -33,7 +33,7 @@ class RecipeListScreenTest {
 
     @Test
     fun `when all data is available then show recipe correctly`() {
-        val state = SearchContract.State.testData()
+        val state = SearchUiState.testData()
         robot(robotTestRule) {
             setRecipeListScreen(state)
             checkScreenWhenStateIsLoaded(state)
@@ -42,8 +42,8 @@ class RecipeListScreenTest {
 
     @Test
     fun `when state change from loading to loaded show correctly loading and loaded screens`() {
-        val loadedState = SearchContract.State.testData()
-        val loadingState = SearchContract.State.testData().copy(
+        val loadedState = SearchUiState.testData()
+        val loadingState = SearchUiState.testData().copy(
             recipes = persistentListOf(),
             loading = true,
         )
@@ -59,7 +59,7 @@ class RecipeListScreenTest {
 
     @Test
     fun `while load more data show loading progress bar correctly`() {
-        val state = SearchContract.State.testData().copy(loading = true)
+        val state = SearchUiState.testData().copy(loading = true)
         robot(robotTestRule) {
             setRecipeListScreen(state)
             checkScreenWhenStateIsLoadedMore()
@@ -68,7 +68,7 @@ class RecipeListScreenTest {
 
     @Test
     fun `when has error check error dialog show correctly`() {
-        val state = SearchContract.State.testData().copy(
+        val state = SearchUiState.testData().copy(
             errors = GenericDialogInfo.testDate(),
         )
         robot(robotTestRule) {

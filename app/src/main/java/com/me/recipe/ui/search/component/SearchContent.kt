@@ -8,11 +8,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.me.recipe.domain.features.recipe.model.Recipe
-import com.me.recipe.ui.component.util.SharedTransitionLayoutPreview
 import com.me.recipe.ui.search.SearchUiState
-import com.me.recipe.ui.search.component.shimmer.SearchShimmer
-import com.me.recipe.ui.search.showLoadingProgressBar
-import com.me.recipe.ui.search.showShimmer
+import com.me.recipe.ui.search.component.shimmer.RecipeShimmer
 import com.me.recipe.ui.theme.RecipeTheme
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
@@ -28,7 +25,7 @@ internal fun SearchContent(
     modifier: Modifier = Modifier,
 ) {
     if (showShimmer) {
-        SearchShimmer(
+        RecipeShimmer(
             imageHeight = 250.dp,
             modifier = modifier,
         )
@@ -48,16 +45,14 @@ internal fun SearchContent(
 @Composable
 private fun SearchContentPreview() {
     RecipeTheme(true) {
-        SharedTransitionLayoutPreview {
-            SearchContent(
-                recipes = SearchUiState.testData().recipes,
-                showShimmer = false,
-                showLoadingProgressBar = false,
-                onRecipeClicked = {},
-                onRecipeLongClicked = {},
-                onChangeRecipeScrollPosition = {},
-            )
-        }
+        SearchContent(
+            recipes = SearchUiState.testData().recipes,
+            showShimmer = false,
+            showLoadingProgressBar = false,
+            onRecipeClicked = {},
+            onRecipeLongClicked = {},
+            onChangeRecipeScrollPosition = {},
+        )
     }
 }
 
@@ -65,15 +60,13 @@ private fun SearchContentPreview() {
 @Composable
 private fun SearchContentShimmerPreview() {
     RecipeTheme(true) {
-        SharedTransitionLayoutPreview {
-            SearchContent(
-                recipes = persistentListOf(),
-                showShimmer = true,
-                showLoadingProgressBar = false,
-                onRecipeClicked = {},
-                onRecipeLongClicked = {},
-                onChangeRecipeScrollPosition = {},
-            )
-        }
+        SearchContent(
+            recipes = persistentListOf(),
+            showShimmer = true,
+            showLoadingProgressBar = false,
+            onRecipeClicked = {},
+            onRecipeLongClicked = {},
+            onChangeRecipeScrollPosition = {},
+        )
     }
 }

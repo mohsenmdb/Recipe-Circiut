@@ -75,7 +75,7 @@ private fun RecipeInfoRow(
             color = MaterialTheme.colorScheme.onSurface,
         )
         Text(
-            text = recipe.rating.toString(),
+            text = recipe.rating,
             modifier = Modifier
                 .fillMaxWidth()
                 .wrapContentWidth(Alignment.End)

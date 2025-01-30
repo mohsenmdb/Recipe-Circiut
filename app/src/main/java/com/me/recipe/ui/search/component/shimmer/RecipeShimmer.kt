@@ -21,10 +21,12 @@ import com.me.recipe.ui.theme.RecipeTheme
 import kotlinx.collections.immutable.persistentListOf
 
 @Composable
-internal fun SearchShimmer(
-    imageHeight: Dp,
+internal fun RecipeShimmer(
     modifier: Modifier = Modifier,
+    imageHeight: Dp = 250.dp,
     padding: Dp = 16.dp,
+    itemCount: Int = 5,
+    withSmallView: Boolean = true
 ) {
     BoxWithConstraints(
         modifier = modifier.fillMaxSize(),
@@ -71,7 +73,7 @@ internal fun SearchShimmer(
             modifier = Modifier
                 .testTag("testTag_SearchShimmer"),
         ) {
-            items(5) {
+            items(itemCount) {
                 ShimmerRecipeCardItem(
                     colors = colors,
                     xShimmer = xCardShimmer.value,
@@ -80,6 +82,7 @@ internal fun SearchShimmer(
                     gradientWidth = gradientWidth,
                     padding = padding,
                     cardNumber = it,
+                    withSmallView = withSmallView,
                 )
             }
         }
@@ -90,6 +93,6 @@ internal fun SearchShimmer(
 @Composable
 private fun SearchShimmerPreview() {
     RecipeTheme(true) {
-        SearchShimmer(imageHeight = 250.dp)
+        RecipeShimmer(imageHeight = 250.dp)
     }
 }

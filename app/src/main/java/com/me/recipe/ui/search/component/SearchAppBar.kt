@@ -37,7 +37,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.me.recipe.shared.utils.FoodCategory
 import com.me.recipe.shared.utils.getAllFoodCategories
-import com.me.recipe.ui.component.util.SharedTransitionLayoutPreview
 import com.me.recipe.ui.search.component.chip.FoodCategoryChip
 import com.me.recipe.ui.theme.RecipeTheme
 
@@ -168,16 +167,14 @@ private fun FoodChipsRow(
 @Composable
 private fun SearchAppBarPreview() {
     RecipeTheme(true) {
-        SharedTransitionLayoutPreview {
-            SearchAppBar(
-                query = FoodCategory.CHICKEN.name,
-                selectedCategory = FoodCategory.CHICKEN,
-                categoryScrollPosition = Pair(0, 0),
-                onQueryChanged = {},
-                newSearch = {},
-                onSelectedCategoryChanged = { _, _, _ -> },
-                onSearchClearClicked = {},
-            )
-        }
+        SearchAppBar(
+            query = FoodCategory.CHICKEN.name,
+            selectedCategory = FoodCategory.CHICKEN,
+            categoryScrollPosition = Pair(0, 0),
+            onQueryChanged = {},
+            newSearch = {},
+            onSelectedCategoryChanged = { _, _, _ -> },
+            onSearchClearClicked = {},
+        )
     }
 }

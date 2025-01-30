@@ -10,6 +10,7 @@ import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.assertIsNotDisplayed
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
+import com.me.recipe.domain.features.recipe.model.Recipe
 import com.me.recipe.ui.component.util.SharedTransitionLayoutPreview
 import com.me.recipe.ui.utils.RobotTestRule
 import javax.inject.Inject
@@ -22,41 +23,25 @@ class RecipeScreenRobot @Inject constructor() {
 
     context (RobotTestRule)
     fun setRecipeScreen(
-        state: RecipeContract.State,
+        state: RecipeUiState,
     ) {
         composeTestRule.setContent {
-            SharedTransitionLayoutPreview {
-                RecipeScreen(
-                    event = {},
-                    effect = flowOf(),
-                    state = state,
-                    sharedTransitionScope = this,
-                    animatedVisibilityScope = it,
-                )
-            }
+            RecipeScreen(state = state)
         }
     }
 
     context (RobotTestRule)
     fun setRecipeScreenLoadingThenLoaded(
-        data: RecipeContract.State,
+        data: RecipeUiState,
     ) {
         composeTestRule.setContent {
             var state by remember {
                 mutableStateOf(data)
             }
-            SharedTransitionLayoutPreview {
-                RecipeScreen(
-                    event = {},
-                    effect = flowOf(),
-                    state = state,
-                    sharedTransitionScope = this,
-                    animatedVisibilityScope = it,
-                )
-            }
+            RecipeScreen(state = state)
             LaunchedEffect(Unit) {
                 delay(1000)
-                state = data.copy(loading = false)
+                state = data.copy(recipesLoading = false, recipe = Recipe.testData())
             }
         }
     }
@@ -83,10 +68,10 @@ class RecipeScreenRobot @Inject constructor() {
     fun checkScreenWhenStateIsLoading() {
         assertLoadingRankChipIsDisplayed()
         assertLoadingRecipeShimmerIsDisplayed()
-        assertRecipeImageIsDisplayed()
-        assertTitleRowTextIsDisplayed()
+        assertRecipeImageShimmerIsDisplayed()
         assertTitleRowIsDisplayed()
 
+        assertTitleRowTextIsNotDisplayed()
         assertRankChipIsNotDisplayed()
         assertRecipeInfoViewIsNotDisplayed()
         assertRecipeInfoViewTextIsNotDisplayed()
@@ -101,9 +86,21 @@ class RecipeScreenRobot @Inject constructor() {
     }
 
     context (RobotTestRule)
+    private fun assertRecipeImageShimmerIsDisplayed() {
+        composeTestRule.onNodeWithTag("testTag_recipeImage_shimmer", useUnmergedTree = true)
+            .assertIsDisplayed()
+    }
+
+    context (RobotTestRule)
     private fun assertTitleRowTextIsDisplayed() {
         composeTestRule.onNodeWithTag("testTag_TitleRow_Text", useUnmergedTree = true)
             .assertIsDisplayed()
+    }
+
+    context (RobotTestRule)
+    private fun assertTitleRowTextIsNotDisplayed() {
+        composeTestRule.onNodeWithTag("testTag_TitleRow_Text", useUnmergedTree = true)
+            .assertIsNotDisplayed()
     }
 
     context (RobotTestRule)
