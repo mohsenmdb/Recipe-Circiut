@@ -28,16 +28,16 @@ import dagger.hilt.components.SingletonComponent
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.coroutines.launch
 
-class MainViewPresenter @AssistedInject constructor(
+class HomePresenter @AssistedInject constructor(
     @Assisted private val screen: MainUiScreen,
     @Assisted internal val navigator: Navigator,
     private val settingsDataStore: Lazy<SettingsDataStore>,
     private val getRecipesUsecase: Lazy<CategoriesRecipesUsecase>,
     private val sliderRecipesUsecase: Lazy<SliderRecipesUsecase>,
-) : Presenter<MainUiState> {
+) : Presenter<HomeUiState> {
 
     @Composable
-    override fun present(): MainUiState {
+    override fun present(): HomeUiState {
         val stableScope = rememberStableCoroutineScope()
         val uiMessageManager = remember { UiMessageManager() }
         val message by uiMessageManager.message.collectAsState(null)
@@ -52,14 +52,14 @@ class MainViewPresenter @AssistedInject constructor(
             sliderRecipesUsecase.get().flow.collectAsRetainedState(initial = null)
         val isDarkTheme by remember { settingsDataStore.get().isDark }
 
-        return MainUiState(
+        return HomeUiState(
             sliderRecipes = sliders?.getOrNull(),
             categoriesRecipes = categoryRows?.getOrNull(),
             isDark = isDarkTheme,
             message = message,
             eventSink = { event ->
                 when (event) {
-                    is MainUiEvent.OnRecipeClicked -> {
+                    is HomeUiEvent.OnRecipeClicked -> {
                         navigator.goTo(
                             RecipeUiScreen(
                                 itemImage = event.recipe.featuredImage,
@@ -70,14 +70,14 @@ class MainViewPresenter @AssistedInject constructor(
                         )
                     }
 
-                    is MainUiEvent.OnCategoryClicked -> {
+                    is HomeUiEvent.OnCategoryClicked -> {
                         navigator.goTo(RecipeListScreen(event.category.value))
                     }
-                    is MainUiEvent.OnRecipeLongClick -> {
+                    is HomeUiEvent.OnRecipeLongClick -> {
                         stableScope.launch { uiMessageManager.emitMessage(UiMessage.createSnackbar(event.title)) }
                     }
-                    MainUiEvent.ToggleDarkTheme -> settingsDataStore.get().toggleTheme()
-                    MainUiEvent.ClearMessage -> stableScope.launch { uiMessageManager.clearMessage() }
+                    HomeUiEvent.ToggleDarkTheme -> settingsDataStore.get().toggleTheme()
+                    HomeUiEvent.ClearMessage -> stableScope.launch { uiMessageManager.clearMessage() }
                 }
             },
         )
@@ -87,5 +87,5 @@ class MainViewPresenter @AssistedInject constructor(
 @CircuitInject(MainUiScreen::class, SingletonComponent::class)
 @AssistedFactory
 interface Factory {
-    fun create(screen: MainUiScreen, navigator: Navigator): MainViewPresenter
+    fun create(screen: MainUiScreen, navigator: Navigator): HomePresenter
 }
