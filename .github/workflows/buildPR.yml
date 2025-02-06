@@ -24,7 +24,7 @@ jobs:
                   TELEGRAM_TOPIC_ID: ${{ secrets.TELEGRAM_GROUP_TOPIC_ID }}
                   MESSAGE: '*[${{ github.head_ref }}]* checkout branch complete! 🌟✨✅🚀'
               run: |
-                  curl -s -X POST https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage -d chat_id=${TELEGRAM_GROUP_ID} -d message_thread_id=58 -d text="${MESSAGE}"
+                  curl -s -X POST https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage -d chat_id=2121476136 -d message_thread_id=58 -d text="${MESSAGE}"
 
             - name: Set Up JDK
               uses: actions/setup-java@v3
