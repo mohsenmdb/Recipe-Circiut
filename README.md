@@ -1,7 +1,7 @@
 # RecipeApp by Circuit
 RecipeApp is for developing an app by Circuit and Jetpack Compose UI.
 This is an offline-first application that shows a list of food on the first page.
-Use Circuit Presenters instead of ViewModels
+Use Circuit Presenters instead of ViewModels.
 [Circuit](https://slackhq.github.io/circuit/#overview) is a simple, lightweight, and extensible framework for building Kotlin applications that’s Compose from the ground up.
 
 Features:
