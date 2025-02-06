@@ -26,7 +26,7 @@ internal fun RecipeShimmer(
     imageHeight: Dp = 250.dp,
     padding: Dp = 16.dp,
     itemCount: Int = 5,
-    withSmallView: Boolean = true
+    withSmallView: Boolean = true,
 ) {
     BoxWithConstraints(
         modifier = modifier.fillMaxSize().testTag("testTag_RecipeShimmer"),

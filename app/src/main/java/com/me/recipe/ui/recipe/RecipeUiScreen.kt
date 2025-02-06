@@ -3,7 +3,6 @@ package com.me.recipe.ui.recipe
 import androidx.compose.runtime.Stable
 import com.me.recipe.domain.features.recipe.model.Recipe
 import com.me.recipe.ui.component.util.UiMessage
-import com.me.recipe.ui.home.MainUiEvent
 import com.slack.circuit.runtime.CircuitUiEvent
 import com.slack.circuit.runtime.CircuitUiState
 import com.slack.circuit.runtime.screen.Screen

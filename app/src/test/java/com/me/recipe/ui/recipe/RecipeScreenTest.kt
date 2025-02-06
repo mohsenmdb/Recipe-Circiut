@@ -43,7 +43,7 @@ class RecipeScreenTest {
     fun `while loading just show shimmer and not show recipe view`() {
         val data = RecipeUiState.testData().copy(
             recipesLoading = true,
-            recipe = null
+            recipe = null,
         )
         robot(robotTestRule) {
             setRecipeScreen(data)
@@ -56,7 +56,7 @@ class RecipeScreenTest {
         val data = RecipeUiState.testData().copy(
             recipesLoading = true,
             recipe = Recipe.EMPTY,
-            )
+        )
         robot(robotTestRule) {
             setRecipeScreenLoadingThenLoaded(data)
 

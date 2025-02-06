@@ -45,7 +45,6 @@ import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toPersistentList
 import kotlinx.coroutines.launch
-import timber.log.Timber
 
 class SearchViewPresenter @AssistedInject constructor(
     @Assisted private val screen: SearchScreen,

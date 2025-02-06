@@ -18,7 +18,6 @@ import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
 import dagger.hilt.components.SingletonComponent
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 class RecipePresenter @AssistedInject constructor(

@@ -41,7 +41,7 @@ internal fun RecipeScreen(
             recipe = state.recipe,
             isLoading = state.recipesLoading,
             modifier = Modifier.padding(padding),
-            onLikeClicked = {state.eventSink(RecipeUiEvent.OnLikeClicked)}
+            onLikeClicked = { state.eventSink(RecipeUiEvent.OnLikeClicked) },
         )
     }
 }

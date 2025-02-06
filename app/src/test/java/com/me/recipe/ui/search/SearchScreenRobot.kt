@@ -20,7 +20,9 @@ import kotlinx.coroutines.delay
 class SearchScreenRobot @Inject constructor() {
 
     context (RobotTestRule)
-    fun setSearchScreen(state: SearchUiState) {
+    fun setSearchScreen(
+        state: SearchUiState,
+    ) {
         composeTestRule.setContent {
             SearchScreenView(state = state)
         }
@@ -58,7 +60,9 @@ class SearchScreenRobot @Inject constructor() {
     }
 
     context (RobotTestRule)
-    fun checkScreenWhenStateIsLoaded(state: SearchUiState) {
+    fun checkScreenWhenStateIsLoaded(
+        state: SearchUiState,
+    ) {
         assertSearchTextFieldIsDisplayed()
         assertFoodChipsRowIsDisplayed()
 

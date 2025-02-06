@@ -140,7 +140,7 @@ private fun RecipeContentPreview() {
         RecipeContent(
             recipe = Recipe.testData(),
             isLoading = false,
-            onLikeClicked = {}
+            onLikeClicked = {},
         )
     }
 }

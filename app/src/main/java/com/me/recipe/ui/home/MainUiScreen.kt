@@ -6,7 +6,6 @@ import com.me.recipe.domain.features.recipe.model.Recipe
 import com.me.recipe.shared.utils.FoodCategory
 import com.me.recipe.ui.component.util.GenericDialogInfo
 import com.me.recipe.ui.component.util.UiMessage
-import com.me.recipe.ui.search.SearchUiEvent
 import com.slack.circuit.runtime.CircuitUiEvent
 import com.slack.circuit.runtime.CircuitUiState
 import com.slack.circuit.runtime.screen.Screen
@@ -33,7 +32,7 @@ data class MainUiState(
     companion object {
         fun testData() = MainUiState(
             sliderRecipes = persistentListOf(Recipe.testData()),
-            categoriesRecipes= persistentListOf(CategoryRecipe.testData(), CategoryRecipe.testData()),
+            categoriesRecipes = persistentListOf(CategoryRecipe.testData(), CategoryRecipe.testData()),
             eventSink = {},
         )
     }

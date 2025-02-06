@@ -20,14 +20,12 @@ import com.me.recipe.ui.theme.RecipeTheme
 import com.slack.circuit.codegen.annotations.CircuitInject
 import dagger.hilt.components.SingletonComponent
 
-
 @CircuitInject(MainUiScreen::class, SingletonComponent::class)
 @Composable
 fun HomeScreen(
     state: MainUiState,
     modifier: Modifier = Modifier,
 ) {
-
     val snackbarHostState = remember { SnackbarHostState() }
     MessageEffect(
         snackbarHostState = snackbarHostState,
@@ -60,12 +58,12 @@ fun HomeScreen(
     }
 }
 
- @Preview
- @Composable
- private fun HomeScreenPreview() {
+@Preview
+@Composable
+private fun HomeScreenPreview() {
     RecipeTheme(true) {
         HomeScreen(
             state = MainUiState.testData(),
         )
     }
- }
+}

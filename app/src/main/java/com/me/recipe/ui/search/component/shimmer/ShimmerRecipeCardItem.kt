@@ -108,7 +108,7 @@ private fun ShimmerRecipeCardItemWithOutSmallViewPreview() {
             gradientWidth = 30f,
             padding = 5.dp,
             cardNumber = 0,
-            withSmallView = false
+            withSmallView = false,
         )
     }
 }
