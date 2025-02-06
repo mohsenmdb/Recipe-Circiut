@@ -1,6 +1,5 @@
 package com.me.recipe.ui.recipe
 
-import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -11,14 +10,10 @@ import androidx.compose.ui.test.assertIsNotDisplayed
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import com.me.recipe.domain.features.recipe.model.Recipe
-import com.me.recipe.ui.component.util.SharedTransitionLayoutPreview
 import com.me.recipe.ui.utils.RobotTestRule
 import javax.inject.Inject
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.flowOf
-
-@OptIn(ExperimentalSharedTransitionApi::class)
 class RecipeScreenRobot @Inject constructor() {
 
     context (RobotTestRule)

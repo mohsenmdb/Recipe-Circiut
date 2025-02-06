@@ -16,14 +16,14 @@ import org.robolectric.shadows.ShadowLog
 
 @HiltAndroidTest
 @RunWith(RobolectricTestRunner::class)
-@Config(application = HiltTestApplication::class)
-class RecipeListScreenTest {
+@Config(application = HiltTestApplication::class, qualifiers = "w1080dp-h2400dp-xhdpi")
+class SearchScreenTest {
 
     @get:Rule
     val robotTestRule = RobotTestRule(this)
 
     @Inject
-    lateinit var robot: RecipeListScreenRobot
+    lateinit var robot: SearchScreenRobot
 
     @Before
     @Throws(Exception::class)
@@ -35,7 +35,7 @@ class RecipeListScreenTest {
     fun `when all data is available then show recipe correctly`() {
         val state = SearchUiState.testData()
         robot(robotTestRule) {
-            setRecipeListScreen(state)
+            setSearchScreen(state)
             checkScreenWhenStateIsLoaded(state)
         }
     }
@@ -58,10 +58,19 @@ class RecipeListScreenTest {
     }
 
     @Test
-    fun `while load more data show loading progress bar correctly`() {
+    fun `while loading data show shimmer correctly`() {
         val state = SearchUiState.testData().copy(loading = true)
         robot(robotTestRule) {
-            setRecipeListScreen(state)
+            setSearchScreen(state)
+            assertRecipeShimmerIsDisplay()
+        }
+    }
+
+    @Test
+    fun `while load more data show appending loading correctly`() {
+        val state = SearchUiState.testData().copy(appendingLoading = true)
+        robot(robotTestRule) {
+            setSearchScreen(state)
             checkScreenWhenStateIsLoadedMore()
         }
     }
@@ -72,7 +81,7 @@ class RecipeListScreenTest {
             errors = GenericDialogInfo.testDate(),
         )
         robot(robotTestRule) {
-            setRecipeListScreen(state)
+            setSearchScreen(state)
             checkScreenWhenStateIsError(state.errors!!)
         }
     }

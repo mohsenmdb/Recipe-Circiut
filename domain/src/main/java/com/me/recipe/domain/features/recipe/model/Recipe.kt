@@ -40,7 +40,7 @@ data class Recipe(
             rating = "15",
             sourceUrl = "Url",
             ingredients = persistentListOf("Soup", "Meat", "Rice"),
-            date = "",
+            date = "Nov 12 2025",
             dateTimestamp = 0L,
         )
     }

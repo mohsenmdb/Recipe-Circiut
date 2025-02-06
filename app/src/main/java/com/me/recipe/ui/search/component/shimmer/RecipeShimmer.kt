@@ -29,7 +29,7 @@ internal fun RecipeShimmer(
     withSmallView: Boolean = true
 ) {
     BoxWithConstraints(
-        modifier = modifier.fillMaxSize(),
+        modifier = modifier.fillMaxSize().testTag("testTag_RecipeShimmer"),
     ) {
         val cardWidthPx = with(LocalDensity.current) { (maxWidth - (padding * 2)).toPx() }
         val cardHeightPx = with(LocalDensity.current) { (imageHeight - padding).toPx() }

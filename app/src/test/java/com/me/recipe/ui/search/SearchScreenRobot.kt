@@ -1,6 +1,5 @@
 package com.me.recipe.ui.search
 
-import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -15,19 +14,13 @@ import com.me.recipe.domain.features.recipe.model.Recipe
 import com.me.recipe.shared.utils.FoodCategory
 import com.me.recipe.shared.utils.getAllFoodCategories
 import com.me.recipe.ui.component.util.GenericDialogInfo
-import com.me.recipe.ui.component.util.SharedTransitionLayoutPreview
 import com.me.recipe.ui.utils.RobotTestRule
 import javax.inject.Inject
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.flowOf
-
-@OptIn(ExperimentalSharedTransitionApi::class)
-class RecipeListScreenRobot @Inject constructor() {
+class SearchScreenRobot @Inject constructor() {
 
     context (RobotTestRule)
-    fun setRecipeListScreen(
-        state: SearchUiState,
-    ) {
+    fun setSearchScreen(state: SearchUiState) {
         composeTestRule.setContent {
             SearchScreenView(state = state)
         }
@@ -65,9 +58,7 @@ class RecipeListScreenRobot @Inject constructor() {
     }
 
     context (RobotTestRule)
-    fun checkScreenWhenStateIsLoaded(
-        state: SearchUiState,
-    ) {
+    fun checkScreenWhenStateIsLoaded(state: SearchUiState) {
         assertSearchTextFieldIsDisplayed()
         assertFoodChipsRowIsDisplayed()
 
@@ -203,6 +194,11 @@ class RecipeListScreenRobot @Inject constructor() {
         composeTestRule.onNodeWithTag("testTag_LoadingView_Text", useUnmergedTree = true)
             .assertIsDisplayed()
     }
+    context (RobotTestRule)
+    fun assertRecipeShimmerIsDisplay() {
+        composeTestRule.onNodeWithTag("testTag_RecipeShimmer", useUnmergedTree = true)
+            .assertIsDisplayed()
+    }
 
     context (RobotTestRule)
     private fun assertGenericDialogIsDisplayed() {
@@ -246,8 +242,8 @@ class RecipeListScreenRobot @Inject constructor() {
     operator fun invoke(
         robotTestRule: RobotTestRule,
         function: context(RobotTestRule)
-        RecipeListScreenRobot.() -> Unit,
+        SearchScreenRobot.() -> Unit,
     ) {
-        function(robotTestRule, this@RecipeListScreenRobot)
+        function(robotTestRule, this@SearchScreenRobot)
     }
 }
