@@ -24,6 +24,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.me.recipe.domain.features.recipe.model.Recipe
@@ -50,13 +51,14 @@ internal fun SliderCard(
                 data = recipe.featuredImage,
                 contentDescription = "recipe image",
                 modifier = Modifier
-                    .fillMaxSize(),
+                    .fillMaxSize()
+                    .testTag("testTag_sliderCard_image"),
                 contentScale = ContentScale.Crop,
             )
             VerticalGradientBox()
             RecipeTitle(
-                recipe,
-                modifier = Modifier.align(Alignment.BottomCenter),
+                recipe.title,
+                modifier = Modifier.align(Alignment.BottomCenter).testTag("testTag_sliderCard_text"),
             )
         }
     }
@@ -64,11 +66,11 @@ internal fun SliderCard(
 
 @Composable
 private fun RecipeTitle(
-    recipe: Recipe,
+    title: String,
     modifier: Modifier = Modifier,
 ) {
     Text(
-        text = recipe.title,
+        text = title,
         modifier = modifier
             .fillMaxWidth()
             .padding(vertical = 16.dp, horizontal = 12.dp),

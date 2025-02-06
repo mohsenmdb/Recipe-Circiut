@@ -11,8 +11,8 @@ data class CategoryRecipe(
     val recipes: ImmutableList<Recipe>,
 ) {
     companion object {
-        fun testData() = CategoryRecipe(
-            category = FoodCategory.CHICKEN,
+        fun testData(category: FoodCategory = FoodCategory.CHICKEN) = CategoryRecipe(
+            category = category,
             recipes = persistentListOf(Recipe.testData()),
         )
     }
