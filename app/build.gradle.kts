@@ -110,7 +110,6 @@ dependencies {
     implementation(libs.compose.animation)
     implementation(libs.compose.ui.preview)
     implementation(libs.compose.material3)
-    implementation(libs.compose.viewmodel.lifecycle)
     implementation(libs.compose.navigation)
     implementation(libs.compose.activity)
     implementation(libs.compose.constraintlayout)
