@@ -1,8 +1,5 @@
-@file:OptIn(ExperimentalSharedTransitionApi::class)
-
 package com.me.recipe.ui.search.component
 
-import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview

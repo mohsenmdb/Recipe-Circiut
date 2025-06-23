@@ -17,7 +17,7 @@ ksp {
 
 android {
     namespace = "com.me.recipe"
-    compileSdk = 34
+    compileSdk = 35
 
     defaultConfig {
         applicationId = "com.example.mycomposeapplication"
@@ -113,7 +113,6 @@ dependencies {
     implementation(libs.compose.material3)
     implementation(libs.compose.navigation)
     implementation(libs.compose.activity)
-    implementation(libs.compose.constraintlayout)
     implementation(libs.compose.coil)
     lintChecks(libs.compose.lint.checks)
 

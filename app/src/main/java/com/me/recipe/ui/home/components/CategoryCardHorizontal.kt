@@ -1,9 +1,8 @@
-@file:OptIn(ExperimentalFoundationApi::class, ExperimentalSharedTransitionApi::class)
+@file:OptIn(ExperimentalFoundationApi::class, ExperimentalFoundationApi::class)
 
 package com.me.recipe.ui.home.components
 
 import android.content.res.Configuration
-import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement

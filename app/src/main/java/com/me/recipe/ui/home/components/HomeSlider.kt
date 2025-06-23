@@ -1,8 +1,5 @@
-@file:OptIn(ExperimentalSharedTransitionApi::class)
-
 package com.me.recipe.ui.home.components
 
-import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.ExperimentalFoundationApi
