@@ -14,9 +14,9 @@ import kotlinx.collections.immutable.persistentListOf
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
-data class MainUiScreen(val title: String? = null) : Screen
+data class HomeUiScreen(val title: String? = null) : Screen
 
-typealias MainUiSink = (HomeUiEvent) -> Unit
+typealias HomeUiEventSink = (HomeUiEvent) -> Unit
 
 @Stable
 data class HomeUiState(
@@ -27,7 +27,7 @@ data class HomeUiState(
     val categoriesLoading: Boolean = categoriesRecipes.isNullOrEmpty(),
     val isDark: Boolean = false,
     val message: UiMessage? = null,
-    val eventSink: MainUiSink,
+    val eventSink: HomeUiEventSink,
 ) : CircuitUiState {
     companion object {
         fun testData() = HomeUiState(

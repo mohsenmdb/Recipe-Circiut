@@ -22,7 +22,7 @@ import com.me.recipe.ui.theme.RecipeTheme
 import com.slack.circuit.codegen.annotations.CircuitInject
 import dagger.hilt.components.SingletonComponent
 
-@CircuitInject(MainUiScreen::class, SingletonComponent::class)
+@CircuitInject(HomeUiScreen::class, SingletonComponent::class)
 @Composable
 fun HomeScreen(
     state: HomeUiState,

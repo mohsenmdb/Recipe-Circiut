@@ -18,7 +18,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.me.recipe.shared.datastore.SettingsDataStore
 import com.me.recipe.shared.datastore.UserDataStore
-import com.me.recipe.ui.home.MainUiScreen
+import com.me.recipe.ui.home.HomeUiScreen
 import com.me.recipe.ui.navigation.NavBottomBar
 import com.me.recipe.ui.theme.RecipeTheme
 import com.me.recipe.util.extention.getPushNotificationPermission
@@ -51,7 +51,7 @@ class MainActivityCircuit : AppCompatActivity() {
         setUserLoginInfo(userDataStore)
         getPushNotificationPermission()
         setContent {
-            val backstack = rememberSaveableBackStack(root = MainUiScreen())
+            val backstack = rememberSaveableBackStack(root = HomeUiScreen())
             val navigator = rememberCircuitNavigator(backstack)
             var selectedIndex by remember { mutableIntStateOf(0) }
             CircuitCompositionLocals(circuit = circuit) {
