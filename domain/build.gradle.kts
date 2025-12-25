@@ -7,10 +7,10 @@ plugins {
 
 android {
     namespace = "com.me.recipe.domain"
-    compileSdk = 34
+    compileSdk = 36
 
     defaultConfig {
-        minSdk = 21
+        minSdk = 23
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }

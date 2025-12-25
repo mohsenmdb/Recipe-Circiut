@@ -17,11 +17,11 @@ ksp {
 
 android {
     namespace = "com.me.recipe"
-    compileSdk = 35
+    compileSdk = 36
 
     defaultConfig {
         applicationId = "com.example.mycomposeapplication"
-        minSdk = 21
+        minSdk = 23
         targetSdk = 34
         versionCode = 1
         versionName = "1.0"
@@ -115,6 +115,7 @@ dependencies {
     implementation(libs.compose.activity)
     implementation(libs.compose.coil)
     lintChecks(libs.compose.lint.checks)
+    implementation(libs.compose.icons.extended)
 
     implementation(libs.hilt)
     ksp(libs.hilt.compiler)

@@ -50,8 +50,10 @@ internal fun NavBottomBar(
                         onIndexChanged(index)
                         navigator.resetRoot(
                             newRoot = getScreenForTab(tab),
-                            saveState = true,
-                            restoreState = true,
+                            options = Navigator.StateOptions(
+                                save = true,
+                                restore = true
+                            ),
                         )
                     },
                 )

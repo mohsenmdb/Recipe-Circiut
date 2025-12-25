@@ -30,7 +30,7 @@ import com.slack.circuit.foundation.NavigableCircuitContent
 import com.slack.circuit.foundation.rememberCircuitNavigator
 import com.slack.circuit.overlay.ContentWithOverlays
 import com.slack.circuit.runtime.Navigator
-import com.slack.circuitx.gesturenavigation.GestureNavigationDecoration
+import com.slack.circuitx.gesturenavigation.GestureNavigationDecorationFactory
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -86,7 +86,7 @@ private fun Content(
     backstack: SaveableBackStack,
 ) {
     val gestureNavigationDecoration = remember(navigator) {
-        GestureNavigationDecoration(onBackInvoked = navigator::pop)
+        GestureNavigationDecorationFactory(onBackInvoked = navigator::pop)
     }
     ContentWithOverlays(
         modifier = Modifier
@@ -97,7 +97,7 @@ private fun Content(
             modifier = Modifier.background(Color.Transparent),
             navigator = navigator,
             backStack = backstack,
-            decoration = gestureNavigationDecoration,
+            decoratorFactory = gestureNavigationDecoration,
         )
     }
 }
