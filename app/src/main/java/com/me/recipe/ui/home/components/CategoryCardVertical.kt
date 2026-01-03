@@ -94,7 +94,7 @@ private fun CategoryCardVertical(
     ) {
         Column {
             CoilImage(
-                data = recipe.featuredImage,
+                data = recipe.image,
                 contentDescription = "recipe image",
                 modifier = Modifier
                     .width(200.dp)

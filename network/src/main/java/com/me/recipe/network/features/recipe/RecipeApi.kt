@@ -7,10 +7,10 @@ import retrofit2.http.Query
 
 interface RecipeApi {
 
-    @GET("search")
+    @GET("recipes")
     suspend fun search(
         @Query("page") page: Int,
-        @Query("size") size: Int,
+        @Query("pageSize") size: Int,
         @Query("query") query: String,
     ): RecipeSearchResponse
 

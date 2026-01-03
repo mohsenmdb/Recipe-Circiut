@@ -98,7 +98,7 @@ internal fun CategoryCardHorizontal(
             .combinedClickable(onClick = onClick, onLongClick = onLongClick),
     ) {
         CoilImage(
-            data = recipe.featuredImage,
+            data = recipe.image,
             contentDescription = "recipe image",
             modifier = Modifier
                 .fillMaxSize(),

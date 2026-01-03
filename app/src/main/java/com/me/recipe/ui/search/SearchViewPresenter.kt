@@ -132,7 +132,7 @@ class SearchViewPresenter @AssistedInject constructor(
         fun navigateToRecipePage(recipe: Recipe) {
             navigator.goTo(
                 RecipeUiScreen(
-                    itemImage = recipe.featuredImage,
+                    itemImage = recipe.image,
                     itemTitle = recipe.title,
                     itemId = recipe.id,
                     itemUid = recipe.uid,
