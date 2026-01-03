@@ -62,7 +62,7 @@ class HomePresenter @AssistedInject constructor(
                     is HomeUiEvent.OnRecipeClicked -> {
                         navigator.goTo(
                             RecipeUiScreen(
-                                itemImage = event.recipe.featuredImage,
+                                itemImage = event.recipe.image,
                                 itemTitle = event.recipe.title,
                                 itemId = event.recipe.id,
                                 itemUid = event.recipe.uid,

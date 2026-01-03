@@ -35,6 +35,8 @@ class RecipeListRepositoryImpl @Inject constructor(
         size: Int,
     ): Flow<ImmutableList<Recipe>> = flow {
         val recipes = getRecipesFromNetwork(page = page, query = query, size = size)
+        Timber.d("getRecipes FromNetwork image= ${recipes.first().image}")
+
         recipeDao.insertRecipes(entityMapper.toEntityList(recipes))
 
         // query the cache
@@ -51,7 +53,9 @@ class RecipeListRepositoryImpl @Inject constructor(
             )
         }
 
+        Timber.d("getRecipes From cache= ${cacheResult.first().image}")
         val list = entityMapper.toDomainList(cacheResult).toPersistentList()
+        Timber.d("getRecipes From cache toDomainList= ${list.first().image}")
         emit(list)
     }.flowOn(ioDispatcher)
 
@@ -181,8 +185,9 @@ class RecipeListRepositoryImpl @Inject constructor(
     }
 
     private suspend fun getRecipesFromNetwork(page: Int, query: String, size: Int): List<Recipe> {
-        val recipes = recipeApi.search(page = page, query = query, size = size).results
-        Timber.d("category1 getRecipesFromNetwork= $recipes")
-        return dtoMapper.toDomainList(recipes)
+        val recipes = recipeApi.search(page = page, query = query, size = size).data.results
+        val mappedRecipes = dtoMapper.toDomainList(recipes)
+        Timber.d("getRecipes FromNetwork= ${mappedRecipes.size}")
+        return mappedRecipes
     }
 }

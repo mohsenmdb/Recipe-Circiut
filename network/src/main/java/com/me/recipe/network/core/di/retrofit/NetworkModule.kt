@@ -38,7 +38,7 @@ object NetworkModule {
     @Provides
     fun provideRecipeService(client: OkHttpClient): Retrofit {
         return Retrofit.Builder()
-            .baseUrl("https://food2fork.ca/api/recipe/")
+            .baseUrl(LOCAL_HOST_PATH)
             .client(client)
             .addConverterFactory(
                 MoshiConverterFactory.create(
@@ -48,3 +48,5 @@ object NetworkModule {
             .build()
     }
 }
+
+const val LOCAL_HOST_PATH = "http://10.0.2.2:3000/"
