@@ -7,10 +7,10 @@ import com.squareup.moshi.JsonClass
 data class RecipeDto(
     @Json(name = "id") var id: Int?,
     @Json(name = "title") var title: String?,
-    @Json(name = "publisher") var publisher: String?,
+    @Json(name = "user_name") var publisher: String?,
     @Json(name = "image") var image: String?,
     @Json(name = "rating") var rating: String = "0",
     @Json(name = "ingredients") var ingredients: String?,
     @Json(name = "long_date_updated") var dateUpdatedTimeStamp: Long?,
-    @Json(name = "date_updated") var dateUpdated: String?,
+    @Json(name = "updatedAt") var dateUpdated: String?,
 )

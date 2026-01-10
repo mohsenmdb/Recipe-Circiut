@@ -7,8 +7,7 @@ import com.me.recipe.shared.utils.DateUtils
 import java.util.UUID
 import kotlinx.collections.immutable.toPersistentList
 
-class RecipeEntityMapper :
-    DomainMapper<RecipeEntity, Recipe> {
+class RecipeEntityMapper : DomainMapper<RecipeEntity, Recipe> {
 
     override fun mapToDomainModel(model: RecipeEntity, uid: String?): Recipe {
         return Recipe(
