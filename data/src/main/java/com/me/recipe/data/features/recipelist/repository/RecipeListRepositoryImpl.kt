@@ -78,12 +78,7 @@ class RecipeListRepositoryImpl @Inject constructor(
                     size = RECIPE_CATEGORY_PAGE_SIZE,
                 )
                 recipeDao.insertRecipes(entityMapper.toEntityList(apiResponse))
-
-                val cacheResult = recipeDao.searchRecipes(
-                    pageSize = RECIPE_CATEGORY_PAGE_SIZE,
-                    query = category.name,
-                    page = 1,
-                )
+                val cacheResult = getCachedCategories(category)
                 val recipes = entityMapper.toDomainList(cacheResult).toPersistentList()
                 if (recipes.isEmpty()) return@forEach
                 add(CategoryRecipe(category, recipes))
@@ -93,11 +88,7 @@ class RecipeListRepositoryImpl @Inject constructor(
     private suspend fun getOfflineCategories(categories: ImmutableList<FoodCategory>): PersistentList<CategoryRecipe> =
         buildList {
             categories.forEach { category ->
-                val cacheResult = recipeDao.searchRecipes(
-                    pageSize = RECIPE_CATEGORY_PAGE_SIZE,
-                    query = category.name,
-                    page = 1,
-                )
+                val cacheResult = getCachedCategories(category)
                 val recipes = entityMapper.toDomainList(cacheResult).toPersistentList()
                 if (recipes.isEmpty()) return@forEach
                 add(CategoryRecipe(category, recipes))
@@ -121,6 +112,13 @@ class RecipeListRepositoryImpl @Inject constructor(
                 query = query,
             )
         }
+
+    private suspend fun getCachedCategories(category: FoodCategory): List<RecipeEntity> =
+        recipeDao.searchRecipes(
+            pageSize = RECIPE_CATEGORY_PAGE_SIZE,
+            query = category.name,
+            page = 1,
+        )
 
     private suspend fun restoreCachedRecipes(query: String, page: Int): List<RecipeEntity> =
         if (query.isBlank()) {

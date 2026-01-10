@@ -13,6 +13,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
+import timber.log.Timber
 
 class RecipeRepositoryImpl @Inject constructor(
     private val recipeDao: RecipeDao,
@@ -29,6 +30,7 @@ class RecipeRepositoryImpl @Inject constructor(
         delay(1000)
 
         var recipe = getRecipeFromCache(recipeId = recipeId, uid = uid)
+        Timber.d("tezt id=${recipe?.id}, publisher= ${recipe?.publisher}")
 
         if (recipe != null) {
             emit(recipe)
