@@ -14,6 +14,8 @@ enum class FoodCategory(val value: String) {
     DONUT("Donut"),
     WATER("Water"),
     BEEF("Beef"),
+    PASTA("Pasta"),
+    UNKNOWN("Unknown"),
 }
 
 fun getAllFoodCategories(): ImmutableList<FoodCategory> {

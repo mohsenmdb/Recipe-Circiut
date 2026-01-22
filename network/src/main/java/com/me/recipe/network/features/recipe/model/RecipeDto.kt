@@ -5,12 +5,12 @@ import com.squareup.moshi.JsonClass
 
 @JsonClass(generateAdapter = true)
 data class RecipeDto(
-    @Json(name = "id") var id: Int?,
-    @Json(name = "title") var title: String?,
-    @Json(name = "user_name") var publisher: String?,
-    @Json(name = "image") var image: String?,
-    @Json(name = "rating") var rating: String = "0",
-    @Json(name = "ingredients") var ingredients: String?,
-    @Json(name = "long_date_updated") var dateUpdatedTimeStamp: Long?,
-    @Json(name = "updatedAt") var dateUpdated: String?,
+    @Json(name = "id") val id: Int?,
+    @Json(name = "title") val title: String?,
+    @Json(name = "user_name") val publisher: String?,
+    @Json(name = "image") val image: String?,
+    @Json(name = "rating") val rating: String = "0",
+    @Json(name = "ingredients") val ingredients: String?,
+    @Json(name = "long_date_updated") val dateUpdatedTimeStamp: Long?,
+    @Json(name = "updatedAt") val dateUpdated: String?,
 )
