@@ -7,18 +7,16 @@ import com.me.recipe.shared.utils.DateUtils
 import java.util.UUID
 import kotlinx.collections.immutable.toPersistentList
 
-class RecipeEntityMapper :
-    DomainMapper<RecipeEntity, Recipe> {
+class RecipeEntityMapper : DomainMapper<RecipeEntity, Recipe> {
 
     override fun mapToDomainModel(model: RecipeEntity, uid: String?): Recipe {
         return Recipe(
             id = model.id,
             uid = uid ?: UUID.randomUUID().toString(),
             title = model.title,
-            featuredImage = model.featuredImage,
+            image = model.image,
             rating = model.rating,
             publisher = model.publisher,
-            sourceUrl = model.sourceUrl,
             ingredients = convertIngredientsToList(model.ingredients).toPersistentList(),
             date = model.date,
             dateTimestamp = model.dateTimestamp,
@@ -29,10 +27,9 @@ class RecipeEntityMapper :
         return RecipeEntity(
             id = domainModel.id,
             title = domainModel.title,
-            featuredImage = domainModel.featuredImage,
+            image = domainModel.image,
             rating = domainModel.rating,
             publisher = domainModel.publisher,
-            sourceUrl = domainModel.sourceUrl,
             ingredients = convertIngredientListToString(domainModel.ingredients),
             date = domainModel.date,
             dateTimestamp = domainModel.dateTimestamp,

@@ -31,7 +31,7 @@ class RecommendationWorker @AssistedInject constructor(
                     id = recipe.id,
                     title = recipe.title,
                     message = recipe.publisher,
-                    banner = recipe.featuredImage,
+                    banner = recipe.image,
                     context = context,
                 )
 //                val output = workDataOf(KEY_WORKER_IMAGE_URI to imageUrl)

@@ -47,7 +47,7 @@ internal fun SliderCard(
     ) {
         BoxWithConstraints(modifier = Modifier.fillMaxSize()) {
             CoilImage(
-                data = recipe.featuredImage,
+                data = recipe.image,
                 contentDescription = "recipe image",
                 modifier = Modifier
                     .fillMaxSize()

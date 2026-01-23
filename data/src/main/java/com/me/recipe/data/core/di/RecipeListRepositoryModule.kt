@@ -1,6 +1,7 @@
 package com.me.recipe.data.core.di
 
 import com.me.recipe.cache.recipe.RecipeDao
+import com.me.recipe.data.features.recipe.mapper.CategoryDtoMapper
 import com.me.recipe.data.features.recipe.mapper.RecipeDtoMapper
 import com.me.recipe.data.features.recipe.mapper.RecipeEntityMapper
 import com.me.recipe.data.features.recipelist.repository.RecipeListRepositoryImpl
@@ -19,7 +20,7 @@ object RecipeListRepositoryModule {
 
     @Singleton
     @Provides
-    fun provideRecipeListRepository(recipeDao: RecipeDao, recipeApi: RecipeApi, recipeDtoMapper: RecipeDtoMapper, entityMapper: RecipeEntityMapper, @IoDispatcher ioDispatcher: CoroutineDispatcher): RecipeListRepository {
-        return RecipeListRepositoryImpl(recipeDao, recipeApi, entityMapper, recipeDtoMapper, ioDispatcher)
+    fun provideRecipeListRepository(recipeDao: RecipeDao, recipeApi: RecipeApi, recipeDtoMapper: RecipeDtoMapper, entityMapper: RecipeEntityMapper, categoryDtoMapper: CategoryDtoMapper, @IoDispatcher ioDispatcher: CoroutineDispatcher): RecipeListRepository {
+        return RecipeListRepositoryImpl(recipeDao, recipeApi, entityMapper, recipeDtoMapper, categoryDtoMapper, ioDispatcher)
     }
 }

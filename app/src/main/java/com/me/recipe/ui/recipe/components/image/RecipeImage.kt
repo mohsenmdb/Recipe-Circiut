@@ -33,7 +33,7 @@ internal fun RecipeImage(
 private fun RecipeImagePreview() {
     RecipeTheme(true) {
         RecipeImage(
-            image = Recipe.testData().featuredImage,
+            image = Recipe.testData().image,
         )
     }
 }
