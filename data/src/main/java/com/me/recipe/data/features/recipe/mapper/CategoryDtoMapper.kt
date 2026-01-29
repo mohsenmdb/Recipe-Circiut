@@ -4,11 +4,12 @@ import com.me.recipe.data.core.utils.mappers.NullableInputMapper
 import com.me.recipe.domain.features.recipe.model.CategoryRecipe
 import com.me.recipe.network.features.recipe.model.CategoriesDto
 import com.me.recipe.network.features.recipe.model.FoodCategoryDto
+import com.me.recipe.network.features.recipe.model.RowTypeDto
+import com.me.recipe.shared.utils.CategoryRowType
 import com.me.recipe.shared.utils.FoodCategory
 import javax.inject.Inject
 import kotlinx.collections.immutable.PersistentList
 import kotlinx.collections.immutable.toPersistentList
-import timber.log.Timber
 
 class CategoryDtoMapper @Inject constructor(private val recipeDtoMapper: RecipeDtoMapper) :
     NullableInputMapper<CategoriesDto, PersistentList<CategoryRecipe>> {
@@ -17,13 +18,26 @@ class CategoryDtoMapper @Inject constructor(private val recipeDtoMapper: RecipeD
             input?.categories?.forEach {
                 if (it.recipes.isNullOrEmpty()) return@forEach
                 val recipes = recipeDtoMapper.toDomainList(it.recipes!!)
-                add(CategoryRecipe(mapCategory(it.categoryName), recipes.toPersistentList()))
+                add(
+                    CategoryRecipe(
+                        rowType = getRowType(it.type),
+                        category = mapCategory(it.categoryName),
+                        recipes = recipes.toPersistentList(),
+                    ),
+                )
             }
         }.toPersistentList()
     }
 
+    private fun getRowType(type: RowTypeDto?): CategoryRowType {
+        return when (type) {
+            RowTypeDto.ROW -> CategoryRowType.ROW
+            RowTypeDto.SLIDER -> CategoryRowType.SLIDER
+            else -> CategoryRowType.UNKNOWN
+        }
+    }
     private fun mapCategory(category: FoodCategoryDto?): FoodCategory {
-        return when(category) {
+        return when (category) {
             FoodCategoryDto.CHICKEN -> FoodCategory.CHICKEN
             FoodCategoryDto.SOUP -> FoodCategory.SOUP
             FoodCategoryDto.DESSERT -> FoodCategory.DESSERT
@@ -35,6 +49,7 @@ class CategoryDtoMapper @Inject constructor(private val recipeDtoMapper: RecipeD
             FoodCategoryDto.WATER -> FoodCategory.WATER
             FoodCategoryDto.BEEF -> FoodCategory.BEEF
             FoodCategoryDto.PASTA -> FoodCategory.PASTA
+            FoodCategoryDto.ALL -> FoodCategory.ALL
             else -> FoodCategory.UNKNOWN
         }
     }

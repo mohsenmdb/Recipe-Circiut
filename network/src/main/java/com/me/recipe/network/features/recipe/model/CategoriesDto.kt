@@ -10,9 +10,16 @@ data class CategoriesDto(
 
 @JsonClass(generateAdapter = true)
 data class CategoriesListDto(
+    @Json(name = "type") val type: RowTypeDto?,
     @Json(name = "category") val categoryName: FoodCategoryDto?,
     @Json(name = "recipes") val recipes: List<RecipeDto>?,
 )
+
+@JsonClass(generateAdapter = false)
+enum class RowTypeDto {
+    SLIDER,
+    ROW,
+}
 
 @JsonClass(generateAdapter = false)
 enum class FoodCategoryDto {
@@ -27,4 +34,5 @@ enum class FoodCategoryDto {
     WATER,
     BEEF,
     PASTA,
+    ALL,
 }

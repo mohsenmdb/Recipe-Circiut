@@ -5,18 +5,17 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.ui.util.fastFilter
 import com.me.recipe.domain.features.recipe.model.CategoryRecipe
-import com.me.recipe.domain.features.recipe.model.Recipe
 import com.me.recipe.domain.features.recipelist.usecases.CategoriesRecipesUsecase
-import com.me.recipe.domain.features.recipelist.usecases.SliderRecipesUsecase
 import com.me.recipe.shared.datastore.SettingsDataStore
+import com.me.recipe.shared.utils.CategoryRowType
 import com.me.recipe.shared.utils.getAllFoodCategories
 import com.me.recipe.ui.component.util.UiMessage
 import com.me.recipe.ui.component.util.UiMessageManager
 import com.me.recipe.ui.recipe.RecipeUiScreen
 import com.me.recipe.ui.recipelist.RecipeListScreen
 import com.slack.circuit.codegen.annotations.CircuitInject
-import com.slack.circuit.retained.collectAsRetainedState
 import com.slack.circuit.runtime.Navigator
 import com.slack.circuit.runtime.internal.rememberStableCoroutineScope
 import com.slack.circuit.runtime.presenter.Presenter
@@ -26,14 +25,14 @@ import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
 import dagger.hilt.components.SingletonComponent
 import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.toPersistentList
 import kotlinx.coroutines.launch
 
 class HomePresenter @AssistedInject constructor(
     @Assisted private val screen: HomeUiScreen,
     @Assisted internal val navigator: Navigator,
     private val settingsDataStore: Lazy<SettingsDataStore>,
-    private val getRecipesUsecase: Lazy<CategoriesRecipesUsecase>,
-    private val sliderRecipesUsecase: Lazy<SliderRecipesUsecase>,
+    private val getCategoriesUseCase: Lazy<CategoriesRecipesUsecase>,
 ) : Presenter<HomeUiState> {
 
     @Composable
@@ -43,18 +42,17 @@ class HomePresenter @AssistedInject constructor(
         val message by uiMessageManager.message.collectAsState(null)
 
         LaunchedEffect(key1 = Unit) {
-            getRecipesUsecase.get().invoke(CategoriesRecipesUsecase.Params(getAllFoodCategories()))
-            sliderRecipesUsecase.get().invoke(Unit)
+            getCategoriesUseCase.get().invoke(CategoriesRecipesUsecase.Params(getAllFoodCategories()))
         }
         val categoryRows: Result<ImmutableList<CategoryRecipe>>? by
-            getRecipesUsecase.get().flow.collectAsState(initial = null)
-        val sliders: Result<ImmutableList<Recipe>>? by
-            sliderRecipesUsecase.get().flow.collectAsRetainedState(initial = null)
+            getCategoriesUseCase.get().flow.collectAsState(initial = null)
+        val rows = categoryRows?.getOrNull()?.fastFilter { it.rowType == CategoryRowType.ROW }?.toPersistentList()
+        val slider = categoryRows?.getOrNull()?.firstOrNull { it.rowType == CategoryRowType.SLIDER }?.recipes
         val isDarkTheme by remember { settingsDataStore.get().isDark }
 
         return HomeUiState(
-            sliderRecipes = sliders?.getOrNull(),
-            categoriesRecipes = categoryRows?.getOrNull(),
+            sliderRecipes = slider,
+            categoriesRecipes = rows,
             isDark = isDarkTheme,
             message = message,
             eventSink = { event ->

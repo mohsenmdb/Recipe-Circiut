@@ -16,7 +16,8 @@ class RecipeDtoMapper :
             id = model.id ?: -1,
             uid = uid ?: UUID.randomUUID().toString(),
             title = model.title.orEmpty(),
-            image = model.image.orEmpty().replace("http://localhost:3000/", LOCAL_HOST_PATH),// this replace is just for local server not production
+            // this replace is just for local server not production
+            image = model.image.orEmpty().replace("http://localhost:3000/", LOCAL_HOST_PATH),
             rating = model.rating,
             publisher = model.publisher.orEmpty(),
             ingredients = model.ingredients?.split(",")?.toPersistentList() ?: persistentListOf(),
@@ -32,7 +33,7 @@ class RecipeDtoMapper :
             image = domainModel.image,
             rating = domainModel.rating,
             publisher = domainModel.publisher,
-            ingredients = domainModel.ingredients.joinToString(",") ,
+            ingredients = domainModel.ingredients.joinToString(","),
             dateUpdated = domainModel.date,
             dateUpdatedTimeStamp = domainModel.dateTimestamp,
         )

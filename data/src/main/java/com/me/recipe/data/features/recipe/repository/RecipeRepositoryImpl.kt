@@ -13,7 +13,6 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
-import timber.log.Timber
 
 class RecipeRepositoryImpl @Inject constructor(
     private val recipeDao: RecipeDao,

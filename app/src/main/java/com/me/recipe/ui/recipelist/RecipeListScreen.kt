@@ -15,7 +15,6 @@ import com.me.recipe.ui.search.component.SearchContent
 import com.me.recipe.ui.theme.RecipeTheme
 import com.slack.circuit.codegen.annotations.CircuitInject
 import dagger.hilt.components.SingletonComponent
-import timber.log.Timber
 
 @CircuitInject(RecipeListScreen::class, SingletonComponent::class)
 @Composable

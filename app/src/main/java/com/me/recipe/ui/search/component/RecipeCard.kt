@@ -34,8 +34,7 @@ internal fun RecipeCard(
     onLongClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-
-    Timber.d("getRecipes RecipeCard ${recipe}")
+    Timber.d("getRecipes RecipeCard $recipe")
     Card(
         shape = MaterialTheme.shapes.small,
         elevation = CardDefaults.cardElevation(4.dp),

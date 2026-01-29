@@ -15,6 +15,7 @@ enum class FoodCategory(val value: String) {
     WATER("Water"),
     BEEF("Beef"),
     PASTA("Pasta"),
+    ALL("All"),
     UNKNOWN("Unknown"),
 }
 
