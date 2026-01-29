@@ -6,6 +6,7 @@ import com.me.recipe.R
 import com.me.recipe.util.errorformater.exceptions.ReadableException
 import com.me.recipe.util.errorformater.exceptions.RecipeDataException
 import dagger.hilt.android.qualifiers.ApplicationContext
+import java.net.ConnectException
 import java.net.SocketTimeoutException
 import java.net.UnknownHostException
 import java.util.concurrent.TimeoutException
@@ -23,7 +24,7 @@ class ErrorFormatterImpl @Inject constructor(
         val errorMessage: StringResource = when (throwable) {
             is ReadableException -> StringResource.Text(throwable.readableMessage)
             is RecipeDataException -> StringResource.ResId(R.string.something_went_wrong)
-            is UnknownHostException -> StringResource.ResId(R.string.not_connected_to_internet)
+            is UnknownHostException, is ConnectException -> StringResource.ResId(R.string.not_connected_to_internet)
             is SocketTimeoutException, is TimeoutException -> StringResource.ResId(R.string.connection_timeout_exception)
             is SSLHandshakeException -> StringResource.ResId(R.string.server_error_retry)
             else -> StringResource.ResId(R.string.server_error_retry)

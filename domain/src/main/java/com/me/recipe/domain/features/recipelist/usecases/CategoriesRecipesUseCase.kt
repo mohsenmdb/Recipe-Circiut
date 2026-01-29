@@ -10,19 +10,18 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.map
 
-class CategoriesRecipesUsecase @Inject constructor(
+class CategoriesRecipesUseCase @Inject constructor(
     private val categoriesRepository: CategoriesRepository,
-) : SubjectInteractor<CategoriesRecipesUsecase.Params, Result<ImmutableList<CategoryRecipe>>>() {
+) : SubjectInteractor<CategoriesRecipesUseCase.Params, Result<ImmutableList<CategoryRecipe>>>() {
     data class Params(
-        val categories: ImmutableList<FoodCategory>,
+        val isOffline: Boolean = false,
     )
     override fun createObservable(params: Params): Flow<Result<ImmutableList<CategoryRecipe>>> {
-        return with(params) {
-            categoriesRepository.categoriesRecipes(categories)
-                .map(Result.Companion::success)
-                .catch {
-                    emit(Result.failure(it))
-                }
-        }
+        val categories = if (params.isOffline) categoriesRepository.categoriesRecipesOffline() else categoriesRepository.categoriesRecipes()
+        return categories
+            .map(Result.Companion::success)
+            .catch {
+                emit(Result.failure(it))
+            }
     }
 }

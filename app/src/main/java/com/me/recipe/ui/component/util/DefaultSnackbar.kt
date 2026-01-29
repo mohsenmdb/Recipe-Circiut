@@ -65,8 +65,8 @@ fun MessageEffect(
     onClearMessage: () -> Unit,
 ) {
     val context = LocalContext.current
-    val actionOk = stringResource(id = R.string.ok)
     var showMessage: UiMessage? by remember { mutableStateOf(null) }
+    var actionOk by remember { mutableStateOf("") }
     LaunchedEffect(showMessage) {
         when (showMessage?.message) {
             is Message.Snackbar -> {
@@ -82,9 +82,8 @@ fun MessageEffect(
         }
     }
     message?.let {
-        LaunchedEffect(message) {
-            showMessage = it
-            onClearMessage()
-        }
+        actionOk = stringResource(id = message.actionText)
+        showMessage = it
+        onClearMessage()
     }
 }

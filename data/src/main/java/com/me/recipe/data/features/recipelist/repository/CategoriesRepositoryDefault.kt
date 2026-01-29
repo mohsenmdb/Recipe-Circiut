@@ -11,6 +11,7 @@ import com.me.recipe.network.features.recipe.RecipeApi
 import com.me.recipe.shared.utils.CategoryRowType
 import com.me.recipe.shared.utils.FoodCategory
 import com.me.recipe.shared.utils.RECIPE_CATEGORY_PAGE_SIZE
+import com.me.recipe.shared.utils.getAllFoodCategories
 import javax.inject.Inject
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.PersistentList
@@ -31,15 +32,11 @@ class CategoriesRepositoryDefault @Inject constructor(
     @IoDispatcher private var ioDispatcher: CoroutineDispatcher,
 ) : CategoriesRepository {
 
-    override fun categoriesRecipes(categories: ImmutableList<FoodCategory>): Flow<ImmutableList<CategoryRecipe>> =
+    override fun categoriesRecipes(): Flow<ImmutableList<CategoryRecipe>> =
         flow {
             // To show loading
             delay(500)
             emit(getCategoriesFromNetwork())
-        }.catch {
-            Timber.d("while fetch categories $it")
-            emit(getOfflineCategories(categories))
-            // TODO send a message to show this is offline data
         }.flowOn(ioDispatcher)
 
     private suspend fun getCategoriesFromNetwork(): PersistentList<CategoryRecipe> {
@@ -51,9 +48,15 @@ class CategoriesRepositoryDefault @Inject constructor(
         return categories
     }
 
-    private suspend fun getOfflineCategories(categories: ImmutableList<FoodCategory>): PersistentList<CategoryRecipe> =
+    override fun categoriesRecipesOffline(): Flow<ImmutableList<CategoryRecipe>> {
+        return flow {
+            emit(getOfflineCategories())
+        }.flowOn(ioDispatcher)
+    }
+
+    private suspend fun getOfflineCategories(): PersistentList<CategoryRecipe> =
         buildList {
-            categories.forEach { category ->
+            getAllFoodCategories().forEach { category ->
                 val cacheResult = getCachedCategories(category)
                 val recipes = recipeEntityMapper.toDomainList(cacheResult).toPersistentList()
                 if (recipes.isEmpty()) return@forEach

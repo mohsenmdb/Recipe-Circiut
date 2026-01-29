@@ -6,5 +6,6 @@ import kotlinx.collections.immutable.ImmutableList
 import kotlinx.coroutines.flow.Flow
 
 interface CategoriesRepository {
-    fun categoriesRecipes(categories: ImmutableList<FoodCategory>): Flow<ImmutableList<CategoryRecipe>>
+    fun categoriesRecipes(): Flow<ImmutableList<CategoryRecipe>>
+    fun categoriesRecipesOffline(): Flow<ImmutableList<CategoryRecipe>>
 }
