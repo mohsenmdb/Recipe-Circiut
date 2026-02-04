@@ -1,10 +1,8 @@
-import java.io.ByteArrayOutputStream
-
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.plugin.compose")
-    id("org.jetbrains.kotlin.android")
     id("kotlin-parcelize")
     id("dagger.hilt.android.plugin")
     alias(libs.plugins.ksp)
@@ -17,7 +15,9 @@ ksp {
 
 android {
     namespace = "com.me.recipe"
-    compileSdk = 36
+    compileSdk {
+        version = release(36)
+    }
 
     defaultConfig {
         applicationId = "com.example.mycomposeapplication"
@@ -40,27 +40,21 @@ android {
             )
         }
     }
-    applicationVariants.all {
-        outputs.all {
-            val branchName = getGitBranchName()
-            val apkName = "$name-$branchName.apk"
-            val output = this as com.android.build.gradle.internal.api.BaseVariantOutputImpl
-            output.outputFileName = apkName
-        }
-    }
+//    applicationVariants.all {
+//        outputs.all {
+//            val branchName = getGitBranchName()
+//            val apkName = "$name-$branchName.apk"
+//            val output = this as com.android.build.gradle.internal.api.BaseVariantOutputImpl
+//            output.outputFileName = apkName
+//        }
+//    }
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
     }
-    kotlinOptions {
-        jvmTarget = "17"
-    }
     buildFeatures {
         compose = true
         buildConfig = true
-    }
-    composeOptions {
-        kotlinCompilerExtensionVersion = libs.versions.kotlinCompilerExtensionVersion.get()
     }
     packagingOptions {
         resources {
@@ -73,12 +67,15 @@ android {
             isReturnDefaultValues = true
         }
     }
-    kotlinOptions {
-        freeCompilerArgs += listOf("-Xcontext-receivers")
-        freeCompilerArgs += listOf("-XXLanguage:+PropertyParamAnnotationDefaultTargetMode")
-    }
 }
 
+kotlin {
+    jvmToolchain(17)
+    compilerOptions {
+        jvmTarget.set(JvmTarget.JVM_17)
+        freeCompilerArgs.add("-Xcontext-receivers")
+    }
+}
 spotless {
     kotlin {
         target("src/**/*.kt")
@@ -142,13 +139,4 @@ dependencies {
     androidTestImplementation(libs.androidx.test.espresso)
     androidTestImplementation(libs.androidx.navigation.testing)
     compileOnly(libs.spotless.gradlePlugin)
-}
-
-fun getGitBranchName(): String {
-    val stdout = ByteArrayOutputStream()
-    exec {
-        commandLine = listOf("git", "rev-parse", "--abbrev-ref", "HEAD")
-        standardOutput = stdout
-    }
-    return stdout.toString().trim().replace("/", "-")
 }

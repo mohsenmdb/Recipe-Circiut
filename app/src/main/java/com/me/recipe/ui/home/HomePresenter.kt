@@ -61,7 +61,7 @@ class HomePresenter @AssistedInject constructor(
                     categoryRows?.getOrNull()?.fastFilter { it.rowType == CategoryRowType.ROW }?.toPersistentList()
                 } else {
                     offlineRows?.getOrNull()?.fastFilter { it.rowType == CategoryRowType.ROW }?.toPersistentList()
-                }
+                },
             )
         }
 
