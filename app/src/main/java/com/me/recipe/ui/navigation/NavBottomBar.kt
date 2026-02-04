@@ -52,7 +52,7 @@ internal fun NavBottomBar(
                             newRoot = getScreenForTab(tab),
                             options = Navigator.StateOptions(
                                 save = true,
-                                restore = true
+                                restore = true,
                             ),
                         )
                     },

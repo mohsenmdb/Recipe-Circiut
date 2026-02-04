@@ -18,13 +18,10 @@ data class RecipeEntity(
     var publisher: String,
 
     @ColumnInfo(name = "featured_image")
-    var featuredImage: String,
+    var image: String,
 
     @ColumnInfo(name = "rating")
     var rating: String,
-
-    @ColumnInfo(name = "source_url")
-    var sourceUrl: String,
 
     /**
      * Value from API

@@ -25,6 +25,7 @@ import androidx.compose.ui.unit.dp
 import com.me.recipe.domain.features.recipe.model.Recipe
 import com.me.recipe.ui.component.image.CoilImage
 import com.me.recipe.ui.theme.RecipeTheme
+import timber.log.Timber
 
 @Composable
 internal fun RecipeCard(
@@ -33,6 +34,7 @@ internal fun RecipeCard(
     onLongClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
+    Timber.d("getRecipes RecipeCard $recipe")
     Card(
         shape = MaterialTheme.shapes.small,
         elevation = CardDefaults.cardElevation(4.dp),
@@ -43,7 +45,7 @@ internal fun RecipeCard(
     ) {
         Column(modifier = Modifier.fillMaxWidth()) {
             CoilImage(
-                data = recipe.featuredImage,
+                data = recipe.image,
                 contentDescription = "recipe image",
                 modifier = Modifier
                     .fillMaxWidth()

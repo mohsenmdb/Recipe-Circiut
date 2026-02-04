@@ -5,7 +5,6 @@ import kotlinx.collections.immutable.toPersistentList
 
 enum class FoodCategory(val value: String) {
     CHICKEN("Chicken"),
-    BEEF("Beef"),
     SOUP("Soup"),
     DESSERT("Dessert"),
     VEGETARIAN("Vegetarian"),
@@ -13,6 +12,11 @@ enum class FoodCategory(val value: String) {
     VEGAN("Vegan"),
     PIZZA("Pizza"),
     DONUT("Donut"),
+    WATER("Water"),
+    BEEF("Beef"),
+    PASTA("Pasta"),
+    ALL("All"),
+    UNKNOWN("Unknown"),
 }
 
 fun getAllFoodCategories(): ImmutableList<FoodCategory> {

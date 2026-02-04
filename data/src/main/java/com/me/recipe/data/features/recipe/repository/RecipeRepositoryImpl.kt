@@ -27,22 +27,15 @@ class RecipeRepositoryImpl @Inject constructor(
     ): Flow<Recipe> = flow {
         // just to show loading, cache is fast
         delay(1000)
-
         var recipe = getRecipeFromCache(recipeId = recipeId, uid = uid)
-
         if (recipe != null) {
             emit(recipe)
         } else {
-            // if the recipe is null, it means it was not in the cache for some reason. So get from network.
             val networkRecipe = getRecipeFromNetwork(recipeId)
-            // insert into cache
             recipeDao.insertRecipe(
                 entityMapper.mapFromDomainModel(networkRecipe),
             )
-            // get from cache
             recipe = getRecipeFromCache(recipeId = recipeId, uid = uid)
-
-            // emit and finish
             if (recipe != null) {
                 emit(recipe)
             } else {

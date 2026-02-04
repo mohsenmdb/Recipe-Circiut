@@ -4,19 +4,20 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.ui.util.fastFilter
+import com.me.recipe.R
 import com.me.recipe.domain.features.recipe.model.CategoryRecipe
-import com.me.recipe.domain.features.recipe.model.Recipe
-import com.me.recipe.domain.features.recipelist.usecases.CategoriesRecipesUsecase
-import com.me.recipe.domain.features.recipelist.usecases.SliderRecipesUsecase
+import com.me.recipe.domain.features.recipelist.usecases.CategoriesRecipesUseCase
 import com.me.recipe.shared.datastore.SettingsDataStore
-import com.me.recipe.shared.utils.getAllFoodCategories
+import com.me.recipe.shared.utils.CategoryRowType
 import com.me.recipe.ui.component.util.UiMessage
 import com.me.recipe.ui.component.util.UiMessageManager
 import com.me.recipe.ui.recipe.RecipeUiScreen
 import com.me.recipe.ui.recipelist.RecipeListScreen
+import com.me.recipe.util.errorformater.ErrorFormatter
 import com.slack.circuit.codegen.annotations.CircuitInject
-import com.slack.circuit.retained.collectAsRetainedState
 import com.slack.circuit.runtime.Navigator
 import com.slack.circuit.runtime.internal.rememberStableCoroutineScope
 import com.slack.circuit.runtime.presenter.Presenter
@@ -26,14 +27,17 @@ import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
 import dagger.hilt.components.SingletonComponent
 import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.toPersistentList
 import kotlinx.coroutines.launch
+import timber.log.Timber
 
 class HomePresenter @AssistedInject constructor(
     @Assisted private val screen: HomeUiScreen,
     @Assisted internal val navigator: Navigator,
     private val settingsDataStore: Lazy<SettingsDataStore>,
-    private val getRecipesUsecase: Lazy<CategoriesRecipesUsecase>,
-    private val sliderRecipesUsecase: Lazy<SliderRecipesUsecase>,
+    private val getCategoriesUseCase: Lazy<CategoriesRecipesUseCase>,
+    private val getOfflineCategoriesUseCase: Lazy<CategoriesRecipesUseCase>,
+    private val errorFormatter: Lazy<ErrorFormatter>,
 ) : Presenter<HomeUiState> {
 
     @Composable
@@ -43,18 +47,37 @@ class HomePresenter @AssistedInject constructor(
         val message by uiMessageManager.message.collectAsState(null)
 
         LaunchedEffect(key1 = Unit) {
-            getRecipesUsecase.get().invoke(CategoriesRecipesUsecase.Params(getAllFoodCategories()))
-            sliderRecipesUsecase.get().invoke(Unit)
+            getCategoriesUseCase.get().invoke(CategoriesRecipesUseCase.Params())
+            getOfflineCategoriesUseCase.get().invoke(CategoriesRecipesUseCase.Params(isOffline = true))
         }
-        val categoryRows: Result<ImmutableList<CategoryRecipe>>? by
-            getRecipesUsecase.get().flow.collectAsState(initial = null)
-        val sliders: Result<ImmutableList<Recipe>>? by
-            sliderRecipesUsecase.get().flow.collectAsRetainedState(initial = null)
         val isDarkTheme by remember { settingsDataStore.get().isDark }
+        val categoryRows: Result<ImmutableList<CategoryRecipe>>? by getCategoriesUseCase.get().flow.collectAsState(initial = null)
+        val offlineRows: Result<ImmutableList<CategoryRecipe>>? by getOfflineCategoriesUseCase.get().flow.collectAsState(initial = null)
+        val slider = categoryRows?.getOrNull()?.firstOrNull { it.rowType == CategoryRowType.SLIDER }?.recipes
+
+        val rows by remember(categoryRows?.getOrNull(), categoryRows?.exceptionOrNull()) {
+            mutableStateOf(
+                if (categoryRows?.getOrNull() != null) {
+                    categoryRows?.getOrNull()?.fastFilter { it.rowType == CategoryRowType.ROW }?.toPersistentList()
+                } else {
+                    offlineRows?.getOrNull()?.fastFilter { it.rowType == CategoryRowType.ROW }?.toPersistentList()
+                }
+            )
+        }
+
+        LaunchedEffect(categoryRows?.exceptionOrNull()) {
+            if (categoryRows?.exceptionOrNull() != null) {
+                val error = errorFormatter.get().format(categoryRows?.exceptionOrNull())
+                uiMessageManager.emitMessage(UiMessage.createSnackbar(error, actionText = R.string.try_again))
+                // TODO handle on try again button
+            }
+        }
+
+        Timber.d("tezt error = ${categoryRows?.exceptionOrNull()}")
 
         return HomeUiState(
-            sliderRecipes = sliders?.getOrNull(),
-            categoriesRecipes = categoryRows?.getOrNull(),
+            sliderRecipes = slider,
+            categoriesRecipes = rows,
             isDark = isDarkTheme,
             message = message,
             eventSink = { event ->
@@ -62,7 +85,7 @@ class HomePresenter @AssistedInject constructor(
                     is HomeUiEvent.OnRecipeClicked -> {
                         navigator.goTo(
                             RecipeUiScreen(
-                                itemImage = event.recipe.featuredImage,
+                                itemImage = event.recipe.image,
                                 itemTitle = event.recipe.title,
                                 itemId = event.recipe.id,
                                 itemUid = event.recipe.uid,

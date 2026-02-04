@@ -24,8 +24,8 @@ internal fun RecipeDetail(
     Column(
         modifier = modifier.fillMaxSize(),
     ) {
-        if (!recipe?.featuredImage.isNullOrEmpty()) {
-            RecipeImage(image = recipe?.featuredImage!!)
+        if (!recipe?.image.isNullOrEmpty()) {
+            RecipeImage(image = recipe?.image!!)
         } else {
             RecipeShimmer(
                 itemCount = 1,

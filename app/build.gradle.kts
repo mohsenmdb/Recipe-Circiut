@@ -75,6 +75,7 @@ android {
     }
     kotlinOptions {
         freeCompilerArgs += listOf("-Xcontext-receivers")
+        freeCompilerArgs += listOf("-XXLanguage:+PropertyParamAnnotationDefaultTargetMode")
     }
 }
 
