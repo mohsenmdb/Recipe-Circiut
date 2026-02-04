@@ -1,16 +1,26 @@
 package com.me.recipe.network.features.recipe.model
 
-import com.squareup.moshi.Json
-import com.squareup.moshi.JsonClass
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
-@JsonClass(generateAdapter = true)
+@Serializable
 data class RecipeDto(
-    @Json(name = "id") val id: Int?,
-    @Json(name = "title") val title: String?,
-    @Json(name = "user_name") val publisher: String?,
-    @Json(name = "image") val image: String?,
-    @Json(name = "rating") val rating: String = "0",
-    @Json(name = "ingredients") val ingredients: String?,
-    @Json(name = "long_date_updated") val dateUpdatedTimeStamp: Long?,
-    @Json(name = "updatedAt") val dateUpdated: String?,
-)
+    @SerialName(value = "id") val id: Int?,
+    @SerialName(value = "title") val title: String?,
+    @SerialName(value = "user") val publisher: UserDto?,
+    @SerialName(value = "image") val image: String?,
+    @SerialName(value = "rating") val rating: String = "0",
+    @SerialName(value = "ingredients") val ingredients: String?,
+    @SerialName(value = "createdAt") val createdAt: Long?,
+    @SerialName(value = "updatedAt") val updatedAt: Long?,
+) {
+
+    @Serializable
+    data class UserDto(
+        @SerialName(value = "id") val id: Int?,
+        @SerialName(value = "email") val email: String?,
+        @SerialName(value = "first_name") val firstName: String?,
+        @SerialName(value = "last_name") val lastName: String?,
+        @SerialName(value = "age") val age: Int?,
+    )
+}

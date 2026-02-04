@@ -34,9 +34,6 @@ data class RecipeEntity(
     @ColumnInfo(name = "date")
     var date: String,
 
-    @ColumnInfo(name = "date_timestamp")
-    var dateTimestamp: Long,
-
     /**
      * The date this recipe was "refreshed" in the cache.
      */

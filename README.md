@@ -16,7 +16,7 @@ Features:<br>
     • Worker (Hilt Worker)<br>
     • Dependency Injection (HILT)<br>
     • Retrieve Network Data from API (REST API)<br>
-    • Moshi JSON library<br>
+    • Kotlinx serialization<br>
     • Database caching (Room)<br>
     • Datastore<br>
     • Dependency management with VersionCatalog<br>

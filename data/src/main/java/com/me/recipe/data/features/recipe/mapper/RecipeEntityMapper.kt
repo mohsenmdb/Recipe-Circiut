@@ -19,11 +19,10 @@ class RecipeEntityMapper : DomainMapper<RecipeEntity, Recipe> {
             publisher = model.publisher,
             ingredients = convertIngredientsToList(model.ingredients).toPersistentList(),
             date = model.date,
-            dateTimestamp = model.dateTimestamp,
         )
     }
 
-    override fun mapFromDomainModel(domainModel: Recipe): RecipeEntity {
+    fun mapFromDomainModel(domainModel: Recipe): RecipeEntity {
         return RecipeEntity(
             id = domainModel.id,
             title = domainModel.title,
@@ -32,7 +31,6 @@ class RecipeEntityMapper : DomainMapper<RecipeEntity, Recipe> {
             publisher = domainModel.publisher,
             ingredients = convertIngredientListToString(domainModel.ingredients),
             date = domainModel.date,
-            dateTimestamp = domainModel.dateTimestamp,
             dateCached = DateUtils.dateToLong(DateUtils.createTimestamp()),
         )
     }

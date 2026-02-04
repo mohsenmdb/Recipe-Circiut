@@ -14,7 +14,6 @@ data class Recipe(
     val rating: String,
     val ingredients: ImmutableList<String>,
     val date: String,
-    val dateTimestamp: Long,
 ) {
     companion object {
         val EMPTY = Recipe(
@@ -26,7 +25,6 @@ data class Recipe(
             rating = "",
             ingredients = persistentListOf(),
             date = "",
-            dateTimestamp = 0L,
         )
 
         fun testData() = Recipe(
@@ -38,7 +36,6 @@ data class Recipe(
             rating = "15",
             ingredients = persistentListOf("Soup", "Meat", "Rice"),
             date = "Nov 12 2025",
-            dateTimestamp = 0L,
         )
     }
 }
