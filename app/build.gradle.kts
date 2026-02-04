@@ -1,6 +1,5 @@
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
-
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.plugin.compose")
@@ -74,6 +73,7 @@ kotlin {
     jvmToolchain(17)
     compilerOptions {
         jvmTarget.set(JvmTarget.JVM_17)
+        freeCompilerArgs.add("-Xcontext-receivers")
     }
 }
 spotless {
@@ -140,12 +140,3 @@ dependencies {
     androidTestImplementation(libs.androidx.navigation.testing)
     compileOnly(libs.spotless.gradlePlugin)
 }
-
-// fun getGitBranchName(): String {
-//    val stdout = ByteArrayOutputStream()
-//    exec {
-//        commandLine = listOf("git", "rev-parse", "--abbrev-ref", "HEAD")
-//        standardOutput = stdout
-//    }
-//    return stdout.toString().trim().replace("/", "-")
-// }
