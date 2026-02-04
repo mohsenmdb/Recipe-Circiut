@@ -4,6 +4,7 @@ plugins {
     alias(libs.plugins.ksp)
     alias(libs.plugins.android.library)
     alias(libs.plugins.spotless)
+    alias(libs.plugins.kotlin.serialization)
 }
 
 android {
@@ -60,10 +61,8 @@ dependencies {
 
     implementation(libs.retrofit)
     implementation(libs.okhttp.logging.interceptor)
-    implementation(libs.moshi)
-    implementation(libs.moshi.kotlin)
-    ksp(libs.moshi.kotlin.codegen)
-    implementation(libs.converter.moshi)
+    implementation(libs.kotlinx.serialization.json)
+    implementation(libs.retrofit.converter)
 
     implementation(libs.timber)
     compileOnly(libs.spotless.gradlePlugin)

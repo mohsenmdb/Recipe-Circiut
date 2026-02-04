@@ -1,17 +1,17 @@
 package com.me.recipe.network.core.di.retrofit
 
-import com.squareup.moshi.Moshi
-import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
+import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import java.util.concurrent.TimeUnit
 import javax.inject.Singleton
+import kotlinx.serialization.json.Json
 import okhttp3.Interceptor
+import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
-import retrofit2.converter.moshi.MoshiConverterFactory
 
 @Module
 @InstallIn(SingletonComponent::class)
@@ -37,14 +37,17 @@ object NetworkModule {
     @Singleton
     @Provides
     fun provideRecipeService(client: OkHttpClient): Retrofit {
+        val contentType = "application/json".toMediaType()
+        val json = Json {
+            ignoreUnknownKeys = true
+            isLenient = true
+        }
         return Retrofit.Builder()
             .baseUrl(LOCAL_HOST_PATH)
-            .client(client)
-            .addConverterFactory(
-                MoshiConverterFactory.create(
-                    Moshi.Builder().add(KotlinJsonAdapterFactory()).build(),
-                ),
-            )
+            .callFactory {
+                client.newCall(it)
+            }
+            .addConverterFactory(json.asConverterFactory(contentType))
             .build()
     }
 }

@@ -1,27 +1,27 @@
 package com.me.recipe.network.features.recipe.model
 
-import com.squareup.moshi.Json
-import com.squareup.moshi.JsonClass
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
-@JsonClass(generateAdapter = true)
+@Serializable
 data class CategoriesDto(
-    @Json(name = "data") val categories: List<CategoriesListDto>?,
+    @SerialName(value = "data") val categories: List<CategoriesListDto>?,
 )
 
-@JsonClass(generateAdapter = true)
+@Serializable
 data class CategoriesListDto(
-    @Json(name = "type") val type: RowTypeDto?,
-    @Json(name = "category") val categoryName: FoodCategoryDto?,
-    @Json(name = "recipes") val recipes: List<RecipeDto>?,
+    @SerialName(value = "type") val type: RowTypeDto?,
+    @SerialName(value = "category") val categoryName: FoodCategoryDto?,
+    @SerialName(value = "recipes") val recipes: List<RecipeDto>?,
 )
 
-@JsonClass(generateAdapter = false)
+@Serializable
 enum class RowTypeDto {
     SLIDER,
     ROW,
 }
 
-@JsonClass(generateAdapter = false)
+@Serializable
 enum class FoodCategoryDto {
     CHICKEN,
     SOUP,

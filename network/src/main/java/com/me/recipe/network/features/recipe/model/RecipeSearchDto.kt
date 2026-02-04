@@ -1,14 +1,14 @@
 package com.me.recipe.network.features.recipe.model
 
-import com.squareup.moshi.Json
-import com.squareup.moshi.JsonClass
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
-@JsonClass(generateAdapter = true)
+@Serializable
 data class RecipeSearchDto(
-    @Json(name = "data") val data: Data,
+    @SerialName(value = "data") val data: Data,
 )
 
-@JsonClass(generateAdapter = true)
+@Serializable
 data class Data(
-    @Json(name = "recipes") val results: List<RecipeDto>,
+    @SerialName(value = "recipes") val results: List<RecipeDto>,
 )
