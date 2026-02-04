@@ -3,7 +3,6 @@ package com.me.recipe.domain.features.recipelist.usecases
 import com.me.recipe.domain.features.recipe.model.CategoryRecipe
 import com.me.recipe.domain.features.recipelist.repository.CategoriesRepository
 import com.me.recipe.domain.util.SubjectInteractor
-import com.me.recipe.shared.utils.FoodCategory
 import javax.inject.Inject
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.coroutines.flow.Flow

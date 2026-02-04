@@ -141,11 +141,11 @@ dependencies {
     compileOnly(libs.spotless.gradlePlugin)
 }
 
-//fun getGitBranchName(): String {
+// fun getGitBranchName(): String {
 //    val stdout = ByteArrayOutputStream()
 //    exec {
 //        commandLine = listOf("git", "rev-parse", "--abbrev-ref", "HEAD")
 //        standardOutput = stdout
 //    }
 //    return stdout.toString().trim().replace("/", "-")
-//}
+// }
