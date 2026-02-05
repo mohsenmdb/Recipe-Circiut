@@ -37,14 +37,16 @@ fun HomeScreen(
         snackbarHostState = snackbarHostState,
         message = state.message,
         onClearMessage = { state.eventSink.invoke(HomeUiEvent.ClearMessage) },
+        onActionClicked = { state.eventSink.invoke(HomeUiEvent.OnRetryClicked) },
     )
 
     Scaffold(
         containerColor = containerColor,
         snackbarHost = {
-            DefaultSnackbar(snackbarHostState = snackbarHostState) {
-                snackbarHostState.currentSnackbarData?.dismiss()
-            }
+            DefaultSnackbar(
+                snackbarHostState = snackbarHostState,
+                onAction = { snackbarHostState.currentSnackbarData?.performAction() },
+            )
         },
         topBar = {
             HomeAppBar(
