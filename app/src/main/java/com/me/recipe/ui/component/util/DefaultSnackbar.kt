@@ -5,6 +5,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Snackbar
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.SnackbarResult
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -17,12 +18,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import com.me.recipe.R
 
 @Composable
 internal fun DefaultSnackbar(
     snackbarHostState: SnackbarHostState,
     modifier: Modifier = Modifier,
-    onDismiss: () -> Unit?,
+    onDismiss: () -> Unit? = {},
+    onAction: () -> Unit? = {},
 ) {
     SnackbarHost(
         hostState = snackbarHostState,
@@ -39,16 +42,18 @@ internal fun DefaultSnackbar(
                 },
                 action = {
                     data.visuals.actionLabel?.let { actionLabel ->
-                        TextButton(
-                            onClick = {
+                        ActionButton(onClicked = onAction, actionLabel = actionLabel)
+                    }
+                },
+                dismissAction = {
+                    if (data.visuals.withDismissAction) {
+                        ActionButton(
+                            actionLabel = stringResource(R.string.ok),
+                            onClicked = {
+                                snackbarHostState.currentSnackbarData?.dismiss()
                                 onDismiss()
                             },
-                        ) {
-                            Text(
-                                text = actionLabel,
-                                style = MaterialTheme.typography.bodyMedium,
-                            )
-                        }
+                        )
                     }
                 },
             )
@@ -58,19 +63,37 @@ internal fun DefaultSnackbar(
 }
 
 @Composable
+private fun ActionButton(onClicked: () -> Unit?, actionLabel: String) {
+    TextButton(onClick = { onClicked() }) {
+        Text(
+            text = actionLabel,
+            style = MaterialTheme.typography.bodyMedium,
+        )
+    }
+}
+
+@Composable
 fun MessageEffect(
     snackbarHostState: SnackbarHostState,
     message: UiMessage?,
     onClearMessage: () -> Unit,
+    onActionClicked: () -> Unit = {},
 ) {
     val context = LocalContext.current
     var showMessage: UiMessage? by remember { mutableStateOf(null) }
-    var actionOk by remember { mutableStateOf("") }
+    var actionOk by remember { mutableStateOf<String?>(null) }
     LaunchedEffect(showMessage) {
         when (showMessage?.message) {
             is Message.Snackbar -> {
                 snackbarHostState.currentSnackbarData?.dismiss()
-                snackbarHostState.showSnackbar(showMessage!!.message.text, actionOk)
+                val result = snackbarHostState.showSnackbar(
+                    message = showMessage!!.message.text,
+                    actionLabel = actionOk,
+                    withDismissAction = true,
+                )
+                if (result == SnackbarResult.ActionPerformed) {
+                    onActionClicked()
+                }
                 showMessage = null
             }
 
@@ -81,7 +104,7 @@ fun MessageEffect(
         }
     }
     message?.let {
-        actionOk = stringResource(id = message.actionText)
+        actionOk = message.actionText.takeIf { it != null }?.let { stringResource(id = it) }
         showMessage = it
         onClearMessage()
     }

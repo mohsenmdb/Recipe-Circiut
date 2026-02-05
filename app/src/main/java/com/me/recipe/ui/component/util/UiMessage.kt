@@ -1,7 +1,6 @@
 package com.me.recipe.ui.component.util
 
 import androidx.annotation.StringRes
-import com.me.recipe.R
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.sync.Mutex
@@ -16,12 +15,12 @@ sealed interface Message {
 data class UiMessage(
     val message: Message,
     val throwable: Throwable? = null,
-    @StringRes val actionText: Int,
+    @StringRes val actionText: Int? = null,
 ) {
     companion object {
         fun createToast(
             t: Throwable,
-            @StringRes actionText: Int = R.string.ok,
+            @StringRes actionText: Int? = null,
         ): UiMessage = UiMessage(
             message = Message.Toast(t.message ?: "Error occurred: $t"),
             throwable = t,
@@ -30,7 +29,7 @@ data class UiMessage(
 
         fun createToast(
             message: String,
-            @StringRes actionText: Int = R.string.ok,
+            @StringRes actionText: Int? = null,
         ): UiMessage = UiMessage(
             message = Message.Toast(message),
             actionText = actionText,
@@ -38,7 +37,7 @@ data class UiMessage(
 
         fun createSnackbar(
             t: Throwable,
-            @StringRes actionText: Int = R.string.ok,
+            @StringRes actionText: Int? = null,
         ): UiMessage = UiMessage(
             message = Message.Snackbar(t.message ?: "Error occurred: $t"),
             throwable = t,
@@ -47,7 +46,7 @@ data class UiMessage(
 
         fun createSnackbar(
             message: String,
-            @StringRes actionText: Int = R.string.ok,
+            @StringRes actionText: Int? = null,
         ): UiMessage = UiMessage(
             message = Message.Snackbar(message),
             actionText = actionText,

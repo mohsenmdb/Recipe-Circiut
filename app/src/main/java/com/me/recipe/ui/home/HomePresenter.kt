@@ -6,10 +6,12 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.util.fastFilter
 import com.me.recipe.R
 import com.me.recipe.domain.features.recipe.model.CategoryRecipe
 import com.me.recipe.domain.features.recipelist.usecases.CategoriesRecipesUseCase
+import com.me.recipe.domain.util.ForceFresh
 import com.me.recipe.shared.datastore.SettingsDataStore
 import com.me.recipe.shared.utils.CategoryRowType
 import com.me.recipe.ui.component.util.UiMessage
@@ -29,7 +31,6 @@ import dagger.hilt.components.SingletonComponent
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toPersistentList
 import kotlinx.coroutines.launch
-import timber.log.Timber
 
 class HomePresenter @AssistedInject constructor(
     @Assisted private val screen: HomeUiScreen,
@@ -45,9 +46,10 @@ class HomePresenter @AssistedInject constructor(
         val stableScope = rememberStableCoroutineScope()
         val uiMessageManager = remember { UiMessageManager() }
         val message by uiMessageManager.message.collectAsState(null)
+        var refresher by remember { mutableStateOf(ForceFresh.refresh()) }
 
-        LaunchedEffect(key1 = Unit) {
-            getCategoriesUseCase.get().invoke(CategoriesRecipesUseCase.Params())
+        LaunchedEffect(key1 = refresher) {
+            getCategoriesUseCase.get().invoke(CategoriesRecipesUseCase.Params(forceRefresh = refresher))
             getOfflineCategoriesUseCase.get().invoke(CategoriesRecipesUseCase.Params(isOffline = true))
         }
         val isDarkTheme by remember { settingsDataStore.get().isDark }
@@ -69,11 +71,8 @@ class HomePresenter @AssistedInject constructor(
             if (categoryRows?.exceptionOrNull() != null) {
                 val error = errorFormatter.get().format(categoryRows?.exceptionOrNull())
                 uiMessageManager.emitMessage(UiMessage.createSnackbar(error, actionText = R.string.try_again))
-                // TODO handle on try again button
             }
         }
-
-        Timber.d("tezt error = ${categoryRows?.exceptionOrNull()}")
 
         return HomeUiState(
             sliderRecipes = slider,
@@ -101,6 +100,9 @@ class HomePresenter @AssistedInject constructor(
                     }
                     HomeUiEvent.ToggleDarkTheme -> settingsDataStore.get().toggleTheme()
                     HomeUiEvent.ClearMessage -> stableScope.launch { uiMessageManager.clearMessage() }
+                    HomeUiEvent.OnRetryClicked -> stableScope.launch {
+                        refresher = ForceFresh.refresh()
+                    }
                 }
             },
         )

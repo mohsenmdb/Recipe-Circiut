@@ -45,6 +45,7 @@ sealed interface HomeUiEvent : CircuitUiEvent {
     data class OnRecipeLongClick(val title: String) : HomeUiEvent
     data object ToggleDarkTheme : HomeUiEvent
     data object ClearMessage : HomeUiEvent
+    data object OnRetryClicked : HomeUiEvent
 }
 
 val HomeUiState.showShimmer: Boolean
