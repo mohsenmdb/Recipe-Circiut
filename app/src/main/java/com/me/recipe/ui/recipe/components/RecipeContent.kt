@@ -25,7 +25,6 @@ import com.me.recipe.ui.recipe.components.shimmer.LoadingRecipeShimmer
 import com.me.recipe.ui.theme.RecipeTheme
 import com.me.recipe.util.compose.OnClick
 import kotlinx.collections.immutable.ImmutableList
-import timber.log.Timber
 
 @Composable
 internal fun RecipeContent(
@@ -101,7 +100,6 @@ internal fun RecipeInfoView(
     ingredients: ImmutableList<String>,
     modifier: Modifier = Modifier,
 ) {
-    Timber.d("tezt= $dateUpdated , $publisher")
     Column(
         modifier = modifier.testTag("testTag_RecipeInfoView"),
     ) {

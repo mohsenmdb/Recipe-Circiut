@@ -1,5 +1,6 @@
 package com.me.recipe.ui.recipelist
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHostState
@@ -22,6 +23,7 @@ internal fun RecipeListScreen(
     state: RecipeListUiState,
     modifier: Modifier = Modifier,
 ) {
+    BackHandler(onBack = { state.eventSink(RecipeListUiEvent.OnNavigateBackClicked) })
     val snackbarHostState = remember { SnackbarHostState() }
     MessageEffect(
         snackbarHostState = snackbarHostState,

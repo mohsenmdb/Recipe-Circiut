@@ -2,10 +2,8 @@ package com.me.recipe.ui.home
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.util.fastFilter
 import com.me.recipe.R
@@ -20,6 +18,8 @@ import com.me.recipe.ui.recipe.RecipeUiScreen
 import com.me.recipe.ui.recipelist.RecipeListScreen
 import com.me.recipe.util.errorformater.ErrorFormatter
 import com.slack.circuit.codegen.annotations.CircuitInject
+import com.slack.circuit.retained.collectAsRetainedState
+import com.slack.circuit.retained.rememberRetained
 import com.slack.circuit.runtime.Navigator
 import com.slack.circuit.runtime.internal.rememberStableCoroutineScope
 import com.slack.circuit.runtime.presenter.Presenter
@@ -44,20 +44,20 @@ class HomePresenter @AssistedInject constructor(
     @Composable
     override fun present(): HomeUiState {
         val stableScope = rememberStableCoroutineScope()
-        val uiMessageManager = remember { UiMessageManager() }
-        val message by uiMessageManager.message.collectAsState(null)
-        var refresher by remember { mutableStateOf(ForceFresh.refresh()) }
+        val uiMessageManager = rememberRetained { UiMessageManager() }
+        val message by uiMessageManager.message.collectAsRetainedState(null)
+        var refresher by rememberRetained { mutableStateOf(ForceFresh.refresh()) }
 
         LaunchedEffect(key1 = refresher) {
             getCategoriesUseCase.get().invoke(CategoriesRecipesUseCase.Params(forceRefresh = refresher))
             getOfflineCategoriesUseCase.get().invoke(CategoriesRecipesUseCase.Params(isOffline = true))
         }
-        val isDarkTheme by remember { settingsDataStore.get().isDark }
-        val categoryRows: Result<ImmutableList<CategoryRecipe>>? by getCategoriesUseCase.get().flow.collectAsState(initial = null)
-        val offlineRows: Result<ImmutableList<CategoryRecipe>>? by getOfflineCategoriesUseCase.get().flow.collectAsState(initial = null)
+        val isDarkTheme by rememberRetained { settingsDataStore.get().isDark }
+        val categoryRows: Result<ImmutableList<CategoryRecipe>>? by getCategoriesUseCase.get().flow.collectAsRetainedState(initial = null)
+        val offlineRows: Result<ImmutableList<CategoryRecipe>>? by getOfflineCategoriesUseCase.get().flow.collectAsRetainedState(initial = null)
         val slider = categoryRows?.getOrNull()?.firstOrNull { it.rowType == CategoryRowType.SLIDER }?.recipes
 
-        val rows by remember(categoryRows?.getOrNull(), categoryRows?.exceptionOrNull()) {
+        val rows by rememberRetained(categoryRows?.getOrNull(), categoryRows?.exceptionOrNull()) {
             mutableStateOf(
                 if (categoryRows?.getOrNull() != null) {
                     categoryRows?.getOrNull()?.fastFilter { it.rowType == CategoryRowType.ROW }?.toPersistentList()

@@ -7,7 +7,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import com.me.recipe.R
 import com.me.recipe.domain.features.recipe.model.Recipe
@@ -33,6 +32,8 @@ import com.me.recipe.ui.search.SearchUiEvent.OnSelectedCategoryChanged
 import com.me.recipe.ui.search.SearchUiEvent.SearchClearEvent
 import com.me.recipe.util.errorformater.ErrorFormatter
 import com.slack.circuit.codegen.annotations.CircuitInject
+import com.slack.circuit.retained.collectAsRetainedState
+import com.slack.circuit.retained.rememberRetained
 import com.slack.circuit.runtime.Navigator
 import com.slack.circuit.runtime.internal.rememberStableCoroutineScope
 import com.slack.circuit.runtime.presenter.Presenter
@@ -58,23 +59,23 @@ class SearchViewPresenter @AssistedInject constructor(
     @Composable
     override fun present(): SearchUiState {
         val stableScope = rememberStableCoroutineScope()
-        val uiMessageManager = remember { UiMessageManager() }
+        val uiMessageManager = rememberRetained { UiMessageManager() }
         val message by uiMessageManager.message.collectAsState(null)
-        var errorDialogInfo by remember { mutableStateOf<GenericDialogInfo?>(null) }
-        var forceRefresher by remember { mutableStateOf<ForceFresh?>(null) }
+        var errorDialogInfo by rememberRetained { mutableStateOf<GenericDialogInfo?>(null) }
+        var forceRefresher by rememberRetained { mutableStateOf<ForceFresh?>(null) }
 
-        var recipeListPage by rememberSaveable { mutableIntStateOf(RECIPE_PAGINATION_FIRST_PAGE) }
-        var recipeScrollPosition by rememberSaveable { mutableIntStateOf(INITIAL_RECIPE_LIST_POSITION) }
-        var selectedCategory by rememberSaveable { mutableStateOf<FoodCategory?>(null) }
-        var searchText by rememberSaveable { mutableStateOf("") }
-        var query by rememberSaveable { mutableStateOf(screen.query) }
-        var categoriesScrollPosition by rememberSaveable { mutableStateOf(0 to 0) }
-        val recipes by searchRecipesUsecase.get().flow.collectAsState(initial = null)
-        val restoredRecipes by restoreRecipesUsecase.get().flow.collectAsState(initial = null)
+        var recipeListPage by rememberRetained { mutableIntStateOf(RECIPE_PAGINATION_FIRST_PAGE) }
+        var recipeScrollPosition by rememberRetained { mutableIntStateOf(INITIAL_RECIPE_LIST_POSITION) }
+        var selectedCategory by rememberRetained { mutableStateOf<FoodCategory?>(null) }
+        var searchText by rememberRetained { mutableStateOf("") }
+        var query by rememberRetained { mutableStateOf(screen.query) }
+        var categoriesScrollPosition by rememberRetained { mutableStateOf(0 to 0) }
+        val recipes by searchRecipesUsecase.get().flow.collectAsRetainedState(initial = null)
+        val restoredRecipes by restoreRecipesUsecase.get().flow.collectAsRetainedState(initial = null)
         val recipesResult = recipes?.getOrNull()
         val restoredRecipesResult = restoredRecipes?.getOrNull()
-        var appendedRecipes by remember { mutableStateOf<ImmutableList<Recipe>>(persistentListOf()) }
-        var appendingLoading by rememberSaveable { mutableStateOf(false) }
+        var appendedRecipes by rememberRetained { mutableStateOf<ImmutableList<Recipe>>(persistentListOf()) }
+        var appendingLoading by rememberRetained { mutableStateOf(false) }
         LaunchedEffect(key1 = query, key2 = recipeListPage, key3 = forceRefresher) {
             if (recipeListPage > 1 && appendedRecipes.isEmpty()) {
                 restoreRecipesUsecase.get().invoke(RestoreRecipesUsecase.Params(query = query, page = recipeListPage))
