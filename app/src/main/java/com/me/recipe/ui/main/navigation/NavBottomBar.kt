@@ -1,4 +1,4 @@
-package com.me.recipe.ui.navigation
+package com.me.recipe.ui.main.navigation
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.expandVertically
@@ -13,6 +13,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import com.me.recipe.ui.auth.AuthScreen
 import com.me.recipe.ui.home.HomeScreen
 import com.me.recipe.ui.search.SearchScreen
 import com.slack.circuit.runtime.Navigator
@@ -65,8 +66,9 @@ internal fun NavBottomBar(
 private fun getScreenForTab(tab: NavigationDestination) = when (tab) {
     HomeDestination -> HomeScreen()
     SearchDestination -> SearchScreen()
+    ProfileDestination -> AuthScreen
     else -> HomeScreen()
 }
 
 private fun isHomeDestination(screen: Screen?) =
-    screen is HomeScreen || screen is SearchScreen
+    screen is HomeScreen || screen is SearchScreen || screen is AuthScreen

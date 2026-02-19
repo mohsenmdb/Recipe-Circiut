@@ -3,6 +3,7 @@ package com.me.recipe.ui
 import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
+import androidx.compose.runtime.LaunchedEffect
 import com.me.recipe.shared.datastore.SettingsDataStore
 import com.me.recipe.shared.datastore.UserDataStore
 import com.me.recipe.ui.splash.SplashScreen
@@ -31,9 +32,11 @@ class MainActivityCircuit : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setUserLoginInfo(userDataStore)
         getPushNotificationPermission()
         setContent {
+            LaunchedEffect(Unit) {
+                setUserLoginInfo(userDataStore)
+            }
             CircuitCompositionLocals(circuit = circuit) {
                 RecipeTheme(settingsDataStore.isDark.value) {
                     val backStack = rememberSaveableBackStack(root = SplashScreen)
@@ -51,6 +54,6 @@ class MainActivityCircuit : AppCompatActivity() {
     }
 }
 
-private fun setUserLoginInfo(userDataStore: UserDataStore) {
+private suspend fun setUserLoginInfo(userDataStore: UserDataStore) {
     userDataStore.setAccessToken("Token 9c8b06d329136da358c2d00e76946b0111ce2c48")
 }

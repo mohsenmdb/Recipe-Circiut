@@ -1,15 +1,185 @@
 package com.me.recipe.ui.auth
 
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ColumnScope
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import com.slack.circuit.codegen.annotations.CircuitInject
 import dagger.hilt.components.SingletonComponent
+import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material3.Button
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Text
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
+import com.me.recipe.R
+import com.me.recipe.ui.theme.RecipeTheme
+
 
 @CircuitInject(AuthScreen::class, SingletonComponent::class)
+
 @Composable
 internal fun AuthUi(
     state: AuthState,
     modifier: Modifier = Modifier,
 ) {
+    Column(
+        modifier = modifier
+            .fillMaxSize()
+            .padding(24.dp),
+        verticalArrangement = Arrangement.Center
+    ) {
+        TitleText(text = stringResource(if (state.isLoginMode) R.string.login else R.string.register))
+        Spacer(modifier = Modifier.height(16.dp))
+        Inputs(state)
+        Spacer(modifier = Modifier.height(24.dp))
+        Buttons(state)
+    }
+}
+
+@Composable
+private fun ColumnScope.Inputs(state: AuthState) {
+    EmailInput(
+        email = state.email,
+        onEmailChange = { state.eventSink(AuthEvent.OnEmailChange(it)) },
+    )
+    Spacer(modifier = Modifier.height(8.dp))
+
+    PasswordInput(
+        password = state.password,
+        onPasswordChange = {
+            state.eventSink(AuthEvent.OnPasswordChange(it))
+        }
+    )
+
+    if (!state.isLoginMode) {
+        Spacer(modifier = Modifier.height(8.dp))
+        RetryPasswordInput(
+            password = state.retryPassword,
+            passwordError = state.hasPasswordError,
+            onPasswordChange = {
+                state.eventSink(AuthEvent.OnRetryPasswordChange(it))
+            }
+        )
+
+        if (state.hasPasswordError) PasswordErrorText()
+    }
+}
+@Composable
+private fun ColumnScope.Buttons(state: AuthState) {
+    SubmitButton(
+        text = stringResource(if (state.isLoginMode) R.string.login else R.string.register),
+        onClick = {
+            state.eventSink(AuthEvent.OnSubmitClicked)
+        }
+    )
+    Spacer(modifier = Modifier.height(8.dp))
+
+    SubmitButton(
+        text = stringResource(if (state.isLoginMode) R.string.do_not_have_account else R.string.already_have_account),
+        onClick = {
+            state.eventSink(AuthEvent.OnSwitchModeClicked)
+        },
+    )
+}
+
+@Composable
+private fun TitleText(text: String) {
+    Text(
+        text = text,
+        style = MaterialTheme.typography.headlineMedium,
+        color = MaterialTheme.colorScheme.onSurface,
+    )
+}
+
+@Composable
+private fun EmailInput(email: String, onEmailChange: (String) -> Unit) {
+    OutlinedTextField(
+        value = email,
+        onValueChange = { onEmailChange(it) },
+        label = { Text(stringResource(R.string.email)) },
+        singleLine = true,
+        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
+        modifier = Modifier.fillMaxWidth()
+    )
+}
+
+@Composable
+private fun PasswordInput(password: String, onPasswordChange: (String) -> Unit) {
+    OutlinedTextField(
+        value = password,
+        onValueChange = {
+            onPasswordChange(it)
+        },
+        label = { Text("Password") },
+        singleLine = true,
+        visualTransformation = PasswordVisualTransformation(),
+        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
+        modifier = Modifier.fillMaxWidth()
+    )
+}
+
+@Composable
+private fun RetryPasswordInput(
+    password: String,
+    onPasswordChange: (String) -> Unit,
+    passwordError: Boolean
+) {
+    OutlinedTextField(
+        value = password,
+        onValueChange = {
+            onPasswordChange(it)
+        },
+        label = { Text("Retry Password") },
+        singleLine = true,
+        visualTransformation = PasswordVisualTransformation(),
+        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
+        modifier = Modifier.fillMaxWidth(),
+        isError = passwordError
+    )
+}
+
+@Composable
+private fun PasswordErrorText() {
+    Text(
+        text = "Passwords do not match",
+        color = MaterialTheme.colorScheme.error,
+        style = MaterialTheme.typography.bodySmall
+    )
+}
+
+@Composable
+private fun SubmitButton(
+    text: String,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    Button(
+        onClick = onClick,
+        modifier = modifier.fillMaxWidth()
+    ) {
+        Text(text = text)
+    }
+}
+
+
+@Preview
+@Composable
+private fun AuthScreenPreview() {
+
+    RecipeTheme(true) {
+        AuthUi(
+            state = AuthState(eventSink = {})
+        )
+    }
 }

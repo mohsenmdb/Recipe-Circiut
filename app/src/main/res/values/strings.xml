@@ -12,6 +12,7 @@
 
     <string name="navigate_splash_title">Splash</string>
     <string name="navigate_search_title">Search</string>
+    <string name="navigate_profile_title">Profile</string>
     <string name="navigate_recipe_list_title">Recipe list</string>
     <string name="navigate_recipe_title">Recipe</string>
     <string name="navigate_home_title">Home</string>
@@ -22,4 +23,9 @@
     <string name="error">Error</string>
     <string name="loading">Loading…</string>
     <string name="see_all">See all</string>
+    <string name="login">Login</string>
+    <string name="register">Register</string>
+    <string name="do_not_have_account">Don\'t have an account? Register</string>
+    <string name="already_have_account">Already have an account? Login</string>
+    <string name="email">Email</string>
 </resources>

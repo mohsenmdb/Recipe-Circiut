@@ -1,7 +1,8 @@
-package com.me.recipe.ui.navigation
+package com.me.recipe.ui.main.navigation
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.ui.graphics.vector.ImageVector
 import com.me.recipe.R
@@ -24,4 +25,10 @@ object SearchDestination : NavigationDestination {
     override val icon = Icons.Filled.Search
 }
 
-val bottomNavigationScreens = listOf(HomeDestination, SearchDestination)
+object ProfileDestination : NavigationDestination {
+    override val route = "Profile"
+    override val titleRes = R.string.navigate_profile_title
+    override val icon = Icons.Filled.Person
+}
+
+val bottomNavigationScreens = listOf(HomeDestination, SearchDestination, ProfileDestination)
