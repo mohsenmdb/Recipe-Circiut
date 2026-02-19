@@ -7,11 +7,12 @@ import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.preferencesDataStore
+import com.me.recipe.shared.utils.IoDispatcher
 import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
 import javax.inject.Singleton
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers.Main
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.map
@@ -21,9 +22,12 @@ import kotlinx.coroutines.launch
 @Singleton
 class SettingsDataStore
 @Inject
-constructor(@ApplicationContext val context: Context) {
+constructor(
+    @ApplicationContext val context: Context,
+    @IoDispatcher private val ioDispatcher: CoroutineDispatcher,
+) {
 
-    private val scope = CoroutineScope(Main)
+    private val scope = CoroutineScope(ioDispatcher)
 
     init {
         observeDataStore()

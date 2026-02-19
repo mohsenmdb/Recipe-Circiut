@@ -6,6 +6,7 @@ import com.me.recipe.data.features.recipe.mapper.RecipeEntityMapper
 import com.me.recipe.data.features.recipe.repository.RecipeRepositoryImpl
 import com.me.recipe.domain.features.recipe.repository.RecipeRepository
 import com.me.recipe.network.features.recipe.RecipeApi
+import com.me.recipe.shared.utils.IoDispatcher
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
