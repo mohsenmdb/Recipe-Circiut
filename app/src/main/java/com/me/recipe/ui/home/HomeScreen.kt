@@ -54,7 +54,6 @@ fun HomeScreen(
                 onToggleTheme = { state.eventSink(HomeUiEvent.ToggleDarkTheme) },
             )
         },
-        modifier = modifier.padding(bottom = 80.dp),
     ) { padding ->
         if (state.showShimmer) {
             HomeShimmer(modifier = Modifier.padding(padding))

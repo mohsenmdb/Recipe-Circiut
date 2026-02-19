@@ -50,7 +50,6 @@ internal fun SearchScreenView(
                 },
             )
         },
-        modifier = modifier.padding(bottom = 80.dp),
     ) { padding ->
         SearchContent(
             recipes = state.recipes,
