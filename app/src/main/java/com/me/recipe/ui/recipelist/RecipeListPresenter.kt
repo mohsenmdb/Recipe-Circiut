@@ -2,9 +2,9 @@ package com.me.recipe.ui.recipelist
 
 import android.annotation.SuppressLint
 import androidx.compose.runtime.Composable
-import com.me.recipe.ui.search.SearchScreen
 import com.me.recipe.ui.search.SearchEvent
 import com.me.recipe.ui.search.SearchPresenter
+import com.me.recipe.ui.search.SearchScreen
 import com.slack.circuit.codegen.annotations.CircuitInject
 import com.slack.circuit.runtime.Navigator
 import com.slack.circuit.runtime.presenter.Presenter
