@@ -12,7 +12,7 @@ class HomeScreenRobot @Inject constructor() {
 
     context (RobotTestRule)
     fun setHomeScreen(
-        state: HomeUiState,
+        state: HomeState,
     ) {
         composeTestRule.setContent {
             HomeUi(state = state)

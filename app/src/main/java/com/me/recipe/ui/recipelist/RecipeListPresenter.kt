@@ -3,7 +3,7 @@ package com.me.recipe.ui.recipelist
 import android.annotation.SuppressLint
 import androidx.compose.runtime.Composable
 import com.me.recipe.ui.search.SearchScreen
-import com.me.recipe.ui.search.SearchUiEvent
+import com.me.recipe.ui.search.SearchEvent
 import com.me.recipe.ui.search.SearchPresenter
 import com.slack.circuit.codegen.annotations.CircuitInject
 import com.slack.circuit.runtime.Navigator
@@ -17,7 +17,7 @@ class RecipeListPresenter @AssistedInject constructor(
     @Assisted private val screen: RecipeListScreen,
     @Assisted private val navigator: Navigator,
     searchPresenterFactory: SearchPresenter.Factory,
-) : Presenter<RecipeListUiState> {
+) : Presenter<RecipeListState> {
 
     private val searchPresenter = searchPresenterFactory.create(
         screen = SearchScreen(screen.query),
@@ -26,9 +26,9 @@ class RecipeListPresenter @AssistedInject constructor(
 
     @SuppressLint("FlowOperatorInvokedInComposition")
     @Composable
-    override fun present(): RecipeListUiState {
+    override fun present(): RecipeListState {
         val searchState = searchPresenter.present()
-        return RecipeListUiState(
+        return RecipeListState(
             query = screen.query,
             recipes = searchState.recipes,
             loading = searchState.loading,
@@ -39,16 +39,16 @@ class RecipeListPresenter @AssistedInject constructor(
             errors = searchState.errors,
             eventSink = { event ->
                 when (event) {
-                    RecipeListUiEvent.OnNavigateBackClicked ->
+                    RecipeListEvent.OnNavigateBackClicked ->
                         navigator.pop()
-                    RecipeListUiEvent.ClearMessage ->
-                        searchState.eventSink.invoke(SearchUiEvent.ClearMessage)
-                    is RecipeListUiEvent.OnRecipeClick ->
-                        searchState.eventSink.invoke(SearchUiEvent.OnRecipeClick(event.recipe))
-                    is RecipeListUiEvent.OnRecipeLongClick ->
-                        searchState.eventSink.invoke(SearchUiEvent.OnRecipeLongClick(event.title))
-                    is RecipeListUiEvent.OnChangeRecipeScrollPosition ->
-                        searchState.eventSink.invoke(SearchUiEvent.OnChangeRecipeScrollPosition(event.index))
+                    RecipeListEvent.ClearMessage ->
+                        searchState.eventSink.invoke(SearchEvent.ClearMessage)
+                    is RecipeListEvent.OnRecipeClick ->
+                        searchState.eventSink.invoke(SearchEvent.OnRecipeClick(event.recipe))
+                    is RecipeListEvent.OnRecipeLongClick ->
+                        searchState.eventSink.invoke(SearchEvent.OnRecipeLongClick(event.title))
+                    is RecipeListEvent.OnChangeRecipeScrollPosition ->
+                        searchState.eventSink.invoke(SearchEvent.OnChangeRecipeScrollPosition(event.index))
                 }
             },
         )

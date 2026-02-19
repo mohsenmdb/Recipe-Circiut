@@ -16,18 +16,18 @@ import com.me.recipe.ui.theme.RecipeTheme
 import com.slack.circuit.codegen.annotations.CircuitInject
 import dagger.hilt.components.SingletonComponent
 
-@CircuitInject(RecipeUiScreen::class, SingletonComponent::class)
+@CircuitInject(RecipeScreen::class, SingletonComponent::class)
 @Composable
 internal fun RecipeUi(
-    state: RecipeUiState,
+    state: RecipeState,
     modifier: Modifier = Modifier,
 ) {
-    BackHandler(onBack = { state.eventSink(RecipeUiEvent.OnBackClicked) })
+    BackHandler(onBack = { state.eventSink(RecipeEvent.OnBackClicked) })
     val snackbarHostState = remember { SnackbarHostState() }
     MessageEffect(
         snackbarHostState = snackbarHostState,
         message = state.message,
-        onClearMessage = { state.eventSink(RecipeUiEvent.ClearMessage) },
+        onClearMessage = { state.eventSink(RecipeEvent.ClearMessage) },
     )
 
     Scaffold(
@@ -43,7 +43,7 @@ internal fun RecipeUi(
             recipe = state.recipe,
             isLoading = state.recipesLoading,
             modifier = Modifier.padding(padding),
-            onLikeClicked = { state.eventSink(RecipeUiEvent.OnLikeClicked) },
+            onLikeClicked = { state.eventSink(RecipeEvent.OnLikeClicked) },
         )
     }
 }
@@ -53,7 +53,7 @@ internal fun RecipeUi(
 private fun RecipeUiPreview() {
     RecipeTheme(true) {
         RecipeUi(
-            state = RecipeUiState.testData(),
+            state = RecipeState.testData(),
         )
     }
 }

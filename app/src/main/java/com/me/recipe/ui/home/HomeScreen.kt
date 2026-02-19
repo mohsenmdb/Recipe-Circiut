@@ -16,10 +16,10 @@ import kotlinx.parcelize.Parcelize
 @Parcelize
 data class HomeScreen(val title: String? = null) : Screen
 
-typealias HomeUiEventSink = (HomeUiEvent) -> Unit
+typealias HomeEventSink = (HomeEvent) -> Unit
 
 @Stable
-data class HomeUiState(
+data class HomeState(
     val sliderRecipes: ImmutableList<Recipe>? = null,
     val categoriesRecipes: ImmutableList<CategoryRecipe>? = null,
     val errors: GenericDialogInfo? = null,
@@ -27,10 +27,10 @@ data class HomeUiState(
     val categoriesLoading: Boolean = categoriesRecipes.isNullOrEmpty(),
     val isDark: Boolean = false,
     val message: UiMessage? = null,
-    val eventSink: HomeUiEventSink,
+    val eventSink: HomeEventSink,
 ) : CircuitUiState {
     companion object {
-        fun testData() = HomeUiState(
+        fun testData() = HomeState(
             sliderRecipes = persistentListOf(Recipe.testData()),
             categoriesRecipes = persistentListOf(CategoryRecipe.testData(), CategoryRecipe.testData(category = FoodCategory.BEEF)),
             eventSink = {},
@@ -38,15 +38,15 @@ data class HomeUiState(
     }
 }
 
-sealed interface HomeUiEvent : CircuitUiEvent {
+sealed interface HomeEvent : CircuitUiEvent {
 
-    data class OnRecipeClicked(val recipe: Recipe) : HomeUiEvent
-    data class OnCategoryClicked(val category: FoodCategory) : HomeUiEvent
-    data class OnRecipeLongClick(val title: String) : HomeUiEvent
-    data object ToggleDarkTheme : HomeUiEvent
-    data object ClearMessage : HomeUiEvent
-    data object OnRetryClicked : HomeUiEvent
+    data class OnRecipeClicked(val recipe: Recipe) : HomeEvent
+    data class OnCategoryClicked(val category: FoodCategory) : HomeEvent
+    data class OnRecipeLongClick(val title: String) : HomeEvent
+    data object ToggleDarkTheme : HomeEvent
+    data object ClearMessage : HomeEvent
+    data object OnRetryClicked : HomeEvent
 }
 
-val HomeUiState.showShimmer: Boolean
+val HomeState.showShimmer: Boolean
     get() = categoriesLoading

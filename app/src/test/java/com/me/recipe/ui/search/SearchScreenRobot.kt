@@ -21,7 +21,7 @@ class SearchScreenRobot @Inject constructor() {
 
     context (RobotTestRule)
     fun setSearchScreen(
-        state: SearchUiState,
+        state: SearchState,
     ) {
         composeTestRule.setContent {
             SearchUi(state = state)
@@ -30,8 +30,8 @@ class SearchScreenRobot @Inject constructor() {
 
     context (RobotTestRule)
     fun setRecipeListScreenLoadingThenLoaded(
-        loadingState: SearchUiState,
-        loadedState: SearchUiState,
+        loadingState: SearchState,
+        loadedState: SearchState,
     ) {
         composeTestRule.setContent {
             var state by remember {
@@ -61,7 +61,7 @@ class SearchScreenRobot @Inject constructor() {
 
     context (RobotTestRule)
     fun checkScreenWhenStateIsLoaded(
-        state: SearchUiState,
+        state: SearchState,
     ) {
         assertSearchTextFieldIsDisplayed()
         assertFoodChipsRowIsDisplayed()

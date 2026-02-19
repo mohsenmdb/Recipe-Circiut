@@ -15,10 +15,10 @@ import kotlinx.parcelize.Parcelize
 @Parcelize
 data class SearchScreen(val query: String = "") : Screen
 
-typealias SearchEventSink = (SearchUiEvent) -> Unit
+typealias SearchEventSink = (SearchEvent) -> Unit
 
 @Stable
-data class SearchUiState(
+data class SearchState(
     val recipes: ImmutableList<Recipe>,
     val errors: GenericDialogInfo? = null,
     val message: UiMessage? = null,
@@ -30,7 +30,7 @@ data class SearchUiState(
     val eventSink: SearchEventSink,
 ) : CircuitUiState {
     companion object {
-        fun testData() = SearchUiState(
+        fun testData() = SearchState(
             recipes = persistentListOf(Recipe.testData()),
             query = FoodCategory.CHICKEN.name,
             selectedCategory = FoodCategory.CHICKEN,
@@ -39,14 +39,14 @@ data class SearchUiState(
     }
 }
 
-sealed interface SearchUiEvent : CircuitUiEvent {
+sealed interface SearchEvent : CircuitUiEvent {
 
-    data object NewSearchEvent : SearchUiEvent
-    data object SearchClearEvent : SearchUiEvent
-    data class OnQueryChanged(val query: String) : SearchUiEvent
-    data class OnSelectedCategoryChanged(val category: String, val position: Int = 0, val offset: Int = 0) : SearchUiEvent
-    data class OnRecipeLongClick(val title: String) : SearchUiEvent
-    data class OnRecipeClick(val recipe: Recipe) : SearchUiEvent
-    data class OnChangeRecipeScrollPosition(val index: Int) : SearchUiEvent
-    data object ClearMessage : SearchUiEvent
+    data object NewSearchEvent : SearchEvent
+    data object SearchClearEvent : SearchEvent
+    data class OnQueryChanged(val query: String) : SearchEvent
+    data class OnSelectedCategoryChanged(val category: String, val position: Int = 0, val offset: Int = 0) : SearchEvent
+    data class OnRecipeLongClick(val title: String) : SearchEvent
+    data class OnRecipeClick(val recipe: Recipe) : SearchEvent
+    data class OnChangeRecipeScrollPosition(val index: Int) : SearchEvent
+    data object ClearMessage : SearchEvent
 }

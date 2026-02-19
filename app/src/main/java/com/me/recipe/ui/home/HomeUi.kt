@@ -24,7 +24,7 @@ import dagger.hilt.components.SingletonComponent
 @CircuitInject(HomeScreen::class, SingletonComponent::class)
 @Composable
 fun HomeUi(
-    state: HomeUiState,
+    state: HomeState,
     modifier: Modifier = Modifier,
 ) {
     val snackbarHostState = remember { SnackbarHostState() }
@@ -35,8 +35,8 @@ fun HomeUi(
     MessageEffect(
         snackbarHostState = snackbarHostState,
         message = state.message,
-        onClearMessage = { state.eventSink.invoke(HomeUiEvent.ClearMessage) },
-        onActionClicked = { state.eventSink.invoke(HomeUiEvent.OnRetryClicked) },
+        onClearMessage = { state.eventSink.invoke(HomeEvent.ClearMessage) },
+        onActionClicked = { state.eventSink.invoke(HomeEvent.OnRetryClicked) },
     )
 
     Scaffold(
@@ -50,7 +50,7 @@ fun HomeUi(
         topBar = {
             HomeAppBar(
                 isDark = state.isDark,
-                onToggleTheme = { state.eventSink(HomeUiEvent.ToggleDarkTheme) },
+                onToggleTheme = { state.eventSink(HomeEvent.ToggleDarkTheme) },
             )
         },
     ) { padding ->
@@ -70,7 +70,7 @@ fun HomeUi(
 private fun HomeUiPreview() {
     RecipeTheme(true) {
         HomeUi(
-            state = HomeUiState.testData(),
+            state = HomeState.testData(),
         )
     }
 }

@@ -21,15 +21,15 @@ import com.me.recipe.ui.component.util.GenericDialogInfo
 import com.me.recipe.ui.component.util.PositiveAction
 import com.me.recipe.ui.component.util.UiMessage
 import com.me.recipe.ui.component.util.UiMessageManager
-import com.me.recipe.ui.recipe.RecipeUiScreen
-import com.me.recipe.ui.search.SearchUiEvent.ClearMessage
-import com.me.recipe.ui.search.SearchUiEvent.NewSearchEvent
-import com.me.recipe.ui.search.SearchUiEvent.OnChangeRecipeScrollPosition
-import com.me.recipe.ui.search.SearchUiEvent.OnQueryChanged
-import com.me.recipe.ui.search.SearchUiEvent.OnRecipeClick
-import com.me.recipe.ui.search.SearchUiEvent.OnRecipeLongClick
-import com.me.recipe.ui.search.SearchUiEvent.OnSelectedCategoryChanged
-import com.me.recipe.ui.search.SearchUiEvent.SearchClearEvent
+import com.me.recipe.ui.recipe.RecipeScreen
+import com.me.recipe.ui.search.SearchEvent.ClearMessage
+import com.me.recipe.ui.search.SearchEvent.NewSearchEvent
+import com.me.recipe.ui.search.SearchEvent.OnChangeRecipeScrollPosition
+import com.me.recipe.ui.search.SearchEvent.OnQueryChanged
+import com.me.recipe.ui.search.SearchEvent.OnRecipeClick
+import com.me.recipe.ui.search.SearchEvent.OnRecipeLongClick
+import com.me.recipe.ui.search.SearchEvent.OnSelectedCategoryChanged
+import com.me.recipe.ui.search.SearchEvent.SearchClearEvent
 import com.me.recipe.util.errorformater.ErrorFormatter
 import com.slack.circuit.codegen.annotations.CircuitInject
 import com.slack.circuit.retained.collectAsRetainedState
@@ -54,10 +54,10 @@ class SearchPresenter @AssistedInject constructor(
     private val searchRecipesUsecase: Lazy<SearchRecipesUsecase>,
     private val restoreRecipesUsecase: Lazy<RestoreRecipesUsecase>,
     private val errorFormatter: Lazy<ErrorFormatter>,
-) : Presenter<SearchUiState> {
+) : Presenter<SearchState> {
 
     @Composable
-    override fun present(): SearchUiState {
+    override fun present(): SearchState {
         val stableScope = rememberStableCoroutineScope()
         val uiMessageManager = rememberRetained { UiMessageManager() }
         val message by uiMessageManager.message.collectAsState(null)
@@ -134,7 +134,7 @@ class SearchPresenter @AssistedInject constructor(
         fun navigateToRecipePage(recipe: Recipe) {
             Timber.d("tezt id=${recipe.id}, uid= ${recipe.uid}")
             navigator.goTo(
-                RecipeUiScreen(
+                RecipeScreen(
                     itemImage = recipe.image,
                     itemTitle = recipe.title,
                     itemId = recipe.id,
@@ -154,7 +154,7 @@ class SearchPresenter @AssistedInject constructor(
                 recipeListPage += 1
             }
         }
-        return SearchUiState(
+        return SearchState(
             recipes = appendedRecipes,
             loading = loading,
             appendingLoading = appendingLoading,

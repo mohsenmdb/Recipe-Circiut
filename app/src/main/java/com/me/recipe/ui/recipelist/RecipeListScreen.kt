@@ -17,10 +17,10 @@ data class RecipeListScreen(
     val query: String,
 ) : Screen
 
-typealias RecipeListEventSink = (RecipeListUiEvent) -> Unit
+typealias RecipeListEventSink = (RecipeListEvent) -> Unit
 
 @Stable
-data class RecipeListUiState(
+data class RecipeListState(
     val recipes: ImmutableList<Recipe>,
     val errors: GenericDialogInfo? = null,
     val message: UiMessage? = null,
@@ -32,7 +32,7 @@ data class RecipeListUiState(
     val eventSink: RecipeListEventSink,
 ) : CircuitUiState {
     companion object {
-        fun testData() = RecipeListUiState(
+        fun testData() = RecipeListState(
             recipes = persistentListOf(Recipe.testData()),
             query = FoodCategory.CHICKEN.name,
             selectedCategory = FoodCategory.CHICKEN,
@@ -41,10 +41,10 @@ data class RecipeListUiState(
     }
 }
 
-sealed interface RecipeListUiEvent : CircuitUiEvent {
-    data object OnNavigateBackClicked : RecipeListUiEvent
-    data class OnChangeRecipeScrollPosition(val index: Int) : RecipeListUiEvent
-    data class OnRecipeLongClick(val title: String) : RecipeListUiEvent
-    data class OnRecipeClick(val recipe: Recipe) : RecipeListUiEvent
-    data object ClearMessage : RecipeListUiEvent
+sealed interface RecipeListEvent : CircuitUiEvent {
+    data object OnNavigateBackClicked : RecipeListEvent
+    data class OnChangeRecipeScrollPosition(val index: Int) : RecipeListEvent
+    data class OnRecipeLongClick(val title: String) : RecipeListEvent
+    data class OnRecipeClick(val recipe: Recipe) : RecipeListEvent
+    data object ClearMessage : RecipeListEvent
 }

@@ -18,7 +18,7 @@ class RecipeScreenRobot @Inject constructor() {
 
     context (RobotTestRule)
     fun setRecipeScreen(
-        state: RecipeUiState,
+        state: RecipeState,
     ) {
         composeTestRule.setContent {
             RecipeUi(state = state)
@@ -27,7 +27,7 @@ class RecipeScreenRobot @Inject constructor() {
 
     context (RobotTestRule)
     fun setRecipeScreenLoadingThenLoaded(
-        data: RecipeUiState,
+        data: RecipeState,
     ) {
         composeTestRule.setContent {
             var state by remember {

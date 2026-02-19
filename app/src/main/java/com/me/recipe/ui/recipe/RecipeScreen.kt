@@ -9,33 +9,33 @@ import com.slack.circuit.runtime.screen.Screen
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
-data class RecipeUiScreen(
+data class RecipeScreen(
     val itemId: Int,
     val itemUid: String,
     val itemTitle: String? = null,
     val itemImage: String? = null,
 ) : Screen
 
-typealias RecipeUiSink = (RecipeUiEvent) -> Unit
+typealias RecipeEventSink = (RecipeEvent) -> Unit
 
 @Stable
-data class RecipeUiState(
+data class RecipeState(
     val recipe: Recipe? = null,
     val message: UiMessage? = null,
     val exception: Throwable? = null,
     val recipesLoading: Boolean = recipe == null && exception == null,
-    val eventSink: RecipeUiSink,
+    val eventSink: RecipeEventSink,
 ) : CircuitUiState {
     companion object {
-        fun testData() = RecipeUiState(
+        fun testData() = RecipeState(
             recipe = Recipe.testData(),
             eventSink = {},
         )
     }
 }
 
-sealed interface RecipeUiEvent : CircuitUiEvent {
-    data object OnBackClicked : RecipeUiEvent
-    data object ClearMessage : RecipeUiEvent
-    data object OnLikeClicked : RecipeUiEvent
+sealed interface RecipeEvent : CircuitUiEvent {
+    data object OnBackClicked : RecipeEvent
+    data object ClearMessage : RecipeEvent
+    data object OnLikeClicked : RecipeEvent
 }

@@ -20,15 +20,15 @@ import dagger.hilt.components.SingletonComponent
 @CircuitInject(RecipeListScreen::class, SingletonComponent::class)
 @Composable
 internal fun RecipeListUi(
-    state: RecipeListUiState,
+    state: RecipeListState,
     modifier: Modifier = Modifier,
 ) {
-    BackHandler(onBack = { state.eventSink(RecipeListUiEvent.OnNavigateBackClicked) })
+    BackHandler(onBack = { state.eventSink(RecipeListEvent.OnNavigateBackClicked) })
     val snackbarHostState = remember { SnackbarHostState() }
     MessageEffect(
         snackbarHostState = snackbarHostState,
         message = state.message,
-        onClearMessage = { state.eventSink.invoke(RecipeListUiEvent.ClearMessage) },
+        onClearMessage = { state.eventSink.invoke(RecipeListEvent.ClearMessage) },
     )
     Scaffold(
         modifier = modifier,
@@ -40,7 +40,7 @@ internal fun RecipeListUi(
         topBar = {
             RecipeListAppBar(
                 category = state.query,
-                onBackPress = { state.eventSink.invoke(RecipeListUiEvent.OnNavigateBackClicked) },
+                onBackPress = { state.eventSink.invoke(RecipeListEvent.OnNavigateBackClicked) },
             )
         },
     ) { padding ->
@@ -48,9 +48,9 @@ internal fun RecipeListUi(
             recipes = state.recipes,
             showShimmer = state.loading,
             showLoadingProgressBar = state.appendingLoading,
-            onRecipeClicked = { state.eventSink.invoke(RecipeListUiEvent.OnRecipeClick(it)) },
-            onRecipeLongClicked = { state.eventSink.invoke(RecipeListUiEvent.OnRecipeLongClick(it)) },
-            onChangeRecipeScrollPosition = { state.eventSink.invoke(RecipeListUiEvent.OnChangeRecipeScrollPosition(it)) },
+            onRecipeClicked = { state.eventSink.invoke(RecipeListEvent.OnRecipeClick(it)) },
+            onRecipeLongClicked = { state.eventSink.invoke(RecipeListEvent.OnRecipeLongClick(it)) },
+            onChangeRecipeScrollPosition = { state.eventSink.invoke(RecipeListEvent.OnChangeRecipeScrollPosition(it)) },
             modifier = Modifier.padding(padding),
         )
         state.errors?.let { GenericDialog(it) }
@@ -62,7 +62,7 @@ internal fun RecipeListUi(
 private fun RecipeListScreenPreview() {
     RecipeTheme(true) {
         RecipeListUi(
-            state = RecipeListUiState.testData(),
+            state = RecipeListState.testData(),
         )
     }
 }

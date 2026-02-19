@@ -31,7 +31,7 @@ class HomeScreenTest {
 
     @Test
     fun `when all data is available then show recipe correctly`() {
-        val state = HomeUiState.testData()
+        val state = HomeState.testData()
         robot(robotTestRule) {
             setHomeScreen(state)
             assertAppNameTextIsDisplayed()

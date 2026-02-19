@@ -19,14 +19,14 @@ import dagger.hilt.components.SingletonComponent
 @CircuitInject(SearchScreen::class, SingletonComponent::class)
 @Composable
 internal fun SearchUi(
-    state: SearchUiState,
+    state: SearchState,
     modifier: Modifier = Modifier,
 ) {
     val snackbarHostState = remember { SnackbarHostState() }
     MessageEffect(
         snackbarHostState = snackbarHostState,
         message = state.message,
-        onClearMessage = { state.eventSink.invoke(SearchUiEvent.ClearMessage) },
+        onClearMessage = { state.eventSink.invoke(SearchEvent.ClearMessage) },
     )
     Scaffold(
         snackbarHost = {
@@ -39,12 +39,12 @@ internal fun SearchUi(
                 query = state.query,
                 selectedCategory = state.selectedCategory,
                 categoryScrollPosition = state.categoryScrollPosition,
-                onQueryChanged = { state.eventSink.invoke(SearchUiEvent.OnQueryChanged(it)) },
-                newSearch = { state.eventSink.invoke(SearchUiEvent.NewSearchEvent) },
-                onSearchClearClicked = { state.eventSink.invoke(SearchUiEvent.SearchClearEvent) },
+                onQueryChanged = { state.eventSink.invoke(SearchEvent.OnQueryChanged(it)) },
+                newSearch = { state.eventSink.invoke(SearchEvent.NewSearchEvent) },
+                onSearchClearClicked = { state.eventSink.invoke(SearchEvent.SearchClearEvent) },
                 onSelectedCategoryChanged = { category, position, offset ->
                     state.eventSink.invoke(
-                        SearchUiEvent.OnSelectedCategoryChanged(category, position, offset),
+                        SearchEvent.OnSelectedCategoryChanged(category, position, offset),
                     )
                 },
             )
@@ -54,9 +54,9 @@ internal fun SearchUi(
             recipes = state.recipes,
             showShimmer = state.loading,
             showLoadingProgressBar = state.appendingLoading,
-            onRecipeClicked = { state.eventSink.invoke(SearchUiEvent.OnRecipeClick(it)) },
-            onRecipeLongClicked = { state.eventSink.invoke(SearchUiEvent.OnRecipeLongClick(it)) },
-            onChangeRecipeScrollPosition = { state.eventSink.invoke(SearchUiEvent.OnChangeRecipeScrollPosition(it)) },
+            onRecipeClicked = { state.eventSink.invoke(SearchEvent.OnRecipeClick(it)) },
+            onRecipeLongClicked = { state.eventSink.invoke(SearchEvent.OnRecipeLongClick(it)) },
+            onChangeRecipeScrollPosition = { state.eventSink.invoke(SearchEvent.OnChangeRecipeScrollPosition(it)) },
             modifier = Modifier.padding(padding),
         )
 
@@ -69,7 +69,7 @@ internal fun SearchUi(
 private fun SearchScreenPreview() {
     RecipeTheme(true) {
         SearchUi(
-            state = SearchUiState.testData(),
+            state = SearchState.testData(),
         )
     }
 }
