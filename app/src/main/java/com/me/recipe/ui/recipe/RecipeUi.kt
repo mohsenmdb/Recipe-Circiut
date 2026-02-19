@@ -18,7 +18,7 @@ import dagger.hilt.components.SingletonComponent
 
 @CircuitInject(RecipeUiScreen::class, SingletonComponent::class)
 @Composable
-internal fun RecipeScreen(
+internal fun RecipeUi(
     state: RecipeUiState,
     modifier: Modifier = Modifier,
 ) {
@@ -50,9 +50,9 @@ internal fun RecipeScreen(
 
 @Preview
 @Composable
-private fun RecipeScreenPreview() {
+private fun RecipeUiPreview() {
     RecipeTheme(true) {
-        RecipeScreen(
+        RecipeUi(
             state = RecipeUiState.testData(),
         )
     }

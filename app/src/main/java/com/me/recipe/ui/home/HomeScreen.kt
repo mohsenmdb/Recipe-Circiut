@@ -1,77 +1,52 @@
 package com.me.recipe.ui.home
 
-import androidx.compose.animation.animateColorAsState
-import androidx.compose.animation.core.Spring
-import androidx.compose.animation.core.spring
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.SnackbarHostState
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
-import com.me.recipe.ui.component.util.DefaultSnackbar
-import com.me.recipe.ui.component.util.MessageEffect
-import com.me.recipe.ui.home.components.HomeAppBar
-import com.me.recipe.ui.home.components.HomeContent
-import com.me.recipe.ui.home.components.shimmer.HomeShimmer
-import com.me.recipe.ui.theme.RecipeTheme
-import com.slack.circuit.codegen.annotations.CircuitInject
-import dagger.hilt.components.SingletonComponent
+import androidx.compose.runtime.Stable
+import com.me.recipe.domain.features.recipe.model.CategoryRecipe
+import com.me.recipe.domain.features.recipe.model.Recipe
+import com.me.recipe.shared.utils.FoodCategory
+import com.me.recipe.ui.component.util.GenericDialogInfo
+import com.me.recipe.ui.component.util.UiMessage
+import com.slack.circuit.runtime.CircuitUiEvent
+import com.slack.circuit.runtime.CircuitUiState
+import com.slack.circuit.runtime.screen.Screen
+import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.persistentListOf
+import kotlinx.parcelize.Parcelize
 
-@CircuitInject(HomeUiScreen::class, SingletonComponent::class)
-@Composable
-fun HomeScreen(
-    state: HomeUiState,
-    modifier: Modifier = Modifier,
-) {
-    val snackbarHostState = remember { SnackbarHostState() }
-    val containerColor by animateColorAsState(
-        targetValue = MaterialTheme.colorScheme.background,
-        animationSpec = spring(stiffness = Spring.StiffnessVeryLow),
-    )
-    MessageEffect(
-        snackbarHostState = snackbarHostState,
-        message = state.message,
-        onClearMessage = { state.eventSink.invoke(HomeUiEvent.ClearMessage) },
-        onActionClicked = { state.eventSink.invoke(HomeUiEvent.OnRetryClicked) },
-    )
+@Parcelize
+data class HomeScreen(val title: String? = null) : Screen
 
-    Scaffold(
-        containerColor = containerColor,
-        snackbarHost = {
-            DefaultSnackbar(
-                snackbarHostState = snackbarHostState,
-                onAction = { snackbarHostState.currentSnackbarData?.performAction() },
-            )
-        },
-        topBar = {
-            HomeAppBar(
-                isDark = state.isDark,
-                onToggleTheme = { state.eventSink(HomeUiEvent.ToggleDarkTheme) },
-            )
-        },
-    ) { padding ->
-        if (state.showShimmer) {
-            HomeShimmer(modifier = Modifier.padding(padding))
-            return@Scaffold
-        }
-        HomeContent(
-            padding = padding,
-            state = state,
+typealias HomeUiEventSink = (HomeUiEvent) -> Unit
+
+@Stable
+data class HomeUiState(
+    val sliderRecipes: ImmutableList<Recipe>? = null,
+    val categoriesRecipes: ImmutableList<CategoryRecipe>? = null,
+    val errors: GenericDialogInfo? = null,
+    val sliderLoading: Boolean = sliderRecipes == null,
+    val categoriesLoading: Boolean = categoriesRecipes.isNullOrEmpty(),
+    val isDark: Boolean = false,
+    val message: UiMessage? = null,
+    val eventSink: HomeUiEventSink,
+) : CircuitUiState {
+    companion object {
+        fun testData() = HomeUiState(
+            sliderRecipes = persistentListOf(Recipe.testData()),
+            categoriesRecipes = persistentListOf(CategoryRecipe.testData(), CategoryRecipe.testData(category = FoodCategory.BEEF)),
+            eventSink = {},
         )
     }
 }
 
-@Preview
-@Composable
-private fun HomeScreenPreview() {
-    RecipeTheme(true) {
-        HomeScreen(
-            state = HomeUiState.testData(),
-        )
-    }
+sealed interface HomeUiEvent : CircuitUiEvent {
+
+    data class OnRecipeClicked(val recipe: Recipe) : HomeUiEvent
+    data class OnCategoryClicked(val category: FoodCategory) : HomeUiEvent
+    data class OnRecipeLongClick(val title: String) : HomeUiEvent
+    data object ToggleDarkTheme : HomeUiEvent
+    data object ClearMessage : HomeUiEvent
+    data object OnRetryClicked : HomeUiEvent
 }
+
+val HomeUiState.showShimmer: Boolean
+    get() = categoriesLoading

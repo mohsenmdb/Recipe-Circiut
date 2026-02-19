@@ -24,7 +24,7 @@ class SearchScreenRobot @Inject constructor() {
         state: SearchUiState,
     ) {
         composeTestRule.setContent {
-            SearchScreenView(state = state)
+            SearchUi(state = state)
         }
     }
 
@@ -37,7 +37,7 @@ class SearchScreenRobot @Inject constructor() {
             var state by remember {
                 mutableStateOf(loadingState)
             }
-            SearchScreenView(state = state)
+            SearchUi(state = state)
             LaunchedEffect(Unit) {
                 delay(1000)
                 state = loadedState

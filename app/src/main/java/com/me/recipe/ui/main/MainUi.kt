@@ -1,6 +1,5 @@
 package com.me.recipe.ui.main
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -11,9 +10,7 @@ import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.unit.dp
-import com.me.recipe.ui.home.HomeUiScreen
+import com.me.recipe.ui.home.HomeScreen
 import com.me.recipe.ui.navigation.NavBottomBar
 import com.slack.circuit.backstack.SaveableBackStack
 import com.slack.circuit.backstack.rememberSaveableBackStack
@@ -23,7 +20,6 @@ import com.slack.circuit.foundation.rememberCircuitNavigator
 import com.slack.circuit.runtime.Navigator
 import com.slack.circuitx.gesturenavigation.GestureNavigationDecorationFactory
 import dagger.hilt.components.SingletonComponent
-import timber.log.Timber
 
 @CircuitInject(MainScreen::class, SingletonComponent::class)
 @Composable
@@ -31,7 +27,7 @@ internal fun MainUi(
     state: MainState,
     modifier: Modifier = Modifier,
 ) {
-    val backstack = rememberSaveableBackStack(root = HomeUiScreen())
+    val backstack = rememberSaveableBackStack(root = HomeScreen())
     val navigator = rememberCircuitNavigator(backstack)
     var selectedIndex by remember { mutableIntStateOf(0) }
     Scaffold(

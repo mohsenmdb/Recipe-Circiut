@@ -48,7 +48,7 @@ import kotlinx.collections.immutable.toPersistentList
 import kotlinx.coroutines.launch
 import timber.log.Timber
 
-class SearchViewPresenter @AssistedInject constructor(
+class SearchPresenter @AssistedInject constructor(
     @Assisted private val screen: SearchScreen,
     @Assisted internal val navigator: Navigator,
     private val searchRecipesUsecase: Lazy<SearchRecipesUsecase>,
@@ -190,7 +190,7 @@ class SearchViewPresenter @AssistedInject constructor(
     @CircuitInject(SearchScreen::class, SingletonComponent::class)
     @AssistedFactory
     interface Factory {
-        fun create(screen: SearchScreen, navigator: Navigator): SearchViewPresenter
+        fun create(screen: SearchScreen, navigator: Navigator): SearchPresenter
     }
     companion object {
         const val INITIAL_RECIPE_LIST_POSITION = 0

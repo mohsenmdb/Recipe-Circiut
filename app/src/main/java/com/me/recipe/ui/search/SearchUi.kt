@@ -7,7 +7,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import com.me.recipe.ui.component.util.DefaultSnackbar
 import com.me.recipe.ui.component.util.GenericDialog
 import com.me.recipe.ui.component.util.MessageEffect
@@ -19,7 +18,7 @@ import dagger.hilt.components.SingletonComponent
 
 @CircuitInject(SearchScreen::class, SingletonComponent::class)
 @Composable
-internal fun SearchScreenView(
+internal fun SearchUi(
     state: SearchUiState,
     modifier: Modifier = Modifier,
 ) {
@@ -69,7 +68,7 @@ internal fun SearchScreenView(
 @Composable
 private fun SearchScreenPreview() {
     RecipeTheme(true) {
-        SearchScreenView(
+        SearchUi(
             state = SearchUiState.testData(),
         )
     }

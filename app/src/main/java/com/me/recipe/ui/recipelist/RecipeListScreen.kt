@@ -1,68 +1,50 @@
 package com.me.recipe.ui.recipelist
 
-import androidx.activity.compose.BackHandler
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.SnackbarHostState
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
-import com.me.recipe.ui.component.util.DefaultSnackbar
-import com.me.recipe.ui.component.util.GenericDialog
-import com.me.recipe.ui.component.util.MessageEffect
-import com.me.recipe.ui.recipelist.components.RecipeListAppBar
-import com.me.recipe.ui.search.component.SearchContent
-import com.me.recipe.ui.theme.RecipeTheme
-import com.slack.circuit.codegen.annotations.CircuitInject
-import dagger.hilt.components.SingletonComponent
+import androidx.compose.runtime.Stable
+import com.me.recipe.domain.features.recipe.model.Recipe
+import com.me.recipe.shared.utils.FoodCategory
+import com.me.recipe.ui.component.util.GenericDialogInfo
+import com.me.recipe.ui.component.util.UiMessage
+import com.slack.circuit.runtime.CircuitUiEvent
+import com.slack.circuit.runtime.CircuitUiState
+import com.slack.circuit.runtime.screen.Screen
+import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.persistentListOf
+import kotlinx.parcelize.Parcelize
 
-@CircuitInject(RecipeListScreen::class, SingletonComponent::class)
-@Composable
-internal fun RecipeListScreen(
-    state: RecipeListUiState,
-    modifier: Modifier = Modifier,
-) {
-    BackHandler(onBack = { state.eventSink(RecipeListUiEvent.OnNavigateBackClicked) })
-    val snackbarHostState = remember { SnackbarHostState() }
-    MessageEffect(
-        snackbarHostState = snackbarHostState,
-        message = state.message,
-        onClearMessage = { state.eventSink.invoke(RecipeListUiEvent.ClearMessage) },
-    )
-    Scaffold(
-        modifier = modifier,
-        snackbarHost = {
-            DefaultSnackbar(snackbarHostState = snackbarHostState) {
-                snackbarHostState.currentSnackbarData?.dismiss()
-            }
-        },
-        topBar = {
-            RecipeListAppBar(
-                category = state.query,
-                onBackPress = { state.eventSink.invoke(RecipeListUiEvent.OnNavigateBackClicked) },
-            )
-        },
-    ) { padding ->
-        SearchContent(
-            recipes = state.recipes,
-            showShimmer = state.loading,
-            showLoadingProgressBar = state.appendingLoading,
-            onRecipeClicked = { state.eventSink.invoke(RecipeListUiEvent.OnRecipeClick(it)) },
-            onRecipeLongClicked = { state.eventSink.invoke(RecipeListUiEvent.OnRecipeLongClick(it)) },
-            onChangeRecipeScrollPosition = { state.eventSink.invoke(RecipeListUiEvent.OnChangeRecipeScrollPosition(it)) },
-            modifier = Modifier.padding(padding),
+@Parcelize
+data class RecipeListScreen(
+    val query: String,
+) : Screen
+
+typealias RecipeListEventSink = (RecipeListUiEvent) -> Unit
+
+@Stable
+data class RecipeListUiState(
+    val recipes: ImmutableList<Recipe>,
+    val errors: GenericDialogInfo? = null,
+    val message: UiMessage? = null,
+    val query: String = "",
+    val selectedCategory: FoodCategory? = null,
+    val loading: Boolean = false,
+    val appendingLoading: Boolean = false,
+    var categoryScrollPosition: Pair<Int, Int> = 0 to 0,
+    val eventSink: RecipeListEventSink,
+) : CircuitUiState {
+    companion object {
+        fun testData() = RecipeListUiState(
+            recipes = persistentListOf(Recipe.testData()),
+            query = FoodCategory.CHICKEN.name,
+            selectedCategory = FoodCategory.CHICKEN,
+            eventSink = {},
         )
-        state.errors?.let { GenericDialog(it) }
     }
 }
 
-@Preview
-@Composable
-private fun RecipeListScreenPreview() {
-    RecipeTheme(true) {
-        RecipeListScreen(
-            state = RecipeListUiState.testData(),
-        )
-    }
+sealed interface RecipeListUiEvent : CircuitUiEvent {
+    data object OnNavigateBackClicked : RecipeListUiEvent
+    data class OnChangeRecipeScrollPosition(val index: Int) : RecipeListUiEvent
+    data class OnRecipeLongClick(val title: String) : RecipeListUiEvent
+    data class OnRecipeClick(val recipe: Recipe) : RecipeListUiEvent
+    data object ClearMessage : RecipeListUiEvent
 }

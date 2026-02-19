@@ -15,7 +15,7 @@ class HomeScreenRobot @Inject constructor() {
         state: HomeUiState,
     ) {
         composeTestRule.setContent {
-            HomeScreen(state = state)
+            HomeUi(state = state)
         }
     }
 

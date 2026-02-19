@@ -4,7 +4,7 @@ import android.annotation.SuppressLint
 import androidx.compose.runtime.Composable
 import com.me.recipe.ui.search.SearchScreen
 import com.me.recipe.ui.search.SearchUiEvent
-import com.me.recipe.ui.search.SearchViewPresenter
+import com.me.recipe.ui.search.SearchPresenter
 import com.slack.circuit.codegen.annotations.CircuitInject
 import com.slack.circuit.runtime.Navigator
 import com.slack.circuit.runtime.presenter.Presenter
@@ -16,7 +16,7 @@ import dagger.hilt.components.SingletonComponent
 class RecipeListPresenter @AssistedInject constructor(
     @Assisted private val screen: RecipeListScreen,
     @Assisted private val navigator: Navigator,
-    searchPresenterFactory: SearchViewPresenter.Factory,
+    searchPresenterFactory: SearchPresenter.Factory,
 ) : Presenter<RecipeListUiState> {
 
     private val searchPresenter = searchPresenterFactory.create(

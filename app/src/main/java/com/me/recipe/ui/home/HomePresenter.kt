@@ -33,7 +33,7 @@ import kotlinx.collections.immutable.toPersistentList
 import kotlinx.coroutines.launch
 
 class HomePresenter @AssistedInject constructor(
-    @Assisted private val screen: HomeUiScreen,
+    @Assisted private val screen: HomeScreen,
     @Assisted internal val navigator: Navigator,
     private val settingsDataStore: Lazy<SettingsDataStore>,
     private val getCategoriesUseCase: Lazy<CategoriesRecipesUseCase>,
@@ -109,8 +109,8 @@ class HomePresenter @AssistedInject constructor(
     }
 }
 
-@CircuitInject(HomeUiScreen::class, SingletonComponent::class)
+@CircuitInject(HomeScreen::class, SingletonComponent::class)
 @AssistedFactory
 interface Factory {
-    fun create(screen: HomeUiScreen, navigator: Navigator): HomePresenter
+    fun create(screen: HomeScreen, navigator: Navigator): HomePresenter
 }
