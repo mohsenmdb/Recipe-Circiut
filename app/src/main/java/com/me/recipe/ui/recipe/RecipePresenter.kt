@@ -21,13 +21,13 @@ import dagger.hilt.components.SingletonComponent
 import kotlinx.coroutines.launch
 
 class RecipePresenter @AssistedInject constructor(
-    @Assisted private val screen: RecipeUiScreen,
+    @Assisted private val screen: RecipeScreen,
     @Assisted internal val navigator: Navigator,
     private val getRecipeUsecase: Lazy<GetRecipeUsecase>,
-) : Presenter<RecipeUiState> {
+) : Presenter<RecipeState> {
 
     @Composable
-    override fun present(): RecipeUiState {
+    override fun present(): RecipeState {
         val stableScope = rememberStableCoroutineScope()
         val uiMessageManager = remember { UiMessageManager() }
         val message by uiMessageManager.message.collectAsState(null)
@@ -44,17 +44,17 @@ class RecipePresenter @AssistedInject constructor(
             }
         }
         navigator.toString()
-        return RecipeUiState(
+        return RecipeState(
             recipe = recipe,
             message = message,
             exception = recipeResult?.exceptionOrNull(),
             eventSink = { event ->
                 when (event) {
-                    RecipeUiEvent.OnBackClicked -> navigator.pop()
-                    RecipeUiEvent.ClearMessage ->
+                    RecipeEvent.OnBackClicked -> navigator.pop()
+                    RecipeEvent.ClearMessage ->
                         stableScope.launch { uiMessageManager.clearMessage() }
 
-                    RecipeUiEvent.OnLikeClicked -> {
+                    RecipeEvent.OnLikeClicked -> {
                         if (recipe?.rating != null) {
                             stableScope.launch {
                                 uiMessageManager.emitMessage(UiMessage.createSnackbar(recipe.rating))
@@ -67,8 +67,8 @@ class RecipePresenter @AssistedInject constructor(
     }
 }
 
-@CircuitInject(RecipeUiScreen::class, SingletonComponent::class)
+@CircuitInject(RecipeScreen::class, SingletonComponent::class)
 @AssistedFactory
 interface Factory {
-    fun create(screen: RecipeUiScreen, navigator: Navigator): RecipePresenter
+    fun create(screen: RecipeScreen, navigator: Navigator): RecipePresenter
 }

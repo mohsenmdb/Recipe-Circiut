@@ -7,7 +7,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import com.me.recipe.ui.component.util.DefaultSnackbar
 import com.me.recipe.ui.component.util.GenericDialog
 import com.me.recipe.ui.component.util.MessageEffect
@@ -19,15 +18,15 @@ import dagger.hilt.components.SingletonComponent
 
 @CircuitInject(SearchScreen::class, SingletonComponent::class)
 @Composable
-internal fun SearchScreenView(
-    state: SearchUiState,
+internal fun SearchUi(
+    state: SearchState,
     modifier: Modifier = Modifier,
 ) {
     val snackbarHostState = remember { SnackbarHostState() }
     MessageEffect(
         snackbarHostState = snackbarHostState,
         message = state.message,
-        onClearMessage = { state.eventSink.invoke(SearchUiEvent.ClearMessage) },
+        onClearMessage = { state.eventSink.invoke(SearchEvent.ClearMessage) },
     )
     Scaffold(
         snackbarHost = {
@@ -40,25 +39,24 @@ internal fun SearchScreenView(
                 query = state.query,
                 selectedCategory = state.selectedCategory,
                 categoryScrollPosition = state.categoryScrollPosition,
-                onQueryChanged = { state.eventSink.invoke(SearchUiEvent.OnQueryChanged(it)) },
-                newSearch = { state.eventSink.invoke(SearchUiEvent.NewSearchEvent) },
-                onSearchClearClicked = { state.eventSink.invoke(SearchUiEvent.SearchClearEvent) },
+                onQueryChanged = { state.eventSink.invoke(SearchEvent.OnQueryChanged(it)) },
+                newSearch = { state.eventSink.invoke(SearchEvent.NewSearchEvent) },
+                onSearchClearClicked = { state.eventSink.invoke(SearchEvent.SearchClearEvent) },
                 onSelectedCategoryChanged = { category, position, offset ->
                     state.eventSink.invoke(
-                        SearchUiEvent.OnSelectedCategoryChanged(category, position, offset),
+                        SearchEvent.OnSelectedCategoryChanged(category, position, offset),
                     )
                 },
             )
         },
-        modifier = modifier.padding(bottom = 80.dp),
     ) { padding ->
         SearchContent(
             recipes = state.recipes,
             showShimmer = state.loading,
             showLoadingProgressBar = state.appendingLoading,
-            onRecipeClicked = { state.eventSink.invoke(SearchUiEvent.OnRecipeClick(it)) },
-            onRecipeLongClicked = { state.eventSink.invoke(SearchUiEvent.OnRecipeLongClick(it)) },
-            onChangeRecipeScrollPosition = { state.eventSink.invoke(SearchUiEvent.OnChangeRecipeScrollPosition(it)) },
+            onRecipeClicked = { state.eventSink.invoke(SearchEvent.OnRecipeClick(it)) },
+            onRecipeLongClicked = { state.eventSink.invoke(SearchEvent.OnRecipeLongClick(it)) },
+            onChangeRecipeScrollPosition = { state.eventSink.invoke(SearchEvent.OnChangeRecipeScrollPosition(it)) },
             modifier = Modifier.padding(padding),
         )
 
@@ -70,8 +68,8 @@ internal fun SearchScreenView(
 @Composable
 private fun SearchScreenPreview() {
     RecipeTheme(true) {
-        SearchScreenView(
-            state = SearchUiState.testData(),
+        SearchUi(
+            state = SearchState.testData(),
         )
     }
 }

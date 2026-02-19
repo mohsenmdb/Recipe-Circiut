@@ -1,59 +1,41 @@
 package com.me.recipe.ui.recipe
 
-import androidx.activity.compose.BackHandler
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.SnackbarHostState
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
-import com.me.recipe.ui.component.util.DefaultSnackbar
-import com.me.recipe.ui.component.util.MessageEffect
-import com.me.recipe.ui.recipe.components.RecipeDetail
-import com.me.recipe.ui.theme.RecipeTheme
-import com.slack.circuit.codegen.annotations.CircuitInject
-import dagger.hilt.components.SingletonComponent
+import androidx.compose.runtime.Stable
+import com.me.recipe.domain.features.recipe.model.Recipe
+import com.me.recipe.ui.component.util.UiMessage
+import com.slack.circuit.runtime.CircuitUiEvent
+import com.slack.circuit.runtime.CircuitUiState
+import com.slack.circuit.runtime.screen.Screen
+import kotlinx.parcelize.Parcelize
 
-@CircuitInject(RecipeUiScreen::class, SingletonComponent::class)
-@Composable
-internal fun RecipeScreen(
-    state: RecipeUiState,
-    modifier: Modifier = Modifier,
-) {
-    BackHandler(onBack = { state.eventSink(RecipeUiEvent.OnBackClicked) })
-    val snackbarHostState = remember { SnackbarHostState() }
-    MessageEffect(
-        snackbarHostState = snackbarHostState,
-        message = state.message,
-        onClearMessage = { state.eventSink(RecipeUiEvent.ClearMessage) },
-    )
+@Parcelize
+data class RecipeScreen(
+    val itemId: Int,
+    val itemUid: String,
+    val itemTitle: String? = null,
+    val itemImage: String? = null,
+) : Screen
 
-    Scaffold(
-        containerColor = MaterialTheme.colorScheme.background,
-        snackbarHost = {
-            DefaultSnackbar(snackbarHostState = snackbarHostState) {
-                snackbarHostState.currentSnackbarData?.dismiss()
-            }
-        },
-        modifier = modifier,
-    ) { padding ->
-        RecipeDetail(
-            recipe = state.recipe,
-            isLoading = state.recipesLoading,
-            modifier = Modifier.padding(padding),
-            onLikeClicked = { state.eventSink(RecipeUiEvent.OnLikeClicked) },
+typealias RecipeEventSink = (RecipeEvent) -> Unit
+
+@Stable
+data class RecipeState(
+    val recipe: Recipe? = null,
+    val message: UiMessage? = null,
+    val exception: Throwable? = null,
+    val recipesLoading: Boolean = recipe == null && exception == null,
+    val eventSink: RecipeEventSink,
+) : CircuitUiState {
+    companion object {
+        fun testData() = RecipeState(
+            recipe = Recipe.testData(),
+            eventSink = {},
         )
     }
 }
 
-@Preview
-@Composable
-private fun RecipeScreenPreview() {
-    RecipeTheme(true) {
-        RecipeScreen(
-            state = RecipeUiState.testData(),
-        )
-    }
+sealed interface RecipeEvent : CircuitUiEvent {
+    data object OnBackClicked : RecipeEvent
+    data object ClearMessage : RecipeEvent
+    data object OnLikeClicked : RecipeEvent
 }

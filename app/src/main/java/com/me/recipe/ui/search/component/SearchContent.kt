@@ -5,7 +5,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.me.recipe.domain.features.recipe.model.Recipe
-import com.me.recipe.ui.search.SearchUiState
+import com.me.recipe.ui.search.SearchState
 import com.me.recipe.ui.search.component.shimmer.RecipeShimmer
 import com.me.recipe.ui.theme.RecipeTheme
 import kotlinx.collections.immutable.ImmutableList
@@ -43,7 +43,7 @@ internal fun SearchContent(
 private fun SearchContentPreview() {
     RecipeTheme(true) {
         SearchContent(
-            recipes = SearchUiState.testData().recipes,
+            recipes = SearchState.testData().recipes,
             showShimmer = false,
             showLoadingProgressBar = false,
             onRecipeClicked = {},

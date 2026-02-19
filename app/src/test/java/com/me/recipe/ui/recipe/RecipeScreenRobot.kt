@@ -18,22 +18,22 @@ class RecipeScreenRobot @Inject constructor() {
 
     context (RobotTestRule)
     fun setRecipeScreen(
-        state: RecipeUiState,
+        state: RecipeState,
     ) {
         composeTestRule.setContent {
-            RecipeScreen(state = state)
+            RecipeUi(state = state)
         }
     }
 
     context (RobotTestRule)
     fun setRecipeScreenLoadingThenLoaded(
-        data: RecipeUiState,
+        data: RecipeState,
     ) {
         composeTestRule.setContent {
             var state by remember {
                 mutableStateOf(data)
             }
-            RecipeScreen(state = state)
+            RecipeUi(state = state)
             LaunchedEffect(Unit) {
                 delay(1000)
                 state = data.copy(recipesLoading = false, recipe = Recipe.testData())

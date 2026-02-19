@@ -1,4 +1,4 @@
-package com.me.recipe.ui.splash
+package com.me.recipe.ui.main
 
 import androidx.compose.runtime.Stable
 import com.slack.circuit.runtime.CircuitUiEvent
@@ -7,13 +7,13 @@ import com.slack.circuit.runtime.screen.Screen
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
-data object SplashScreen : Screen
+data object MainScreen : Screen
 
-typealias SplashEventSink = (SplashEvent) -> Unit
+typealias MainEventSink = (MainEvent) -> Unit
 
 @Stable
-data class SplashState(
-    val eventSink: SplashEventSink,
+data class MainState(
+    val eventSink: MainEventSink,
 ) : CircuitUiState
 
-sealed interface SplashEvent : CircuitUiEvent
+sealed interface MainEvent : CircuitUiEvent

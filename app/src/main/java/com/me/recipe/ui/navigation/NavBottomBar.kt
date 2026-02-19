@@ -13,7 +13,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import com.me.recipe.ui.home.HomeUiScreen
+import com.me.recipe.ui.home.HomeScreen
 import com.me.recipe.ui.search.SearchScreen
 import com.slack.circuit.runtime.Navigator
 import com.slack.circuit.runtime.screen.Screen
@@ -63,10 +63,10 @@ internal fun NavBottomBar(
 }
 
 private fun getScreenForTab(tab: NavigationDestination) = when (tab) {
-    HomeDestination -> HomeUiScreen()
+    HomeDestination -> HomeScreen()
     SearchDestination -> SearchScreen()
-    else -> HomeUiScreen()
+    else -> HomeScreen()
 }
 
 private fun isHomeDestination(screen: Screen?) =
-    screen is HomeUiScreen || screen is SearchScreen
+    screen is HomeScreen || screen is SearchScreen

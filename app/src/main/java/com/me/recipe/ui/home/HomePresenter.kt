@@ -14,7 +14,7 @@ import com.me.recipe.shared.datastore.SettingsDataStore
 import com.me.recipe.shared.utils.CategoryRowType
 import com.me.recipe.ui.component.util.UiMessage
 import com.me.recipe.ui.component.util.UiMessageManager
-import com.me.recipe.ui.recipe.RecipeUiScreen
+import com.me.recipe.ui.recipe.RecipeScreen
 import com.me.recipe.ui.recipelist.RecipeListScreen
 import com.me.recipe.util.errorformater.ErrorFormatter
 import com.slack.circuit.codegen.annotations.CircuitInject
@@ -33,16 +33,16 @@ import kotlinx.collections.immutable.toPersistentList
 import kotlinx.coroutines.launch
 
 class HomePresenter @AssistedInject constructor(
-    @Assisted private val screen: HomeUiScreen,
+    @Assisted private val screen: HomeScreen,
     @Assisted internal val navigator: Navigator,
     private val settingsDataStore: Lazy<SettingsDataStore>,
     private val getCategoriesUseCase: Lazy<CategoriesRecipesUseCase>,
     private val getOfflineCategoriesUseCase: Lazy<CategoriesRecipesUseCase>,
     private val errorFormatter: Lazy<ErrorFormatter>,
-) : Presenter<HomeUiState> {
+) : Presenter<HomeState> {
 
     @Composable
-    override fun present(): HomeUiState {
+    override fun present(): HomeState {
         val stableScope = rememberStableCoroutineScope()
         val uiMessageManager = rememberRetained { UiMessageManager() }
         val message by uiMessageManager.message.collectAsRetainedState(null)
@@ -74,16 +74,16 @@ class HomePresenter @AssistedInject constructor(
             }
         }
 
-        return HomeUiState(
+        return HomeState(
             sliderRecipes = slider,
             categoriesRecipes = rows,
             isDark = isDarkTheme,
             message = message,
             eventSink = { event ->
                 when (event) {
-                    is HomeUiEvent.OnRecipeClicked -> {
+                    is HomeEvent.OnRecipeClicked -> {
                         navigator.goTo(
-                            RecipeUiScreen(
+                            RecipeScreen(
                                 itemImage = event.recipe.image,
                                 itemTitle = event.recipe.title,
                                 itemId = event.recipe.id,
@@ -92,15 +92,15 @@ class HomePresenter @AssistedInject constructor(
                         )
                     }
 
-                    is HomeUiEvent.OnCategoryClicked -> {
+                    is HomeEvent.OnCategoryClicked -> {
                         navigator.goTo(RecipeListScreen(event.category.value))
                     }
-                    is HomeUiEvent.OnRecipeLongClick -> {
+                    is HomeEvent.OnRecipeLongClick -> {
                         stableScope.launch { uiMessageManager.emitMessage(UiMessage.createSnackbar(event.title)) }
                     }
-                    HomeUiEvent.ToggleDarkTheme -> settingsDataStore.get().toggleTheme()
-                    HomeUiEvent.ClearMessage -> stableScope.launch { uiMessageManager.clearMessage() }
-                    HomeUiEvent.OnRetryClicked -> stableScope.launch {
+                    HomeEvent.ToggleDarkTheme -> settingsDataStore.get().toggleTheme()
+                    HomeEvent.ClearMessage -> stableScope.launch { uiMessageManager.clearMessage() }
+                    HomeEvent.OnRetryClicked -> stableScope.launch {
                         refresher = ForceFresh.refresh()
                     }
                 }
@@ -109,8 +109,8 @@ class HomePresenter @AssistedInject constructor(
     }
 }
 
-@CircuitInject(HomeUiScreen::class, SingletonComponent::class)
+@CircuitInject(HomeScreen::class, SingletonComponent::class)
 @AssistedFactory
 interface Factory {
-    fun create(screen: HomeUiScreen, navigator: Navigator): HomePresenter
+    fun create(screen: HomeScreen, navigator: Navigator): HomePresenter
 }

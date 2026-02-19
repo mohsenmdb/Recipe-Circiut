@@ -33,7 +33,7 @@ class SearchScreenTest {
 
     @Test
     fun `when all data is available then show recipe correctly`() {
-        val state = SearchUiState.testData()
+        val state = SearchState.testData()
         robot(robotTestRule) {
             setSearchScreen(state)
             checkScreenWhenStateIsLoaded(state)
@@ -42,8 +42,8 @@ class SearchScreenTest {
 
     @Test
     fun `when state change from loading to loaded show correctly loading and loaded screens`() {
-        val loadedState = SearchUiState.testData()
-        val loadingState = SearchUiState.testData().copy(
+        val loadedState = SearchState.testData()
+        val loadingState = SearchState.testData().copy(
             recipes = persistentListOf(),
             loading = true,
         )
@@ -59,7 +59,7 @@ class SearchScreenTest {
 
     @Test
     fun `while loading data show shimmer correctly`() {
-        val state = SearchUiState.testData().copy(loading = true)
+        val state = SearchState.testData().copy(loading = true)
         robot(robotTestRule) {
             setSearchScreen(state)
             assertRecipeShimmerIsDisplay()
@@ -68,7 +68,7 @@ class SearchScreenTest {
 
     @Test
     fun `while load more data show appending loading correctly`() {
-        val state = SearchUiState.testData().copy(appendingLoading = true)
+        val state = SearchState.testData().copy(appendingLoading = true)
         robot(robotTestRule) {
             setSearchScreen(state)
             checkScreenWhenStateIsLoadedMore()
@@ -77,7 +77,7 @@ class SearchScreenTest {
 
     @Test
     fun `when has error check error dialog show correctly`() {
-        val state = SearchUiState.testData().copy(
+        val state = SearchState.testData().copy(
             errors = GenericDialogInfo.testDate(),
         )
         robot(robotTestRule) {
