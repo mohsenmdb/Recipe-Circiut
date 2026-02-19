@@ -1,5 +1,8 @@
 package com.me.recipe.ui.auth
 
+import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.core.Spring
+import androidx.compose.animation.core.spring
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
@@ -8,36 +11,69 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import com.slack.circuit.codegen.annotations.CircuitInject
-import dagger.hilt.components.SingletonComponent
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.me.recipe.R
+import com.me.recipe.ui.component.util.DefaultSnackbar
+import com.me.recipe.ui.component.util.MessageEffect
 import com.me.recipe.ui.theme.RecipeTheme
-
+import com.slack.circuit.codegen.annotations.CircuitInject
+import dagger.hilt.components.SingletonComponent
 
 @CircuitInject(AuthScreen::class, SingletonComponent::class)
-
 @Composable
 internal fun AuthUi(
     state: AuthState,
     modifier: Modifier = Modifier,
 ) {
+    val snackbarHostState = remember { SnackbarHostState() }
+    val containerColor by animateColorAsState(
+        targetValue = MaterialTheme.colorScheme.background,
+        animationSpec = spring(stiffness = Spring.StiffnessVeryLow),
+    )
+    MessageEffect(
+        snackbarHostState = snackbarHostState,
+        message = state.message,
+        onClearMessage = { state.eventSink(AuthEvent.ClearMessage) },
+    )
+
+    Scaffold(
+        containerColor = containerColor,
+        snackbarHost = {
+            DefaultSnackbar(
+                snackbarHostState = snackbarHostState,
+                onAction = { snackbarHostState.currentSnackbarData?.performAction() },
+            )
+        },
+    ) { padding ->
+        Content(state, modifier.padding(padding))
+    }
+}
+
+@Composable
+private fun Content(state: AuthState, modifier: Modifier = Modifier) {
     Column(
         modifier = modifier
             .fillMaxSize()
             .padding(24.dp),
-        verticalArrangement = Arrangement.Center
+        verticalArrangement = Arrangement.Center,
     ) {
         TitleText(text = stringResource(if (state.isLoginMode) R.string.login else R.string.register))
         Spacer(modifier = Modifier.height(16.dp))
@@ -59,7 +95,7 @@ private fun ColumnScope.Inputs(state: AuthState) {
         password = state.password,
         onPasswordChange = {
             state.eventSink(AuthEvent.OnPasswordChange(it))
-        }
+        },
     )
 
     if (!state.isLoginMode) {
@@ -69,23 +105,25 @@ private fun ColumnScope.Inputs(state: AuthState) {
             passwordError = state.hasPasswordError,
             onPasswordChange = {
                 state.eventSink(AuthEvent.OnRetryPasswordChange(it))
-            }
+            },
         )
 
         if (state.hasPasswordError) PasswordErrorText()
     }
 }
+
 @Composable
 private fun ColumnScope.Buttons(state: AuthState) {
     SubmitButton(
         text = stringResource(if (state.isLoginMode) R.string.login else R.string.register),
+        isLoading = state.isLoading,
         onClick = {
             state.eventSink(AuthEvent.OnSubmitClicked)
-        }
+        },
     )
     Spacer(modifier = Modifier.height(8.dp))
 
-    SubmitButton(
+    SwitchModeButton(
         text = stringResource(if (state.isLoginMode) R.string.do_not_have_account else R.string.already_have_account),
         onClick = {
             state.eventSink(AuthEvent.OnSwitchModeClicked)
@@ -110,7 +148,7 @@ private fun EmailInput(email: String, onEmailChange: (String) -> Unit) {
         label = { Text(stringResource(R.string.email)) },
         singleLine = true,
         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
-        modifier = Modifier.fillMaxWidth()
+        modifier = Modifier.fillMaxWidth(),
     )
 }
 
@@ -125,7 +163,7 @@ private fun PasswordInput(password: String, onPasswordChange: (String) -> Unit) 
         singleLine = true,
         visualTransformation = PasswordVisualTransformation(),
         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
-        modifier = Modifier.fillMaxWidth()
+        modifier = Modifier.fillMaxWidth(),
     )
 }
 
@@ -133,7 +171,7 @@ private fun PasswordInput(password: String, onPasswordChange: (String) -> Unit) 
 private fun RetryPasswordInput(
     password: String,
     onPasswordChange: (String) -> Unit,
-    passwordError: Boolean
+    passwordError: Boolean,
 ) {
     OutlinedTextField(
         value = password,
@@ -145,7 +183,7 @@ private fun RetryPasswordInput(
         visualTransformation = PasswordVisualTransformation(),
         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
         modifier = Modifier.fillMaxWidth(),
-        isError = passwordError
+        isError = passwordError,
     )
 }
 
@@ -154,32 +192,53 @@ private fun PasswordErrorText() {
     Text(
         text = "Passwords do not match",
         color = MaterialTheme.colorScheme.error,
-        style = MaterialTheme.typography.bodySmall
+        style = MaterialTheme.typography.bodySmall,
     )
 }
 
 @Composable
 private fun SubmitButton(
     text: String,
+    isLoading: Boolean,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Button(
         onClick = onClick,
-        modifier = modifier.fillMaxWidth()
+        modifier = modifier.fillMaxWidth(),
+    ) {
+        if (isLoading) {
+            CircularProgressIndicator(
+                modifier = Modifier.size(20.dp),
+                color = Color.White,
+                strokeWidth = 2.dp,
+            )
+        } else {
+            Text(text = text)
+        }
+    }
+}
+
+@Composable
+private fun SwitchModeButton(
+    text: String,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    Button(
+        onClick = onClick,
+        modifier = modifier.fillMaxWidth(),
     ) {
         Text(text = text)
     }
 }
 
-
 @Preview
 @Composable
 private fun AuthScreenPreview() {
-
     RecipeTheme(true) {
         AuthUi(
-            state = AuthState(eventSink = {})
+            state = AuthState(eventSink = {}),
         )
     }
 }
