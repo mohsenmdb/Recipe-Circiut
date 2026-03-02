@@ -16,11 +16,12 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-data class User(
+data class UserInfo(
     val accessToken: String = "",
-    val email: String = "",
     val username: String = "",
-    val phone: String = "",
+    val firstName: String = "",
+    val lastName: String = "",
+    val age: String = "",
 )
 
 @Singleton
@@ -28,42 +29,44 @@ class UserDataStore @Inject constructor(
     private val context: Context,
     @IoDispatcher private val ioDispatcher: CoroutineDispatcher,
 ) {
-    private val _userFlow = MutableStateFlow(User())
-    val userFlow: StateFlow<User> get() = _userFlow
+    private val _userFlow = MutableStateFlow(UserInfo())
+    val userFlow: StateFlow<UserInfo> get() = _userFlow
 
     init {
         CoroutineScope(ioDispatcher).launch {
             context.dataStore.data.collect { prefs ->
-                _userFlow.value = User(
+                _userFlow.value = UserInfo(
                     accessToken = prefs[ACCESS_TOKEN_KEY] ?: "",
-                    email = prefs[EMAIL_KEY] ?: "",
                     username = prefs[USERNAME_KEY] ?: "",
-                    phone = prefs[PHONE_KEY] ?: "",
+                    firstName = prefs[FIRST_NAME_KEY] ?: "",
+                    lastName = prefs[LAST_NAME_KEY] ?: "",
+                    age = prefs[AGE_KEY] ?: "",
                 )
             }
         }
     }
 
-    fun getUser(): User = _userFlow.value
+    fun getUser(): UserInfo = _userFlow.value
 
     suspend fun setAccessToken(token: String) = saveValue(ACCESS_TOKEN_KEY, token)
-    suspend fun setEmail(email: String) = saveValue(EMAIL_KEY, email)
+    suspend fun setEmail(email: String) = saveValue(FIRST_NAME_KEY, email)
     suspend fun setUsername(username: String) = saveValue(USERNAME_KEY, username)
-    suspend fun setPhone(phone: String) = saveValue(PHONE_KEY, phone)
+    suspend fun setPhone(phone: String) = saveValue(AGE_KEY, phone)
 
-    suspend fun setUser(user: User) = withContext(ioDispatcher) {
+    suspend fun setUser(user: UserInfo) = withContext(ioDispatcher) {
         context.dataStore.edit { prefs ->
             prefs[ACCESS_TOKEN_KEY] = user.accessToken
-            prefs[EMAIL_KEY] = user.email
             prefs[USERNAME_KEY] = user.username
-            prefs[PHONE_KEY] = user.phone
+            prefs[FIRST_NAME_KEY] = user.firstName
+            prefs[LAST_NAME_KEY] = user.lastName
+            prefs[AGE_KEY] = user.age
         }
         _userFlow.value = user
     }
 
     suspend fun clearAll() = withContext(ioDispatcher) {
         context.dataStore.edit { it.clear() }
-        _userFlow.value = User()
+        _userFlow.value = UserInfo()
     }
 
     private suspend fun saveValue(key: Preferences.Key<String>, value: String) {
@@ -73,9 +76,10 @@ class UserDataStore @Inject constructor(
             }
             _userFlow.value = when (key) {
                 ACCESS_TOKEN_KEY -> _userFlow.value.copy(accessToken = value)
-                EMAIL_KEY -> _userFlow.value.copy(email = value)
                 USERNAME_KEY -> _userFlow.value.copy(username = value)
-                PHONE_KEY -> _userFlow.value.copy(phone = value)
+                FIRST_NAME_KEY -> _userFlow.value.copy(firstName = value)
+                LAST_NAME_KEY -> _userFlow.value.copy(lastName = value)
+                AGE_KEY -> _userFlow.value.copy(age = value)
                 else -> _userFlow.value
             }
         }
@@ -85,9 +89,10 @@ class UserDataStore @Inject constructor(
         private const val APP_PREFERENCE_NAME = "user_info"
 
         private val ACCESS_TOKEN_KEY = stringPreferencesKey("access_token")
-        private val EMAIL_KEY = stringPreferencesKey("user_email")
         private val USERNAME_KEY = stringPreferencesKey("user_name")
-        private val PHONE_KEY = stringPreferencesKey("user_phone")
+        private val FIRST_NAME_KEY = stringPreferencesKey("first_name")
+        private val LAST_NAME_KEY = stringPreferencesKey("last_name")
+        private val AGE_KEY = stringPreferencesKey("age")
 
         private val Context.dataStore: DataStore<Preferences> by preferencesDataStore(
             name = APP_PREFERENCE_NAME,

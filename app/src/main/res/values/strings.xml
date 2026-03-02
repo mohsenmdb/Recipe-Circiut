@@ -9,6 +9,8 @@
     <string name="not_connected_to_internet">It seems you have no internet connection. Check your connection and try again!</string>
     <string name="connection_timeout_exception">Something went wrong, please try again a bit later.</string>
     <string name="server_error_retry">Error occurred, try again later</string>
+    <string name="server_error_unauthorized">Username or password is wrong, check and try again.</string>
+    <string name="server_error_user_exist">User with this username already exists, try other username.</string>
 
     <string name="navigate_splash_title">Splash</string>
     <string name="navigate_search_title">Search</string>
@@ -27,5 +29,8 @@
     <string name="register">Register</string>
     <string name="do_not_have_account">Don\'t have an account? Register</string>
     <string name="already_have_account">Already have an account? Login</string>
-    <string name="email">Email</string>
+    <string name="username">Username</string>
+    <string name="firstName">First Name</string>
+    <string name="lastName">Last Name</string>
+    <string name="age">Age</string>
 </resources>

@@ -1,13 +1,17 @@
 package com.me.recipe.domain.features.auth.repository
 
 import com.me.recipe.domain.features.model.Login
+import com.me.recipe.domain.features.model.Register
 import kotlinx.coroutines.flow.Flow
 
 interface AuthRepository {
-    suspend fun login(email: String, password: String): Login
+    suspend fun login(username: String, password: String): Login
 
-    fun register(
-        email: String,
+    suspend fun register(
+        username: String,
+        firstName: String,
+        lastName: String,
+        age: Int?,
         password: String,
-    ): Flow<Login>
+    ): Register
 }

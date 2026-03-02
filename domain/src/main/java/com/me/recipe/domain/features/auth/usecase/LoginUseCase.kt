@@ -10,12 +10,12 @@ class LoginUseCase @Inject constructor(
     private val repository: AuthRepository,
 ) {
     data class Params(
-        val email: String,
+        val username: String,
         val password: String,
     )
     suspend operator fun invoke(params: Params): Result<Login> {
         return runAsResult {
-            repository.login(params.email, params.password)
+            repository.login(params.username, params.password)
         }
     }
 }

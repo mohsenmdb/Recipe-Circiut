@@ -4,7 +4,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import com.me.recipe.BuildConfig
 import com.me.recipe.domain.features.auth.usecase.LoginUseCase
+import com.me.recipe.domain.features.auth.usecase.RegisterUseCase
+import com.me.recipe.domain.features.model.User
+import com.me.recipe.shared.datastore.UserInfo
 import com.me.recipe.shared.datastore.UserDataStore
 import com.me.recipe.ui.component.util.UiMessage
 import com.me.recipe.ui.component.util.UiMessageManager
@@ -26,6 +30,7 @@ import kotlinx.coroutines.launch
 class AuthPresenter @AssistedInject constructor(
     @Assisted internal val navigator: Navigator,
     private val loginUseCase: Lazy<LoginUseCase>,
+    private val registerUseCase: Lazy<RegisterUseCase>,
     private val userDataStore: Lazy<UserDataStore>,
     private val errorFormatter: Lazy<ErrorFormatter>,
 ) : Presenter<AuthState> {
@@ -36,23 +41,89 @@ class AuthPresenter @AssistedInject constructor(
         val uiMessageManager = rememberRetained { UiMessageManager() }
         val message by uiMessageManager.message.collectAsRetainedState(null)
         var authMode by rememberRetained { mutableStateOf(AuthMode.LOGIN) }
-        var email by rememberRetained { mutableStateOf("") }
+        var username by rememberRetained { mutableStateOf("") }
         var password by rememberRetained { mutableStateOf("") }
+        var firstName by rememberRetained { mutableStateOf("") }
+        var lastName by rememberRetained { mutableStateOf("") }
+        var age by rememberRetained { mutableStateOf("") }
         var retryPassword by rememberRetained { mutableStateOf("") }
         var hasPasswordError by rememberRetained { mutableStateOf(false) }
         var isLoading by rememberRetained { mutableStateOf(false) }
 
+        suspend fun createMessage(message: String) {
+            uiMessageManager.emitMessage(UiMessage.createSnackbar(message))
+        }
+
+        suspend fun saveUserInfo(accessToken: String, user: User) {
+            userDataStore.get().setUser(
+                UserInfo(
+                    accessToken = accessToken,
+                    username = user.username,
+                    firstName = user.firstName,
+                    lastName = user.lastName,
+                    age = user.age.toString(),
+                )
+            )
+        }
+
+        suspend fun loginUser() {
+            isLoading = true
+            if (BuildConfig.DEBUG) delay(500)
+            loginUseCase.get().invoke(LoginUseCase.Params(username, password)).apply {
+                getOrNull()?.let {
+                    if (it.accessToken.isNotEmpty()) {
+                        saveUserInfo(it.accessToken, it.user)
+                        createMessage("Login Successful")
+                    } else {
+                        createMessage("Try again")
+                    }
+                }
+                exceptionOrNull()?.let {
+                    createMessage(errorFormatter.get().format(it))
+                }
+            }
+            isLoading = false
+        }
+
+        suspend fun registerUser() {
+            isLoading = true
+            if (BuildConfig.DEBUG) delay(500)
+            registerUseCase.get().invoke(RegisterUseCase.Params(
+                username = username,
+                firstName = firstName,
+                lastName = lastName,
+                age = age.toIntOrNull(),
+                password = password,
+            )).apply {
+                getOrNull()?.let {
+                    if (it.accessToken.isNotEmpty()) {
+                        saveUserInfo(it.accessToken, it.user)
+                        createMessage("Register Successful")
+                    } else {
+                        createMessage("Try again")
+                    }
+                }
+                exceptionOrNull()?.let {
+                    createMessage(errorFormatter.get().format(it))
+                }
+            }
+            isLoading = false
+        }
+
         return AuthState(
             isLoading = isLoading,
             authMode = authMode,
-            email = email,
+            username = username,
+            firstName = firstName,
+            lastName = lastName,
+            age = age,
             password = password,
             retryPassword = retryPassword,
             hasPasswordError = hasPasswordError,
             message = message,
             eventSink = { event ->
                 when (event) {
-                    is AuthEvent.OnEmailChange -> email = event.email
+                    is AuthEvent.OnUsernameChange -> username = event.username
                     is AuthEvent.OnPasswordChange -> {
                         password = event.password
                         hasPasswordError = false
@@ -70,28 +141,28 @@ class AuthPresenter @AssistedInject constructor(
                     }
                     AuthEvent.ClearMessage -> scope.launch { uiMessageManager.clearMessage() }
                     AuthEvent.OnSubmitClicked -> {
-                        if (authMode == AuthMode.REGISTER && password != retryPassword) {
-                            hasPasswordError = true
-                            return@AuthState
-                        }
-                        if (authMode == AuthMode.LOGIN) {
-                            scope.launch {
-                                isLoading = true
-                                delay(1000)
-                                loginUseCase.get().invoke(LoginUseCase.Params(email, password)).apply {
-                                    getOrNull()?.let {
-                                        if (it.accessToken.isNotEmpty()) {
-                                            userDataStore.get().setAccessToken(it.accessToken)
-                                            uiMessageManager.emitMessage(UiMessage.createSnackbar("Login Successful"))
-                                        }
-                                    }
-                                    exceptionOrNull()?.let {
-                                        uiMessageManager.emitMessage(UiMessage.createSnackbar(errorFormatter.get().format(it)))
-                                    }
+                        when (authMode) {
+                            AuthMode.REGISTER -> {
+                                if (password != retryPassword) {
+                                    hasPasswordError = true
+                                    return@AuthState
+                                } else {
+                                    scope.launch { registerUser() }
                                 }
-                                isLoading = false
                             }
+
+                            AuthMode.LOGIN -> {
+                                scope.launch { loginUser() }
+                            }
+
+                            else -> {}
                         }
+                    }
+                    is AuthEvent.OnFirstNameChange -> firstName = event.firstName
+                    is AuthEvent.OnLastNameChange -> lastName = event.lastName
+                    is AuthEvent.OnAgeChange -> {
+                        event.age.toIntOrNull() ?: return@AuthState
+                        age = event.age
                     }
                 }
             },

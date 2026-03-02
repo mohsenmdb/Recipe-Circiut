@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.text.KeyboardOptions.Companion
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
@@ -35,6 +36,7 @@ import com.me.recipe.R
 import com.me.recipe.ui.component.util.DefaultSnackbar
 import com.me.recipe.ui.component.util.MessageEffect
 import com.me.recipe.ui.theme.RecipeTheme
+import com.me.recipe.util.compose.OnClick
 import com.slack.circuit.codegen.annotations.CircuitInject
 import dagger.hilt.components.SingletonComponent
 
@@ -80,17 +82,49 @@ private fun Content(state: AuthState, modifier: Modifier = Modifier) {
         Spacer(modifier = Modifier.height(16.dp))
         Inputs(state)
         Spacer(modifier = Modifier.height(24.dp))
-        Buttons(state)
+        Buttons(
+            isLoading = state.isLoading,
+            isLoginMode = state.isLoginMode,
+            isSubmitButtonEnable = state.isSubmitButtonEnable,
+            onSubmitClicked = { state.eventSink(AuthEvent.OnSubmitClicked) },
+            onSwitchModeClicked = { state.eventSink(AuthEvent.OnSwitchModeClicked) },
+        )
     }
 }
 
 @Composable
 private fun ColumnScope.Inputs(state: AuthState) {
-    EmailInput(
-        email = state.email,
-        onEmailChange = { state.eventSink(AuthEvent.OnEmailChange(it)) },
+    TextInput(
+        label = stringResource(R.string.username),
+        username = state.username,
+        onUsernameChange = { state.eventSink(AuthEvent.OnUsernameChange(it)) },
     )
     Spacer(modifier = Modifier.height(8.dp))
+
+
+    if (!state.isLoginMode) {
+        TextInput(
+            label = stringResource(R.string.firstName),
+            username = state.firstName,
+            onUsernameChange = { state.eventSink(AuthEvent.OnFirstNameChange(it)) },
+        )
+        Spacer(modifier = Modifier.height(8.dp))
+
+        TextInput(
+            label = stringResource(R.string.lastName),
+            username = state.lastName,
+            onUsernameChange = { state.eventSink(AuthEvent.OnLastNameChange(it)) },
+        )
+        Spacer(modifier = Modifier.height(8.dp))
+
+        TextInput(
+            label = stringResource(R.string.age),
+            username = state.age,
+            onUsernameChange = { state.eventSink(AuthEvent.OnAgeChange(it)) },
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
+        )
+        Spacer(modifier = Modifier.height(8.dp))
+    }
 
     PasswordInput(
         password = state.password,
@@ -114,21 +148,24 @@ private fun ColumnScope.Inputs(state: AuthState) {
 }
 
 @Composable
-private fun ColumnScope.Buttons(state: AuthState) {
+private fun ColumnScope.Buttons(
+    isLoginMode: Boolean,
+    isLoading: Boolean,
+    onSubmitClicked: OnClick,
+    onSwitchModeClicked: OnClick,
+    isSubmitButtonEnable: Boolean,
+    ) {
     SubmitButton(
-        text = stringResource(if (state.isLoginMode) R.string.login else R.string.register),
-        isLoading = state.isLoading,
-        onClick = {
-            state.eventSink(AuthEvent.OnSubmitClicked)
-        },
+        text = stringResource(if (isLoginMode) R.string.login else R.string.register),
+        isLoading = isLoading,
+        isEnable = isSubmitButtonEnable,
+        onClick = onSubmitClicked,
     )
     Spacer(modifier = Modifier.height(8.dp))
 
     SwitchModeButton(
-        text = stringResource(if (state.isLoginMode) R.string.do_not_have_account else R.string.already_have_account),
-        onClick = {
-            state.eventSink(AuthEvent.OnSwitchModeClicked)
-        },
+        text = stringResource(if (isLoginMode) R.string.do_not_have_account else R.string.already_have_account),
+        onClick = onSwitchModeClicked,
     )
 }
 
@@ -142,13 +179,18 @@ private fun TitleText(text: String) {
 }
 
 @Composable
-private fun EmailInput(email: String, onEmailChange: (String) -> Unit) {
+private fun TextInput(
+    label: String,
+    username: String,
+    keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
+    onUsernameChange: (String) -> Unit,
+    ) {
     OutlinedTextField(
-        value = email,
-        onValueChange = { onEmailChange(it) },
-        label = { Text(stringResource(R.string.email)) },
+        value = username,
+        onValueChange = { onUsernameChange(it) },
+        label = { Text(label) },
         singleLine = true,
-        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
+        keyboardOptions = keyboardOptions,
         modifier = Modifier.fillMaxWidth(),
     )
 }
@@ -201,11 +243,13 @@ private fun PasswordErrorText() {
 private fun SubmitButton(
     text: String,
     isLoading: Boolean,
+    isEnable: Boolean,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Button(
         onClick = onClick,
+        enabled = isEnable,
         modifier = modifier.fillMaxWidth(),
     ) {
         if (isLoading) {

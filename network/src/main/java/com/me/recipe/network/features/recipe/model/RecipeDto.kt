@@ -13,14 +13,4 @@ data class RecipeDto(
     @SerialName(value = "ingredients") val ingredients: String?,
     @SerialName(value = "createdAt") val createdAt: Long?,
     @SerialName(value = "updatedAt") val updatedAt: Long?,
-) {
-
-    @Serializable
-    data class UserDto(
-        @SerialName(value = "id") val id: Int?,
-        @SerialName(value = "email") val email: String?,
-        @SerialName(value = "first_name") val firstName: String?,
-        @SerialName(value = "last_name") val lastName: String?,
-        @SerialName(value = "age") val age: Int?,
-    )
-}
+)
