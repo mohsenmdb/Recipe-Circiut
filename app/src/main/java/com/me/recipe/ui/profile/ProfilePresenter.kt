@@ -55,7 +55,7 @@ class ProfilePresenter @AssistedInject constructor(
                 when (event) {
                     ProfileEvent.ClearMessage -> scope.launch { uiMessageManager.clearMessage() }
                     ProfileEvent.OnLogoutClicked -> scope.launch {
-                        userDataStore.get().clearAll()
+                        userDataStore.get().logout()
                         uiMessageManager.emitMessage(UiMessage.createToast(R.string.logout))
                         navigator.resetRoot(AuthScreen)
                     }

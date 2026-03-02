@@ -75,7 +75,7 @@ class UserDataStore @Inject constructor(
 //        _userFlow.value = user
     }
 
-    suspend fun clearAll() = withContext(ioDispatcher) {
+    suspend fun logout() = withContext(ioDispatcher) {
         context.dataStore.edit { it.clear() }
         _userFlow.value = LoginState.LoggedOut
     }
