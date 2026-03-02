@@ -13,6 +13,7 @@ typealias MainEventSink = (MainEvent) -> Unit
 
 @Stable
 data class MainState(
+    val isUserLoggedIn: Boolean,
     val eventSink: MainEventSink,
 ) : CircuitUiState
 

@@ -15,6 +15,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import com.me.recipe.ui.auth.AuthScreen
 import com.me.recipe.ui.home.HomeScreen
+import com.me.recipe.ui.profile.ProfileScreen
 import com.me.recipe.ui.search.SearchScreen
 import com.slack.circuit.runtime.Navigator
 import com.slack.circuit.runtime.screen.Screen
@@ -24,6 +25,7 @@ internal fun NavBottomBar(
     selectedIndex: Int,
     onIndexChanged: (Int) -> Unit,
     navigator: Navigator,
+    isUserLoggedIn: Boolean,
 ) {
     val itemColors = NavigationBarItemDefaults.colors(
         indicatorColor = MaterialTheme.colorScheme.tertiary,
@@ -50,7 +52,7 @@ internal fun NavBottomBar(
                     onClick = {
                         onIndexChanged(index)
                         navigator.resetRoot(
-                            newRoot = getScreenForTab(tab),
+                            newRoot = getScreenForTab(tab, isUserLoggedIn),
                             options = Navigator.StateOptions(
                                 save = true,
                                 restore = true,
@@ -63,12 +65,12 @@ internal fun NavBottomBar(
     }
 }
 
-private fun getScreenForTab(tab: NavigationDestination) = when (tab) {
+private fun getScreenForTab(tab: NavigationDestination, isUserLoggedIn: Boolean) = when (tab) {
     HomeDestination -> HomeScreen()
     SearchDestination -> SearchScreen()
-    ProfileDestination -> AuthScreen
+    ProfileDestination -> if (isUserLoggedIn) ProfileScreen else AuthScreen
     else -> HomeScreen()
 }
 
 private fun isHomeDestination(screen: Screen?) =
-    screen is HomeScreen || screen is SearchScreen || screen is AuthScreen
+    screen is HomeScreen || screen is SearchScreen || screen is AuthScreen || screen is ProfileScreen

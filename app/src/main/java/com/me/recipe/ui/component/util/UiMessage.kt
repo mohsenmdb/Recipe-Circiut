@@ -8,7 +8,7 @@ import kotlinx.coroutines.sync.withLock
 
 sealed interface Message {
     val text: String?
-    val textRes : Int?
+    val textRes: Int?
 
     data class Toast(override val text: String? = null, @StringRes override val textRes: Int? = null) : Message
     data class Snackbar(override val text: String? = null, @StringRes override val textRes: Int? = null) : Message

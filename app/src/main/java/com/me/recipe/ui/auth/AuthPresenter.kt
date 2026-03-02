@@ -14,6 +14,7 @@ import com.me.recipe.shared.datastore.UserDataStore
 import com.me.recipe.shared.datastore.UserInfo
 import com.me.recipe.ui.component.util.UiMessage
 import com.me.recipe.ui.component.util.UiMessageManager
+import com.me.recipe.ui.profile.ProfileScreen
 import com.me.recipe.util.errorformater.ErrorFormatter
 import com.slack.circuit.codegen.annotations.CircuitInject
 import com.slack.circuit.retained.collectAsRetainedState
@@ -52,7 +53,7 @@ class AuthPresenter @AssistedInject constructor(
         var hasPasswordError by rememberRetained { mutableStateOf(false) }
         var isLoading by rememberRetained { mutableStateOf(false) }
 
-        suspend fun createMessage(message: String?= null , @StringRes messageRes: Int? = null) {
+        suspend fun createMessage(message: String? = null, @StringRes messageRes: Int? = null) {
             if (message != null) {
                 uiMessageManager.emitMessage(UiMessage.createSnackbar(message))
             } else if (messageRes != null) {
@@ -80,6 +81,8 @@ class AuthPresenter @AssistedInject constructor(
                     if (it.accessToken.isNotEmpty()) {
                         saveUserInfo(it.accessToken, it.user)
                         createMessage(messageRes = R.string.login_successful)
+                        delay(500)
+                        navigator.resetRoot(ProfileScreen)
                     } else {
                         createMessage(messageRes = R.string.server_error_retry)
                     }
@@ -107,6 +110,8 @@ class AuthPresenter @AssistedInject constructor(
                     if (it.accessToken.isNotEmpty()) {
                         saveUserInfo(it.accessToken, it.user)
                         createMessage(messageRes = R.string.register_successful)
+                        delay(500)
+                        navigator.resetRoot(ProfileScreen)
                     } else {
                         createMessage(messageRes = R.string.server_error_retry)
                     }
