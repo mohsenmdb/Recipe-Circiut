@@ -20,7 +20,7 @@ class RecipeDtoMapper : DomainMapper<RecipeDto, Recipe> {
             // this replace is just for local server not production
             image = model.image.orEmpty().replace("http://localhost:3000/", LOCAL_HOST_PATH),
             rating = model.rating,
-            publisher = model.publisher?.firstName.orEmpty() + "-" + model.publisher?.lastName.orEmpty(),
+            publisher = model.publisher?.username.orEmpty(),
             ingredients = model.ingredients?.split(",")?.toPersistentList() ?: persistentListOf(),
             date = timestamp.toDate(),
         )

@@ -11,7 +11,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import com.me.recipe.ui.home.HomeScreen
-import com.me.recipe.ui.navigation.NavBottomBar
+import com.me.recipe.ui.main.navigation.NavBottomBar
 import com.slack.circuit.backstack.SaveableBackStack
 import com.slack.circuit.backstack.rememberSaveableBackStack
 import com.slack.circuit.codegen.annotations.CircuitInject

@@ -1,4 +1,4 @@
-package com.me.recipe.data.core.di
+package com.me.recipe.shared.utils
 
 import dagger.Module
 import dagger.Provides

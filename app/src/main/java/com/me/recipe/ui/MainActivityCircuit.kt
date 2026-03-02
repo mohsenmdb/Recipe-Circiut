@@ -4,7 +4,6 @@ import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
 import com.me.recipe.shared.datastore.SettingsDataStore
-import com.me.recipe.shared.datastore.UserDataStore
 import com.me.recipe.ui.splash.SplashScreen
 import com.me.recipe.ui.theme.RecipeTheme
 import com.me.recipe.util.extention.getPushNotificationPermission
@@ -26,12 +25,8 @@ class MainActivityCircuit : AppCompatActivity() {
     @Inject
     lateinit var settingsDataStore: SettingsDataStore
 
-    @Inject
-    lateinit var userDataStore: UserDataStore
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setUserLoginInfo(userDataStore)
         getPushNotificationPermission()
         setContent {
             CircuitCompositionLocals(circuit = circuit) {
@@ -49,8 +44,4 @@ class MainActivityCircuit : AppCompatActivity() {
             }
         }
     }
-}
-
-private fun setUserLoginInfo(userDataStore: UserDataStore) {
-    userDataStore.setAccessToken("Token 9c8b06d329136da358c2d00e76946b0111ce2c48")
 }

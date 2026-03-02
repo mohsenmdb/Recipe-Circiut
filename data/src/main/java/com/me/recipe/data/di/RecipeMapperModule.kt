@@ -1,4 +1,4 @@
-package com.me.recipe.data.core.di
+package com.me.recipe.data.di
 
 import com.me.recipe.data.features.recipe.mapper.CategoryDtoMapper
 import com.me.recipe.data.features.recipe.mapper.RecipeDtoMapper

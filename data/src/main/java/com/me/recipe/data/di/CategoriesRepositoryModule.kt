@@ -1,4 +1,4 @@
-package com.me.recipe.data.core.di
+package com.me.recipe.data.di
 
 import com.me.recipe.data.features.recipelist.repository.CategoriesRepositoryDefault
 import com.me.recipe.domain.features.recipelist.repository.CategoriesRepository
