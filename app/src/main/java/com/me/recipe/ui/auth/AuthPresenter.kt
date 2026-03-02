@@ -1,10 +1,12 @@
 package com.me.recipe.ui.auth
 
+import androidx.annotation.StringRes
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import com.me.recipe.BuildConfig
+import com.me.recipe.R
 import com.me.recipe.domain.features.auth.usecase.LoginUseCase
 import com.me.recipe.domain.features.auth.usecase.RegisterUseCase
 import com.me.recipe.domain.features.model.User
@@ -50,8 +52,12 @@ class AuthPresenter @AssistedInject constructor(
         var hasPasswordError by rememberRetained { mutableStateOf(false) }
         var isLoading by rememberRetained { mutableStateOf(false) }
 
-        suspend fun createMessage(message: String) {
-            uiMessageManager.emitMessage(UiMessage.createSnackbar(message))
+        suspend fun createMessage(message: String?= null , @StringRes messageRes: Int? = null) {
+            if (message != null) {
+                uiMessageManager.emitMessage(UiMessage.createSnackbar(message))
+            } else if (messageRes != null) {
+                uiMessageManager.emitMessage(UiMessage.createSnackbar(messageRes))
+            }
         }
 
         suspend fun saveUserInfo(accessToken: String, user: User) {
@@ -73,9 +79,9 @@ class AuthPresenter @AssistedInject constructor(
                 getOrNull()?.let {
                     if (it.accessToken.isNotEmpty()) {
                         saveUserInfo(it.accessToken, it.user)
-                        createMessage("Login Successful")
+                        createMessage(messageRes = R.string.login_successful)
                     } else {
-                        createMessage("Try again")
+                        createMessage(messageRes = R.string.server_error_retry)
                     }
                 }
                 exceptionOrNull()?.let {
@@ -100,9 +106,9 @@ class AuthPresenter @AssistedInject constructor(
                 getOrNull()?.let {
                     if (it.accessToken.isNotEmpty()) {
                         saveUserInfo(it.accessToken, it.user)
-                        createMessage("Register Successful")
+                        createMessage(messageRes = R.string.register_successful)
                     } else {
-                        createMessage("Try again")
+                        createMessage(messageRes = R.string.server_error_retry)
                     }
                 }
                 exceptionOrNull()?.let {

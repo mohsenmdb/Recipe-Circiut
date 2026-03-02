@@ -33,4 +33,6 @@
     <string name="firstName">First Name</string>
     <string name="lastName">Last Name</string>
     <string name="age">Age</string>
+    <string name="login_successful">Login Successful</string>
+    <string name="register_successful">Register Successful</string>
 </resources>

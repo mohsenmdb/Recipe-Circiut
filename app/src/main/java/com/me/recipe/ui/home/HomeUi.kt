@@ -34,7 +34,7 @@ fun HomeUi(
     )
     MessageEffect(
         snackbarHostState = snackbarHostState,
-        message = state.message,
+        uiMessage = state.message,
         onClearMessage = { state.eventSink.invoke(HomeEvent.ClearMessage) },
         onActionClicked = { state.eventSink.invoke(HomeEvent.OnRetryClicked) },
     )

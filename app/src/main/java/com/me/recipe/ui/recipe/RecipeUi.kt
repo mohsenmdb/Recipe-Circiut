@@ -26,7 +26,7 @@ internal fun RecipeUi(
     val snackbarHostState = remember { SnackbarHostState() }
     MessageEffect(
         snackbarHostState = snackbarHostState,
-        message = state.message,
+        uiMessage = state.message,
         onClearMessage = { state.eventSink(RecipeEvent.ClearMessage) },
     )
 
