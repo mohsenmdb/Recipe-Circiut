@@ -1,6 +1,7 @@
 package com.me.recipe.ui.profile
 
 import androidx.compose.runtime.Stable
+import com.me.recipe.shared.datastore.UserInfo
 import com.me.recipe.ui.component.util.UiMessage
 import com.slack.circuit.runtime.CircuitUiEvent
 import com.slack.circuit.runtime.CircuitUiState
@@ -16,9 +17,10 @@ typealias ProfileEventSink = (ProfileEvent) -> Unit
 data class ProfileState(
     val message: UiMessage? = null,
     val eventSink: ProfileEventSink,
+    val profile: UserInfo,
 ) : CircuitUiState
 
 sealed interface ProfileEvent : CircuitUiEvent {
-    data object OnSubmitClicked : ProfileEvent
+    data object OnLogoutClicked : ProfileEvent
     data object ClearMessage : ProfileEvent
 }

@@ -37,6 +37,14 @@ data class UiMessage(
             actionText = actionText,
         )
 
+        fun createToast(
+            @StringRes message: Int,
+            @StringRes actionText: Int? = null,
+        ): UiMessage = UiMessage(
+            message = Message.Toast(textRes = message),
+            actionText = actionText,
+        )
+
         fun createSnackbar(
             t: Throwable,
             @StringRes actionText: Int? = null,

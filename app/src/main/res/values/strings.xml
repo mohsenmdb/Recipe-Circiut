@@ -26,6 +26,7 @@
     <string name="loading">Loading…</string>
     <string name="see_all">See all</string>
     <string name="login">Login</string>
+    <string name="logout">Logout</string>
     <string name="register">Register</string>
     <string name="do_not_have_account">Don\'t have an account? Register</string>
     <string name="already_have_account">Already have an account? Login</string>
