@@ -7,9 +7,11 @@ import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 
 sealed interface Message {
-    val text: String
-    data class Toast(override val text: String) : Message
-    data class Snackbar(override val text: String) : Message
+    val text: String?
+    val textRes: Int?
+
+    data class Toast(override val text: String? = null, @StringRes override val textRes: Int? = null) : Message
+    data class Snackbar(override val text: String? = null, @StringRes override val textRes: Int? = null) : Message
 }
 
 data class UiMessage(
@@ -35,6 +37,14 @@ data class UiMessage(
             actionText = actionText,
         )
 
+        fun createToast(
+            @StringRes message: Int,
+            @StringRes actionText: Int? = null,
+        ): UiMessage = UiMessage(
+            message = Message.Toast(textRes = message),
+            actionText = actionText,
+        )
+
         fun createSnackbar(
             t: Throwable,
             @StringRes actionText: Int? = null,
@@ -49,6 +59,14 @@ data class UiMessage(
             @StringRes actionText: Int? = null,
         ): UiMessage = UiMessage(
             message = Message.Snackbar(message),
+            actionText = actionText,
+        )
+
+        fun createSnackbar(
+            @StringRes message: Int,
+            @StringRes actionText: Int? = null,
+        ): UiMessage = UiMessage(
+            message = Message.Snackbar(textRes = message),
             actionText = actionText,
         )
     }

@@ -25,7 +25,7 @@ internal fun SearchUi(
     val snackbarHostState = remember { SnackbarHostState() }
     MessageEffect(
         snackbarHostState = snackbarHostState,
-        message = state.message,
+        uiMessage = state.message,
         onClearMessage = { state.eventSink.invoke(SearchEvent.ClearMessage) },
     )
     Scaffold(

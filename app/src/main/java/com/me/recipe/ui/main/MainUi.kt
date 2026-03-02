@@ -31,12 +31,13 @@ internal fun MainUi(
     val navigator = rememberCircuitNavigator(backstack)
     var selectedIndex by remember { mutableIntStateOf(0) }
     Scaffold(
-        modifier = Modifier.fillMaxSize(),
+        modifier = modifier.fillMaxSize(),
         bottomBar = {
             NavBottomBar(
                 selectedIndex = selectedIndex,
                 onIndexChanged = { selectedIndex = it },
                 navigator = navigator,
+                isUserLoggedIn = state.isUserLoggedIn,
             )
         },
         content = { paddingValues ->

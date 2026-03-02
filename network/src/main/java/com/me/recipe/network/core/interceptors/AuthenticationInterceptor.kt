@@ -26,9 +26,9 @@ class AuthenticationInterceptor @Inject constructor(
         if (noAuthentication != "true") {
             val builder = request.newBuilder()
             builder.addHeader(USER_AGENT_HEADER, USER_AGENT_VALUE)
-            val token = userDataStore.getUser().accessToken
+            val token = userDataStore.getAccessToken()
             Timber.d("Need to add auth [%s]", token)
-            if (token.isNotEmpty()) {
+            if (!token.isNullOrEmpty()) {
                 builder.addHeader(AUTHORIZATION_HEADER, token)
             }
             request = builder.build()

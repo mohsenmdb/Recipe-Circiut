@@ -52,7 +52,7 @@ internal fun AuthUi(
     )
     MessageEffect(
         snackbarHostState = snackbarHostState,
-        message = state.message,
+        uiMessage = state.message,
         onClearMessage = { state.eventSink(AuthEvent.ClearMessage) },
     )
 

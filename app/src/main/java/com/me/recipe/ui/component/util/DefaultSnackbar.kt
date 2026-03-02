@@ -75,19 +75,21 @@ private fun ActionButton(onClicked: () -> Unit?, actionLabel: String) {
 @Composable
 fun MessageEffect(
     snackbarHostState: SnackbarHostState,
-    message: UiMessage?,
+    uiMessage: UiMessage?,
     onClearMessage: () -> Unit,
     onActionClicked: () -> Unit = {},
 ) {
     val context = LocalContext.current
     var showMessage: UiMessage? by remember { mutableStateOf(null) }
     var actionOk by remember { mutableStateOf<String?>(null) }
+    val message = showMessage?.message?.textRes?.let { stringResource(it) } ?: showMessage?.message?.text
     LaunchedEffect(showMessage) {
+        message ?: return@LaunchedEffect
         when (showMessage?.message) {
             is Message.Snackbar -> {
                 snackbarHostState.currentSnackbarData?.dismiss()
                 val result = snackbarHostState.showSnackbar(
-                    message = showMessage!!.message.text,
+                    message = message,
                     actionLabel = actionOk,
                     withDismissAction = true,
                 )
@@ -98,13 +100,13 @@ fun MessageEffect(
             }
 
             is Message.Toast -> {
-                toast(context, showMessage!!.message.text)
+                toast(context, message)
             }
             else -> {}
         }
     }
-    message?.let {
-        actionOk = message.actionText.takeIf { it != null }?.let { stringResource(id = it) }
+    uiMessage?.let {
+        actionOk = uiMessage.actionText.takeIf { it != null }?.let { stringResource(id = it) }
         showMessage = it
         onClearMessage()
     }

@@ -16,6 +16,10 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
+sealed interface LoginState {
+    data class LoggedIn(val user: UserInfo) : LoginState
+    data object LoggedOut : LoginState
+}
 data class UserInfo(
     val accessToken: String = "",
     val username: String = "",
@@ -29,29 +33,36 @@ class UserDataStore @Inject constructor(
     private val context: Context,
     @IoDispatcher private val ioDispatcher: CoroutineDispatcher,
 ) {
-    private val _userFlow = MutableStateFlow(UserInfo())
-    val userFlow: StateFlow<UserInfo> get() = _userFlow
+    private val _userFlow = MutableStateFlow<LoginState>(LoginState.LoggedOut)
+    val userFlow: StateFlow<LoginState> get() = _userFlow
 
     init {
         CoroutineScope(ioDispatcher).launch {
             context.dataStore.data.collect { prefs ->
-                _userFlow.value = UserInfo(
-                    accessToken = prefs[ACCESS_TOKEN_KEY] ?: "",
-                    username = prefs[USERNAME_KEY] ?: "",
-                    firstName = prefs[FIRST_NAME_KEY] ?: "",
-                    lastName = prefs[LAST_NAME_KEY] ?: "",
-                    age = prefs[AGE_KEY] ?: "",
-                )
+                _userFlow.value = getLoginState(prefs)
             }
         }
     }
 
-    fun getUser(): UserInfo = _userFlow.value
+    fun getLoginState(prefs: Preferences): LoginState {
+        val jwtToken = prefs[ACCESS_TOKEN_KEY]
+        fun isLoggedOut(): Boolean {
+            return jwtToken.isNullOrEmpty()
+        }
+        if (isLoggedOut()) return LoginState.LoggedOut
 
-    suspend fun setAccessToken(token: String) = saveValue(ACCESS_TOKEN_KEY, token)
-    suspend fun setEmail(email: String) = saveValue(FIRST_NAME_KEY, email)
-    suspend fun setUsername(username: String) = saveValue(USERNAME_KEY, username)
-    suspend fun setPhone(phone: String) = saveValue(AGE_KEY, phone)
+        return LoginState.LoggedIn(
+            user = UserInfo(
+                accessToken = jwtToken!!,
+                username = prefs[USERNAME_KEY].orEmpty(),
+                firstName = prefs[FIRST_NAME_KEY].orEmpty(),
+                lastName = prefs[LAST_NAME_KEY].orEmpty(),
+                age = prefs[AGE_KEY].orEmpty(),
+            ),
+        )
+    }
+    fun getAccessToken(): String? =
+        if (_userFlow.value is LoginState.LoggedIn) (_userFlow.value as LoginState.LoggedIn).user.accessToken else null
 
     suspend fun setUser(user: UserInfo) = withContext(ioDispatcher) {
         context.dataStore.edit { prefs ->
@@ -61,28 +72,12 @@ class UserDataStore @Inject constructor(
             prefs[LAST_NAME_KEY] = user.lastName
             prefs[AGE_KEY] = user.age
         }
-        _userFlow.value = user
+//        _userFlow.value = user
     }
 
-    suspend fun clearAll() = withContext(ioDispatcher) {
+    suspend fun logout() = withContext(ioDispatcher) {
         context.dataStore.edit { it.clear() }
-        _userFlow.value = UserInfo()
-    }
-
-    private suspend fun saveValue(key: Preferences.Key<String>, value: String) {
-        withContext(ioDispatcher) {
-            context.dataStore.edit { prefs ->
-                prefs[key] = value
-            }
-            _userFlow.value = when (key) {
-                ACCESS_TOKEN_KEY -> _userFlow.value.copy(accessToken = value)
-                USERNAME_KEY -> _userFlow.value.copy(username = value)
-                FIRST_NAME_KEY -> _userFlow.value.copy(firstName = value)
-                LAST_NAME_KEY -> _userFlow.value.copy(lastName = value)
-                AGE_KEY -> _userFlow.value.copy(age = value)
-                else -> _userFlow.value
-            }
-        }
+        _userFlow.value = LoginState.LoggedOut
     }
 
     companion object {
