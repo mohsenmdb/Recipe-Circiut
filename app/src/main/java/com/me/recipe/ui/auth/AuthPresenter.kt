@@ -8,8 +8,8 @@ import com.me.recipe.BuildConfig
 import com.me.recipe.domain.features.auth.usecase.LoginUseCase
 import com.me.recipe.domain.features.auth.usecase.RegisterUseCase
 import com.me.recipe.domain.features.model.User
-import com.me.recipe.shared.datastore.UserInfo
 import com.me.recipe.shared.datastore.UserDataStore
+import com.me.recipe.shared.datastore.UserInfo
 import com.me.recipe.ui.component.util.UiMessage
 import com.me.recipe.ui.component.util.UiMessageManager
 import com.me.recipe.util.errorformater.ErrorFormatter
@@ -62,7 +62,7 @@ class AuthPresenter @AssistedInject constructor(
                     firstName = user.firstName,
                     lastName = user.lastName,
                     age = user.age.toString(),
-                )
+                ),
             )
         }
 
@@ -88,13 +88,15 @@ class AuthPresenter @AssistedInject constructor(
         suspend fun registerUser() {
             isLoading = true
             if (BuildConfig.DEBUG) delay(500)
-            registerUseCase.get().invoke(RegisterUseCase.Params(
-                username = username,
-                firstName = firstName,
-                lastName = lastName,
-                age = age.toIntOrNull(),
-                password = password,
-            )).apply {
+            registerUseCase.get().invoke(
+                RegisterUseCase.Params(
+                    username = username,
+                    firstName = firstName,
+                    lastName = lastName,
+                    age = age.toIntOrNull(),
+                    password = password,
+                ),
+            ).apply {
                 getOrNull()?.let {
                     if (it.accessToken.isNotEmpty()) {
                         saveUserInfo(it.accessToken, it.user)

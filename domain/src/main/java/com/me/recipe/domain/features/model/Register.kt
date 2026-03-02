@@ -10,7 +10,7 @@ data class Register(
     companion object {
         val EMPTY = Register(
             accessToken = "",
-            user = User.EMPTY
+            user = User.EMPTY,
         )
 
         fun testData() = Register(
@@ -19,4 +19,3 @@ data class Register(
         )
     }
 }
-

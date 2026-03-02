@@ -10,7 +10,7 @@ data class Login(
     companion object {
         val EMPTY = Login(
             accessToken = "",
-            user = User.EMPTY
+            user = User.EMPTY,
         )
 
         fun testData() = Login(
@@ -19,4 +19,3 @@ data class Login(
         )
     }
 }
-

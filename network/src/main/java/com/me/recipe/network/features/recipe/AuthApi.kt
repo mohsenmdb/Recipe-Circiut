@@ -13,6 +13,7 @@ interface AuthApi {
         @Field("username") username: String,
         @Field("password") password: String,
     ): LoginDto
+
     @FormUrlEncoded
     @POST("auth/register")
     suspend fun register(

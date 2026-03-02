@@ -16,7 +16,7 @@ class LoginDtoMapper @Inject constructor() :
                 firstName = input?.data?.user?.firstName.orEmpty(),
                 lastName = input?.data?.user?.lastName.orEmpty(),
                 age = input?.data?.user?.age,
-            )
+            ),
         )
     }
 }

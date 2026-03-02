@@ -1,7 +1,6 @@
 package com.me.recipe.domain.features.auth.usecase
 
 import com.me.recipe.domain.features.auth.repository.AuthRepository
-import com.me.recipe.domain.features.model.Login
 import com.me.recipe.domain.features.model.Register
 import com.me.recipe.shared.utils.Result
 import com.me.recipe.shared.utils.runAsResult

@@ -1,7 +1,6 @@
 package com.me.recipe.util.errorformater
 
 import android.content.Context
-import retrofit2.HttpException
 import com.me.recipe.BuildConfig
 import com.me.recipe.R
 import com.me.recipe.util.errorformater.exceptions.ReadableException
@@ -13,6 +12,7 @@ import java.net.UnknownHostException
 import java.util.concurrent.TimeoutException
 import javax.inject.Inject
 import javax.net.ssl.SSLHandshakeException
+import retrofit2.HttpException
 import timber.log.Timber
 
 class ErrorFormatterImpl @Inject constructor(
@@ -64,7 +64,7 @@ class ErrorFormatterImpl @Inject constructor(
     }
 
     companion object {
-        const val UNAUTHORIZED_ERROR_CODE =  401
-        const val USER_ALREADY_EXIST_ERROR_CODE =  422
+        const val UNAUTHORIZED_ERROR_CODE = 401
+        const val USER_ALREADY_EXIST_ERROR_CODE = 422
     }
 }

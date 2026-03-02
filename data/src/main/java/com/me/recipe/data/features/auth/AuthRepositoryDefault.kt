@@ -7,7 +7,6 @@ import com.me.recipe.domain.features.model.Login
 import com.me.recipe.domain.features.model.Register
 import com.me.recipe.network.features.recipe.AuthApi
 import javax.inject.Inject
-import kotlinx.coroutines.flow.Flow
 
 class AuthRepositoryDefault @Inject constructor(
     private val authApi: AuthApi,
@@ -27,7 +26,7 @@ class AuthRepositoryDefault @Inject constructor(
         age: Int?,
         password: String,
     ): Register {
-        val response = authApi.register(username,firstName, lastName,age, password)
+        val response = authApi.register(username, firstName, lastName, age, password)
         return registerDtoMapper.map(response)
     }
 }

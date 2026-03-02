@@ -13,7 +13,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.foundation.text.KeyboardOptions.Companion
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
@@ -101,7 +100,6 @@ private fun ColumnScope.Inputs(state: AuthState) {
     )
     Spacer(modifier = Modifier.height(8.dp))
 
-
     if (!state.isLoginMode) {
         TextInput(
             label = stringResource(R.string.firstName),
@@ -121,7 +119,7 @@ private fun ColumnScope.Inputs(state: AuthState) {
             label = stringResource(R.string.age),
             username = state.age,
             onUsernameChange = { state.eventSink(AuthEvent.OnAgeChange(it)) },
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
         )
         Spacer(modifier = Modifier.height(8.dp))
     }
@@ -154,7 +152,7 @@ private fun ColumnScope.Buttons(
     onSubmitClicked: OnClick,
     onSwitchModeClicked: OnClick,
     isSubmitButtonEnable: Boolean,
-    ) {
+) {
     SubmitButton(
         text = stringResource(if (isLoginMode) R.string.login else R.string.register),
         isLoading = isLoading,
@@ -184,7 +182,7 @@ private fun TextInput(
     username: String,
     keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
     onUsernameChange: (String) -> Unit,
-    ) {
+) {
     OutlinedTextField(
         value = username,
         onValueChange = { onUsernameChange(it) },

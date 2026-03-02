@@ -1,10 +1,8 @@
 package com.me.recipe.data.features.recipe.mapper
 
 import com.me.recipe.data.core.utils.mappers.NullableInputMapper
-import com.me.recipe.domain.features.model.Login
 import com.me.recipe.domain.features.model.Register
 import com.me.recipe.domain.features.model.User
-import com.me.recipe.network.features.recipe.model.LoginDto
 import com.me.recipe.network.features.recipe.model.RegisterDto
 import javax.inject.Inject
 
@@ -18,7 +16,7 @@ class RegisterDtoMapper @Inject constructor() :
                 firstName = input?.data?.user?.firstName.orEmpty(),
                 lastName = input?.data?.user?.lastName.orEmpty(),
                 age = input?.data?.user?.age,
-            )
+            ),
         )
     }
 }
