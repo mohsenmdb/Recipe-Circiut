@@ -12,7 +12,7 @@ import com.me.recipe.R
 
 @Composable
 internal fun CoilImage(
-    data: String?,
+    data: Any?,
     modifier: Modifier = Modifier,
     contentScale: ContentScale = ContentScale.Fit,
     contentDescription: String? = null,

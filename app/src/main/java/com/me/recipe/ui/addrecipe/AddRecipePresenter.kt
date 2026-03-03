@@ -1,7 +1,10 @@
 package com.me.recipe.ui.addrecipe
 
+import android.net.Uri
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import com.me.recipe.ui.component.util.UiMessageManager
 import com.slack.circuit.codegen.annotations.CircuitInject
 import com.slack.circuit.retained.collectAsRetainedState
@@ -24,12 +27,32 @@ class AddRecipePresenter @AssistedInject constructor(
         val scope = rememberStableCoroutineScope()
         val uiMessageManager = rememberRetained { UiMessageManager() }
         val message by uiMessageManager.message.collectAsRetainedState(null)
+        var title by rememberRetained { mutableStateOf("") }
+        var description by rememberRetained { mutableStateOf("") }
+        var ingredients by rememberRetained { mutableStateOf("") }
+        var imageUri by rememberRetained { mutableStateOf<Uri?>(null) }
+        val isLoading by rememberRetained { mutableStateOf(false) }
+        val isSubmitEnabled = title.isNotBlank() &&
+            description.isNotBlank() &&
+            ingredients.isNotBlank() &&
+            imageUri != null
 
         return AddRecipeState(
+            title = title,
+            imageUri = imageUri,
+            description = description,
+            ingredients = ingredients,
+            isLoading = isLoading,
+            isSubmitEnabled = isSubmitEnabled,
             message = message,
             eventSink = { event ->
                 when (event) {
                     AddRecipeEvent.ClearMessage -> scope.launch { uiMessageManager.clearMessage() }
+                    is AddRecipeEvent.OnTitleChanged -> title = event.value
+                    is AddRecipeEvent.OnDescriptionChanged -> description = event.value
+                    is AddRecipeEvent.OnIngredientsChanged -> ingredients = event.value
+                    is AddRecipeEvent.OnImageSelected -> imageUri = event.uri
+                    AddRecipeEvent.OnSubmitClicked -> TODO()
                 }
             },
         )
