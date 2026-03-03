@@ -1,4 +1,4 @@
-package com.me.recipe.ui.profile
+package com.me.recipe.ui.addrecipe
 
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.Spring
@@ -28,7 +28,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.me.recipe.R
-import com.me.recipe.shared.datastore.UserInfo
 import com.me.recipe.ui.component.util.DefaultSnackbar
 import com.me.recipe.ui.component.util.MessageEffect
 import com.me.recipe.ui.theme.RecipeTheme
@@ -36,10 +35,10 @@ import com.me.recipe.util.compose.OnClick
 import com.slack.circuit.codegen.annotations.CircuitInject
 import dagger.hilt.components.SingletonComponent
 
-@CircuitInject(ProfileScreen::class, SingletonComponent::class)
+@CircuitInject(AddRecipeScreen::class, SingletonComponent::class)
 @Composable
-internal fun ProfileUi(
-    state: ProfileState,
+internal fun AddRecipeUi(
+    state: AddRecipeState,
     modifier: Modifier = Modifier,
 ) {
     val snackbarHostState = remember { SnackbarHostState() }
@@ -50,7 +49,7 @@ internal fun ProfileUi(
     MessageEffect(
         snackbarHostState = snackbarHostState,
         uiMessage = state.message,
-        onClearMessage = { state.eventSink(ProfileEvent.ClearMessage) },
+        onClearMessage = { state.eventSink(AddRecipeEvent.ClearMessage) },
     )
 
     Scaffold(
@@ -63,15 +62,13 @@ internal fun ProfileUi(
         },
     ) { padding ->
         Content(
-            profile = state.profile,
-            onLogoutClicked = { state.eventSink.invoke(ProfileEvent.OnLogoutClicked) },
             modifier = modifier.padding(padding),
         )
     }
 }
 
 @Composable
-private fun Content(profile: UserInfo, modifier: Modifier = Modifier, onLogoutClicked: OnClick) {
+private fun Content(modifier: Modifier = Modifier) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center,
@@ -81,47 +78,21 @@ private fun Content(profile: UserInfo, modifier: Modifier = Modifier, onLogoutCl
     ) {
         TitleText()
         Spacer(Modifier.height(50.dp))
-
-        ProfileInfoText(
-            title = stringResource(R.string.username),
-            text = profile.username,
-        )
-        Spacer(Modifier.height(16.dp))
-
-        ProfileInfoText(
-            title = stringResource(R.string.firstName),
-            text = profile.firstName,
-        )
-        Spacer(Modifier.height(16.dp))
-
-        ProfileInfoText(
-            title = stringResource(R.string.lastName),
-            text = profile.lastName,
-        )
-        Spacer(Modifier.height(16.dp))
-
-        ProfileInfoText(
-            title = stringResource(R.string.age),
-            text = profile.age,
-        )
-        Spacer(Modifier.height(60.dp))
-
-        LogoutButton(onClick = onLogoutClicked)
     }
 }
 
 @Composable
-private fun TitleText(modifier: Modifier = Modifier) {
+fun TitleText(modifier: Modifier = Modifier) {
     Text(
         modifier = modifier,
-        text = stringResource(R.string.navigate_profile_title),
+        text = stringResource(R.string.add_recipe),
         color = MaterialTheme.colorScheme.onSurface,
         style = MaterialTheme.typography.titleLarge,
     )
 }
 
 @Composable
-private fun ProfileInfoText(
+fun AddRecipeInfoText(
     title: String,
     text: String,
     modifier: Modifier = Modifier,
@@ -165,17 +136,10 @@ private fun LogoutButton(
 
 @Preview
 @Composable
-private fun ProfileScreenPreview() {
+private fun AddRecipeScreenPreview() {
     RecipeTheme(true) {
-        ProfileUi(
-            state = ProfileState(
-                profile = UserInfo(
-                    accessToken = "",
-                    username = "user_name",
-                    firstName = "First Name",
-                    lastName = "Last Name",
-                    age = "23",
-                ),
+        AddRecipeUi(
+            state = AddRecipeState(
                 eventSink = {},
             ),
         )
