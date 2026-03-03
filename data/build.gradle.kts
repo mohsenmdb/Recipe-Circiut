@@ -60,5 +60,6 @@ dependencies {
     ksp(libs.hilt.compiler)
     implementation(libs.kotlinx.collections.immutable)
     implementation(libs.timber)
+    implementation(libs.squareup.okhttp)
     compileOnly(libs.spotless.gradlePlugin)
 }

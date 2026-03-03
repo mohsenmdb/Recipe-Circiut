@@ -13,9 +13,10 @@ import com.me.recipe.R
 @Composable
 fun AddRecipeTopBar(modifier: Modifier = Modifier) {
     TopAppBar(
-        title = { TitleText() }
+        title = { TitleText() },
     )
 }
+
 @Composable
 fun TitleText(modifier: Modifier = Modifier) {
     Text(

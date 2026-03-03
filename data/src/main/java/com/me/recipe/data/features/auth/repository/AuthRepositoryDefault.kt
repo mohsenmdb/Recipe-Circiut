@@ -1,10 +1,10 @@
-package com.me.recipe.data.features.auth
+package com.me.recipe.data.features.auth.repository
 
-import com.me.recipe.data.features.recipe.mapper.LoginDtoMapper
-import com.me.recipe.data.features.recipe.mapper.RegisterDtoMapper
+import com.me.recipe.data.features.auth.mapper.LoginDtoMapper
+import com.me.recipe.data.features.auth.mapper.RegisterDtoMapper
+import com.me.recipe.domain.features.auth.model.Login
+import com.me.recipe.domain.features.auth.model.Register
 import com.me.recipe.domain.features.auth.repository.AuthRepository
-import com.me.recipe.domain.features.model.Login
-import com.me.recipe.domain.features.model.Register
 import com.me.recipe.network.features.recipe.AuthApi
 import javax.inject.Inject
 

@@ -1,6 +1,7 @@
-package com.me.recipe.data.features.recipe.mapper
+package com.me.recipe.data.features.recipelist.mapper
 
 import com.me.recipe.data.core.utils.mappers.NullableInputMapper
+import com.me.recipe.data.features.recipe.mapper.RecipeDtoMapper
 import com.me.recipe.domain.features.recipe.model.CategoryRecipe
 import com.me.recipe.network.features.recipe.model.CategoriesDto
 import com.me.recipe.network.features.recipe.model.FoodCategoryDto

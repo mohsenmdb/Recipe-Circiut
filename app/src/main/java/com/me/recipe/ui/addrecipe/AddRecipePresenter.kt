@@ -5,13 +5,18 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import com.me.recipe.R
+import com.me.recipe.domain.features.recipe.usecases.AddRecipeUseCase
+import com.me.recipe.ui.component.util.UiMessage
 import com.me.recipe.ui.component.util.UiMessageManager
+import com.me.recipe.util.errorformater.ErrorFormatter
 import com.slack.circuit.codegen.annotations.CircuitInject
 import com.slack.circuit.retained.collectAsRetainedState
 import com.slack.circuit.retained.rememberRetained
 import com.slack.circuit.runtime.Navigator
 import com.slack.circuit.runtime.internal.rememberStableCoroutineScope
 import com.slack.circuit.runtime.presenter.Presenter
+import dagger.Lazy
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
@@ -20,6 +25,8 @@ import kotlinx.coroutines.launch
 
 class AddRecipePresenter @AssistedInject constructor(
     @Assisted internal val navigator: Navigator,
+    private val addRecipeUseCase: Lazy<AddRecipeUseCase>,
+    private val errorFormatter: Lazy<ErrorFormatter>,
 ) : Presenter<AddRecipeState> {
 
     @Composable
@@ -31,11 +38,39 @@ class AddRecipePresenter @AssistedInject constructor(
         var description by rememberRetained { mutableStateOf("") }
         var ingredients by rememberRetained { mutableStateOf("") }
         var imageUri by rememberRetained { mutableStateOf<Uri?>(null) }
-        val isLoading by rememberRetained { mutableStateOf(false) }
+        var isLoading by rememberRetained { mutableStateOf(false) }
         val isSubmitEnabled = title.isNotBlank() &&
             description.isNotBlank() &&
             ingredients.isNotBlank() &&
             imageUri != null
+
+        fun cleanForm() {
+            title = ""
+            description = ""
+            ingredients = ""
+            imageUri = null
+        }
+
+        suspend fun sendRecipe() {
+            isLoading = true
+            addRecipeUseCase.get().invoke(
+                AddRecipeUseCase.Params(
+                    title = title,
+                    description = description,
+                    ingredients = ingredients,
+                    imageUri = imageUri!!,
+                ),
+            ).apply {
+                getOrNull()?.let {
+                    cleanForm()
+                    uiMessageManager.emitMessage(UiMessage.createSnackbar(R.string.recipe_added))
+                }
+                exceptionOrNull()?.let {
+                    uiMessageManager.emitMessage(UiMessage.createSnackbar(errorFormatter.get().format(it)))
+                }
+            }
+            isLoading = false
+        }
 
         return AddRecipeState(
             title = title,
@@ -52,7 +87,7 @@ class AddRecipePresenter @AssistedInject constructor(
                     is AddRecipeEvent.OnDescriptionChanged -> description = event.value
                     is AddRecipeEvent.OnIngredientsChanged -> ingredients = event.value
                     is AddRecipeEvent.OnImageSelected -> imageUri = event.uri
-                    AddRecipeEvent.OnSubmitClicked -> TODO()
+                    AddRecipeEvent.OnSubmitClicked -> scope.launch { sendRecipe() }
                 }
             },
         )

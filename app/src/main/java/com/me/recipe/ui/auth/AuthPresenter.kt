@@ -7,9 +7,9 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import com.me.recipe.BuildConfig
 import com.me.recipe.R
+import com.me.recipe.domain.features.auth.model.User
 import com.me.recipe.domain.features.auth.usecase.LoginUseCase
 import com.me.recipe.domain.features.auth.usecase.RegisterUseCase
-import com.me.recipe.domain.features.model.User
 import com.me.recipe.shared.datastore.UserDataStore
 import com.me.recipe.shared.datastore.UserInfo
 import com.me.recipe.ui.component.util.UiMessage
