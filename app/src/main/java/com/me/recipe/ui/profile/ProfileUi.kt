@@ -71,7 +71,7 @@ internal fun ProfileUi(
 }
 
 @Composable
-fun Content(profile: UserInfo, modifier: Modifier = Modifier, onLogoutClicked: OnClick) {
+private fun Content(profile: UserInfo, modifier: Modifier = Modifier, onLogoutClicked: OnClick) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center,
@@ -111,7 +111,7 @@ fun Content(profile: UserInfo, modifier: Modifier = Modifier, onLogoutClicked: O
 }
 
 @Composable
-fun TitleText(modifier: Modifier = Modifier) {
+private fun TitleText(modifier: Modifier = Modifier) {
     Text(
         modifier = modifier,
         text = stringResource(R.string.navigate_profile_title),
@@ -121,7 +121,7 @@ fun TitleText(modifier: Modifier = Modifier) {
 }
 
 @Composable
-fun ProfileInfoText(
+private fun ProfileInfoText(
     title: String,
     text: String,
     modifier: Modifier = Modifier,

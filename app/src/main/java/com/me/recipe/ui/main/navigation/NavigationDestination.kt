@@ -1,6 +1,7 @@
 package com.me.recipe.ui.main.navigation
 
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Search
@@ -31,4 +32,11 @@ object ProfileDestination : NavigationDestination {
     override val icon = Icons.Filled.Person
 }
 
+object AddRecipeDestination : NavigationDestination {
+    override val route = "AddRecipe"
+    override val titleRes = R.string.navigate_add_recipe
+    override val icon = Icons.Filled.Add
+}
+
 val bottomNavigationScreens = listOf(HomeDestination, SearchDestination, ProfileDestination)
+val bottomNavigationScreensWithLogin = listOf(HomeDestination, SearchDestination, AddRecipeDestination, ProfileDestination)

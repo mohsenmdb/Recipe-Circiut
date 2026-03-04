@@ -1,4 +1,4 @@
-package com.me.recipe.domain.features.model
+package com.me.recipe.domain.features.auth.model
 
 import androidx.compose.runtime.Immutable
 

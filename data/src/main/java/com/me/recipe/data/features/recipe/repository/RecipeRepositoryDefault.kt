@@ -14,7 +14,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 
-class RecipeRepositoryImpl @Inject constructor(
+class RecipeRepositoryDefault @Inject constructor(
     private val recipeDao: RecipeDao,
     private val recipeApi: RecipeApi,
     private val entityMapper: RecipeEntityMapper,

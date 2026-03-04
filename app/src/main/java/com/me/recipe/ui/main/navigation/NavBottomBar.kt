@@ -13,6 +13,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import com.me.recipe.ui.addrecipe.AddRecipeScreen
 import com.me.recipe.ui.auth.AuthScreen
 import com.me.recipe.ui.home.HomeScreen
 import com.me.recipe.ui.profile.ProfileScreen
@@ -43,7 +44,9 @@ internal fun NavBottomBar(
             containerColor = MaterialTheme.colorScheme.primaryContainer,
             modifier = Modifier.fillMaxWidth(),
         ) {
-            bottomNavigationScreens.forEachIndexed { index, tab ->
+            val menu =
+                if (isUserLoggedIn) bottomNavigationScreensWithLogin else bottomNavigationScreens
+            menu.forEachIndexed { index, tab ->
                 NavigationBarItem(
                     icon = { Icon(imageVector = tab.icon!!, contentDescription = null) },
                     label = { Text(stringResource(tab.titleRes)) },
@@ -69,8 +72,11 @@ private fun getScreenForTab(tab: NavigationDestination, isUserLoggedIn: Boolean)
     HomeDestination -> HomeScreen()
     SearchDestination -> SearchScreen()
     ProfileDestination -> if (isUserLoggedIn) ProfileScreen else AuthScreen
+    AddRecipeDestination -> AddRecipeScreen
     else -> HomeScreen()
 }
 
-private fun isHomeDestination(screen: Screen?) =
-    screen is HomeScreen || screen is SearchScreen || screen is AuthScreen || screen is ProfileScreen
+private fun isHomeDestination(screen: Screen?) = when (screen) {
+    is HomeScreen, is SearchScreen, is AuthScreen, is ProfileScreen, is AddRecipeScreen -> true
+    else -> false
+}

@@ -15,6 +15,7 @@
     <string name="navigate_splash_title">Splash</string>
     <string name="navigate_search_title">Search</string>
     <string name="navigate_profile_title">Profile</string>
+    <string name="navigate_add_recipe">Add Recipe</string>
     <string name="navigate_recipe_list_title">Recipe list</string>
     <string name="navigate_recipe_title">Recipe</string>
     <string name="navigate_home_title">Home</string>
@@ -36,4 +37,10 @@
     <string name="age">Age</string>
     <string name="login_successful">Login Successful</string>
     <string name="register_successful">Register Successful</string>
+    <string name="add_recipe">Add New Recipe</string>
+    <string name="take_photo">Take photo</string>
+    <string name="pick_from_gallery">Pick from gallery</string>
+    <string name="no_image_selected">No image selected</string>
+    <string name="recipe_image">Recipe image</string>
+    <string name="recipe_added">Recipe added successfully</string>
 </resources>

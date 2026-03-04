@@ -1,8 +1,8 @@
 package com.me.recipe.data.di
 
-import com.me.recipe.data.features.recipe.mapper.CategoryDtoMapper
 import com.me.recipe.data.features.recipe.mapper.RecipeDtoMapper
 import com.me.recipe.data.features.recipe.mapper.RecipeEntityMapper
+import com.me.recipe.data.features.recipelist.mapper.CategoryDtoMapper
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

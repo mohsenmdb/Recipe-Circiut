@@ -1,7 +1,7 @@
 package com.me.recipe.domain.features.auth.repository
 
-import com.me.recipe.domain.features.model.Login
-import com.me.recipe.domain.features.model.Register
+import com.me.recipe.domain.features.auth.model.Login
+import com.me.recipe.domain.features.auth.model.Register
 
 interface AuthRepository {
     suspend fun login(username: String, password: String): Login

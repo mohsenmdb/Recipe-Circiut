@@ -2,8 +2,8 @@ package com.me.recipe.data.features.recipelist.repository
 
 import com.me.recipe.cache.recipe.RecipeDao
 import com.me.recipe.cache.recipe.model.RecipeEntity
-import com.me.recipe.data.features.recipe.mapper.CategoryDtoMapper
 import com.me.recipe.data.features.recipe.mapper.RecipeEntityMapper
+import com.me.recipe.data.features.recipelist.mapper.CategoryDtoMapper
 import com.me.recipe.domain.features.recipe.model.CategoryRecipe
 import com.me.recipe.domain.features.recipelist.repository.CategoriesRepository
 import com.me.recipe.network.features.recipe.RecipeApi

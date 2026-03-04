@@ -72,7 +72,6 @@ class UserDataStore @Inject constructor(
             prefs[LAST_NAME_KEY] = user.lastName
             prefs[AGE_KEY] = user.age
         }
-//        _userFlow.value = user
     }
 
     suspend fun logout() = withContext(ioDispatcher) {

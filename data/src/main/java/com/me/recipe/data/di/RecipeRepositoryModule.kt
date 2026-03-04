@@ -1,26 +1,23 @@
 package com.me.recipe.data.di
 
-import com.me.recipe.cache.recipe.RecipeDao
-import com.me.recipe.data.features.recipe.mapper.RecipeDtoMapper
-import com.me.recipe.data.features.recipe.mapper.RecipeEntityMapper
-import com.me.recipe.data.features.recipe.repository.RecipeRepositoryImpl
+import com.me.recipe.data.features.recipe.repository.AddRecipeRepositoryDefault
+import com.me.recipe.data.features.recipe.repository.RecipeRepositoryDefault
+import com.me.recipe.domain.features.recipe.repository.AddRecipeRepository
 import com.me.recipe.domain.features.recipe.repository.RecipeRepository
-import com.me.recipe.network.features.recipe.RecipeApi
-import com.me.recipe.shared.utils.IoDispatcher
+import dagger.Binds
 import dagger.Module
-import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import javax.inject.Singleton
-import kotlinx.coroutines.CoroutineDispatcher
 
 @Module
 @InstallIn(SingletonComponent::class)
-object RecipeRepositoryModule {
-
+interface RecipeRepositoryModule {
+    @Binds
     @Singleton
-    @Provides
-    fun provideRecipeRepository(recipeDao: RecipeDao, recipeApi: RecipeApi, recipeDtoMapper: RecipeDtoMapper, entityMapper: RecipeEntityMapper, @IoDispatcher ioDispatcher: CoroutineDispatcher): RecipeRepository {
-        return RecipeRepositoryImpl(recipeDao, recipeApi, entityMapper, recipeDtoMapper, ioDispatcher)
-    }
+    fun provideRecipeRepository(default: RecipeRepositoryDefault): RecipeRepository
+
+    @Binds
+    @Singleton
+    fun provideAddRecipeRepository(default: AddRecipeRepositoryDefault): AddRecipeRepository
 }
