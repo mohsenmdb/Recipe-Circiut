@@ -16,7 +16,6 @@ import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -45,10 +44,8 @@ internal fun ColumnScope.ImagePickerSection(
     onImageSelected: (Uri?) -> Unit,
 ) {
     TitleText()
-    Spacer(Modifier.height(8.dp))
 
     ImageBox(imageUri = imageUri)
-    Spacer(Modifier.height(8.dp))
 
     ButtonsRow(onImageSelected = onImageSelected)
 }

@@ -3,6 +3,7 @@ package com.me.recipe.ui.addrecipe
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.spring
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -27,6 +28,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.me.recipe.ui.addrecipe.components.AddRecipeTopBar
 import com.me.recipe.ui.addrecipe.components.ImagePickerSection
+import com.me.recipe.ui.addrecipe.components.IngredientsSection
 import com.me.recipe.ui.component.util.DefaultSnackbar
 import com.me.recipe.ui.component.util.MessageEffect
 import com.me.recipe.ui.theme.RecipeTheme
@@ -89,8 +91,10 @@ private fun InfoColumn(
     modifier: Modifier = Modifier,
 ) {
     Column(
+        verticalArrangement = Arrangement.spacedBy(8.dp),
         modifier = modifier
             .fillMaxWidth()
+            .padding(vertical = 8.dp)
             .verticalScroll(rememberScrollState()),
     ) {
         TitleInput(
@@ -103,12 +107,15 @@ private fun InfoColumn(
             onValueChange = { state.eventSink(AddRecipeEvent.OnDescriptionChanged(it)) },
         )
 
-        IngredientsInput(
-            value = state.ingredients,
+        IngredientsSection(
+            ingredientText = state.ingredientText,
+            ingredientsList = state.ingredientsList,
             onValueChange = { state.eventSink(AddRecipeEvent.OnIngredientsChanged(it)) },
+            onAddIngredientsClicked = { state.eventSink(AddRecipeEvent.OnAddIngredientsClicked) },
+            onRemoveIngredientsClicked = { state.eventSink(AddRecipeEvent.OnRemoveIngredientsClicked(it)) },
         )
 
-        Spacer(Modifier.height(20.dp))
+        Spacer(Modifier.height(12.dp))
         ImagePickerSection(
             imageUri = state.imageUri,
             onImageSelected = { state.eventSink(AddRecipeEvent.OnImageSelected(it)) },
@@ -142,22 +149,6 @@ private fun DescriptionInput(
         modifier = Modifier.fillMaxWidth(),
         minLines = 3,
         maxLines = 5,
-    )
-}
-
-@Composable
-private fun IngredientsInput(
-    value: String,
-    onValueChange: (String) -> Unit,
-) {
-    OutlinedTextField(
-        value = value,
-        onValueChange = onValueChange,
-        label = { Text("Ingredients") },
-        placeholder = { Text("e.g. Eggs, Milk, Flour...") },
-        modifier = Modifier.fillMaxWidth(),
-        minLines = 3,
-        maxLines = 6,
     )
 }
 

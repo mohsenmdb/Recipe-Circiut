@@ -21,6 +21,8 @@ import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
 import dagger.hilt.components.SingletonComponent
+import kotlinx.collections.immutable.PersistentList
+import kotlinx.collections.immutable.persistentListOf
 import kotlinx.coroutines.launch
 
 class AddRecipePresenter @AssistedInject constructor(
@@ -36,18 +38,20 @@ class AddRecipePresenter @AssistedInject constructor(
         val message by uiMessageManager.message.collectAsRetainedState(null)
         var title by rememberRetained { mutableStateOf("") }
         var description by rememberRetained { mutableStateOf("") }
-        var ingredients by rememberRetained { mutableStateOf("") }
+        var ingredientText by rememberRetained { mutableStateOf("") }
+        var ingredientsList by rememberRetained { mutableStateOf<PersistentList<String>>(persistentListOf()) }
         var imageUri by rememberRetained { mutableStateOf<Uri?>(null) }
         var isLoading by rememberRetained { mutableStateOf(false) }
         val isSubmitEnabled = title.isNotBlank() &&
             description.isNotBlank() &&
-            ingredients.isNotBlank() &&
+            ingredientsList.isNotEmpty() &&
             imageUri != null
 
         fun cleanForm() {
             title = ""
             description = ""
-            ingredients = ""
+            ingredientText = ""
+            ingredientsList = persistentListOf()
             imageUri = null
         }
 
@@ -57,7 +61,7 @@ class AddRecipePresenter @AssistedInject constructor(
                 AddRecipeUseCase.Params(
                     title = title,
                     description = description,
-                    ingredients = ingredients,
+                    ingredients = ingredientsList.joinToString(","),
                     imageUri = imageUri!!,
                 ),
             ).apply {
@@ -76,7 +80,8 @@ class AddRecipePresenter @AssistedInject constructor(
             title = title,
             imageUri = imageUri,
             description = description,
-            ingredients = ingredients,
+            ingredientText = ingredientText,
+            ingredientsList = ingredientsList,
             isLoading = isLoading,
             isSubmitEnabled = isSubmitEnabled,
             message = message,
@@ -85,9 +90,14 @@ class AddRecipePresenter @AssistedInject constructor(
                     AddRecipeEvent.ClearMessage -> scope.launch { uiMessageManager.clearMessage() }
                     is AddRecipeEvent.OnTitleChanged -> title = event.value
                     is AddRecipeEvent.OnDescriptionChanged -> description = event.value
-                    is AddRecipeEvent.OnIngredientsChanged -> ingredients = event.value
+                    is AddRecipeEvent.OnIngredientsChanged -> ingredientText = event.value
                     is AddRecipeEvent.OnImageSelected -> imageUri = event.uri
                     AddRecipeEvent.OnSubmitClicked -> scope.launch { sendRecipe() }
+                    is AddRecipeEvent.OnRemoveIngredientsClicked -> ingredientsList = ingredientsList.remove(event.item)
+                    AddRecipeEvent.OnAddIngredientsClicked -> {
+                        ingredientsList = ingredientsList.add(ingredientText.trim().replaceFirstChar { it.uppercaseChar() })
+                        ingredientText = ""
+                    }
                 }
             },
         )
