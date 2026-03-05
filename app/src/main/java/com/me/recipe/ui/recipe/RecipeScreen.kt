@@ -20,10 +20,10 @@ typealias RecipeEventSink = (RecipeEvent) -> Unit
 
 @Stable
 data class RecipeState(
-    val recipe: Recipe? = null,
+    val recipe: Recipe,
     val message: UiMessage? = null,
     val exception: Throwable? = null,
-    val recipesLoading: Boolean = recipe == null && exception == null,
+    val isLoading: Boolean = false,
     val eventSink: RecipeEventSink,
 ) : CircuitUiState {
     companion object {

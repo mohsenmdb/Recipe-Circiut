@@ -43,4 +43,7 @@
     <string name="no_image_selected">No image selected</string>
     <string name="recipe_image">Recipe image</string>
     <string name="recipe_added">Recipe added successfully</string>
+    <string name="ingredients">Ingredients</string>
+    <string name="ingredients_placeholder">e.g. Eggs, Milk, Flour...</string>
+    <string name="description">Description</string>
 </resources>

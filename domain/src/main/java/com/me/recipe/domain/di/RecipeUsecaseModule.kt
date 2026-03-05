@@ -1,7 +1,7 @@
 package com.me.recipe.domain.di
 
 import com.me.recipe.domain.features.recipe.repository.RecipeRepository
-import com.me.recipe.domain.features.recipe.usecases.GetRecipeUsecase
+import com.me.recipe.domain.features.recipe.usecases.GetRecipeUseCase
 import com.me.recipe.domain.features.recipelist.repository.RecipeListRepository
 import com.me.recipe.domain.features.recipelist.usecases.RestoreRecipesUsecase
 import com.me.recipe.domain.features.recipelist.usecases.SearchRecipesUsecase
@@ -36,8 +36,8 @@ object RecipeUsecaseModule {
     @Provides
     fun provideGetRecipeUsecase(
         recipeRepository: RecipeRepository,
-    ): GetRecipeUsecase {
-        return GetRecipeUsecase(recipeRepository = recipeRepository)
+    ): GetRecipeUseCase {
+        return GetRecipeUseCase(recipeRepository = recipeRepository)
     }
 
     @ViewModelScoped

@@ -9,7 +9,6 @@ import com.me.recipe.network.features.recipe.RecipeApi
 import com.me.recipe.shared.utils.IoDispatcher
 import javax.inject.Inject
 import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
@@ -25,8 +24,6 @@ class RecipeRepositoryDefault @Inject constructor(
         recipeId: Int,
         uid: String,
     ): Flow<Recipe> = flow {
-        // just to show loading, cache is fast
-        delay(1000)
         var recipe = getRecipeFromCache(recipeId = recipeId, uid = uid)
         if (recipe != null) {
             emit(recipe)

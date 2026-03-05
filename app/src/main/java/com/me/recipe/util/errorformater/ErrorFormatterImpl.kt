@@ -13,7 +13,6 @@ import java.util.concurrent.TimeoutException
 import javax.inject.Inject
 import javax.net.ssl.SSLHandshakeException
 import retrofit2.HttpException
-import timber.log.Timber
 
 class ErrorFormatterImpl @Inject constructor(
     @ApplicationContext private val context: Context,
@@ -30,9 +29,6 @@ class ErrorFormatterImpl @Inject constructor(
             is SocketTimeoutException, is TimeoutException -> StringResource.ResId(R.string.connection_timeout_exception)
             is SSLHandshakeException -> StringResource.ResId(R.string.server_error_retry)
             is HttpException -> {
-                Timber.d("tezt code = ${throwable.code()}.")
-                Timber.d("tezt message = ${throwable.message()}.")
-                Timber.d("tezt response = ${throwable.response()}.")
                 when {
                     throwable.code() == UNAUTHORIZED_ERROR_CODE -> {
                         StringResource.ResId(R.string.server_error_unauthorized)

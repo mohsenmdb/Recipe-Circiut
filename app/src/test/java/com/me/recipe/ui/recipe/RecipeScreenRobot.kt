@@ -36,7 +36,7 @@ class RecipeScreenRobot @Inject constructor() {
             RecipeUi(state = state)
             LaunchedEffect(Unit) {
                 delay(1000)
-                state = data.copy(recipesLoading = false, recipe = Recipe.testData())
+                state = data.copy(isLoading = false, recipe = Recipe.testData())
             }
         }
     }

@@ -46,7 +46,6 @@ import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toPersistentList
 import kotlinx.coroutines.launch
-import timber.log.Timber
 
 class SearchPresenter @AssistedInject constructor(
     @Assisted private val screen: SearchScreen,
@@ -132,7 +131,6 @@ class SearchPresenter @AssistedInject constructor(
             query = searchText
         }
         fun navigateToRecipePage(recipe: Recipe) {
-            Timber.d("tezt id=${recipe.id}, uid= ${recipe.uid}")
             navigator.goTo(
                 RecipeScreen(
                     itemImage = recipe.image,

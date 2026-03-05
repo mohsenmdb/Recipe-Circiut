@@ -12,6 +12,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.me.recipe.ui.component.util.DefaultSnackbar
 import com.me.recipe.ui.component.util.MessageEffect
 import com.me.recipe.ui.recipe.components.RecipeDetail
+import com.me.recipe.ui.recipe.components.shimmer.RecipeShimmerView
 import com.me.recipe.ui.theme.RecipeTheme
 import com.slack.circuit.codegen.annotations.CircuitInject
 import dagger.hilt.components.SingletonComponent
@@ -39,12 +40,15 @@ internal fun RecipeUi(
         },
         modifier = modifier,
     ) { padding ->
-        RecipeDetail(
-            recipe = state.recipe,
-            isLoading = state.recipesLoading,
-            modifier = Modifier.padding(padding),
-            onLikeClicked = { state.eventSink(RecipeEvent.OnLikeClicked) },
-        )
+        if (state.isLoading) {
+            RecipeShimmerView()
+        } else {
+            RecipeDetail(
+                recipe = state.recipe,
+                modifier = Modifier.padding(padding),
+                onLikeClicked = { state.eventSink(RecipeEvent.OnLikeClicked) },
+            )
+        }
     }
 }
 
