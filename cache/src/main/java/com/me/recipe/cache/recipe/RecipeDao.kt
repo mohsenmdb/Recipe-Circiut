@@ -38,7 +38,7 @@ interface RecipeDao {
         SELECT * FROM recipes
         WHERE title LIKE '%' || :query || '%'
         OR ingredients LIKE '%' || :query || '%'
-        ORDER BY id ASC LIMIT :pageSize OFFSET ((:page - 1) * :pageSize)
+        ORDER BY id DESC LIMIT :pageSize OFFSET ((:page - 1) * :pageSize)
         """,
     )
     suspend fun searchRecipes(
@@ -53,7 +53,7 @@ interface RecipeDao {
     @Query(
         """
         SELECT * FROM recipes
-        ORDER BY id ASC LIMIT :pageSize OFFSET ((:page - 1) * :pageSize)
+        ORDER BY id DESC LIMIT :pageSize OFFSET ((:page - 1) * :pageSize)
     """,
     )
     suspend fun getAllRecipes(
@@ -69,7 +69,7 @@ interface RecipeDao {
         SELECT * FROM recipes
         WHERE title LIKE '%' || :query || '%'
         OR ingredients LIKE '%' || :query || '%'
-        ORDER BY id ASC LIMIT (:page * :pageSize)
+        ORDER BY id DESC LIMIT (:page * :pageSize)
         """,
     )
     suspend fun restoreRecipes(
@@ -84,7 +84,7 @@ interface RecipeDao {
     @Query(
         """
         SELECT * FROM recipes
-        ORDER BY id ASC LIMIT (:page * :pageSize)
+        ORDER BY id DESC LIMIT (:page * :pageSize)
     """,
     )
     suspend fun restoreAllRecipes(
