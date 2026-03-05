@@ -6,6 +6,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.util.fastFilter
+import com.me.recipe.BuildConfig
 import com.me.recipe.R
 import com.me.recipe.domain.features.recipe.model.CategoryRecipe
 import com.me.recipe.domain.features.recipelist.usecases.CategoriesRecipesUseCase
@@ -30,6 +31,7 @@ import dagger.assisted.AssistedInject
 import dagger.hilt.components.SingletonComponent
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toPersistentList
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 class HomePresenter @AssistedInject constructor(
@@ -49,6 +51,7 @@ class HomePresenter @AssistedInject constructor(
         var refresher by rememberRetained { mutableStateOf(ForceFresh.refresh()) }
 
         LaunchedEffect(key1 = refresher) {
+            if (BuildConfig.DEBUG) delay(500)
             getCategoriesUseCase.get().invoke(CategoriesRecipesUseCase.Params(forceRefresh = refresher))
             getOfflineCategoriesUseCase.get().invoke(CategoriesRecipesUseCase.Params(isOffline = true))
         }

@@ -14,6 +14,9 @@ data class RecipeEntity(
     @ColumnInfo(name = "title")
     var title: String,
 
+    @ColumnInfo(name = "description")
+    var description: String,
+
     @ColumnInfo(name = "publisher")
     var publisher: String,
 

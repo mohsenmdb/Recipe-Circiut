@@ -17,7 +17,6 @@ import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.PersistentList
 import kotlinx.collections.immutable.toPersistentList
 import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
@@ -32,8 +31,6 @@ class CategoriesRepositoryDefault @Inject constructor(
 
     override fun categoriesRecipes(): Flow<ImmutableList<CategoryRecipe>> =
         flow {
-            // To show loading
-            delay(500)
             emit(getCategoriesFromNetwork())
         }.flowOn(ioDispatcher)
 

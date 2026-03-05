@@ -8,9 +8,9 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.map
 
-class GetRecipeUsecase @Inject constructor(
+class GetRecipeUseCase @Inject constructor(
     private val recipeRepository: RecipeRepository,
-) : SubjectInteractor<GetRecipeUsecase.Params, Result<Recipe>>() {
+) : SubjectInteractor<GetRecipeUseCase.Params, Result<Recipe>>() {
     data class Params(
         val recipeId: Int,
         val uid: String,

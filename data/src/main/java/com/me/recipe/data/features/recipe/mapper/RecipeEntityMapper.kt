@@ -14,6 +14,7 @@ class RecipeEntityMapper : DomainMapper<RecipeEntity, Recipe> {
             id = model.id,
             uid = uid ?: UUID.randomUUID().toString(),
             title = model.title,
+            description = model.description,
             image = model.image,
             rating = model.rating,
             publisher = model.publisher,
@@ -26,24 +27,14 @@ class RecipeEntityMapper : DomainMapper<RecipeEntity, Recipe> {
         return RecipeEntity(
             id = domainModel.id,
             title = domainModel.title,
+            description = domainModel.description,
             image = domainModel.image,
             rating = domainModel.rating,
             publisher = domainModel.publisher,
-            ingredients = convertIngredientListToString(domainModel.ingredients),
+            ingredients = domainModel.ingredients.joinToString(","),
             date = domainModel.date,
             dateCached = DateUtils.dateToLong(DateUtils.createTimestamp()),
         )
-    }
-
-    /**
-     * "Carrot, potato, Chicken, ..."
-     */
-    private fun convertIngredientListToString(ingredients: List<String>): String {
-        val ingredientsString = StringBuilder()
-        for (ingredient in ingredients) {
-            ingredientsString.append("$ingredient,")
-        }
-        return ingredientsString.toString()
     }
 
     private fun convertIngredientsToList(ingredientsString: String?): List<String> {

@@ -15,7 +15,7 @@ import org.robolectric.shadows.ShadowLog
 
 @HiltAndroidTest
 @RunWith(RobolectricTestRunner::class)
-@Config(application = HiltTestApplication::class)
+@Config(application = HiltTestApplication::class, qualifiers = "w411dp-h1200dp")
 class RecipeScreenTest {
 
     @get:Rule
@@ -35,15 +35,15 @@ class RecipeScreenTest {
         val data = RecipeState.testData()
         robot(robotTestRule) {
             setRecipeScreen(data)
-            checkScreenWhenStateIsLoaded(data.recipe?.ingredients!!)
+            checkScreenWhenStateIsLoaded(data.recipe.ingredients)
         }
     }
 
     @Test
     fun `while loading just show shimmer and not show recipe view`() {
         val data = RecipeState.testData().copy(
-            recipesLoading = true,
-            recipe = null,
+            isLoading = true,
+            recipe = Recipe.EMPTY,
         )
         robot(robotTestRule) {
             setRecipeScreen(data)
@@ -54,7 +54,7 @@ class RecipeScreenTest {
     @Test
     fun `when state change from loading to loaded show correctly loading and loaded screens`() {
         val data = RecipeState.testData().copy(
-            recipesLoading = true,
+            isLoading = true,
             recipe = Recipe.EMPTY,
         )
         robot(robotTestRule) {

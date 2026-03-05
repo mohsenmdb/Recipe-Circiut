@@ -17,6 +17,7 @@ class RecipeDtoMapper : DomainMapper<RecipeDto, Recipe> {
             id = model.id ?: -1,
             uid = uid ?: UUID.randomUUID().toString(),
             title = model.title.orEmpty(),
+            description = model.description.orEmpty(),
             // this replace is just for local server not production
             image = model.image.orEmpty().replace("http://localhost:3000/", LOCAL_HOST_PATH),
             rating = model.rating,

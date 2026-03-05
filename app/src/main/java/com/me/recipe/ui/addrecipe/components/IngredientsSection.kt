@@ -27,9 +27,11 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.util.fastForEach
+import com.me.recipe.R
 import com.me.recipe.ui.theme.RecipeTheme
 import com.me.recipe.util.compose.OnClick
 import kotlinx.collections.immutable.ImmutableList
@@ -134,8 +136,8 @@ private fun RowScope.IngredientsInput(
     OutlinedTextField(
         value = value,
         onValueChange = onValueChange,
-        label = { Text("Ingredients") },
-        placeholder = { Text("e.g. Eggs, Milk, Flour...") },
+        label = { Text(stringResource(R.string.ingredients)) },
+        placeholder = { Text(stringResource(R.string.ingredients_placeholder)) },
         modifier = Modifier.weight(1f),
         maxLines = 1,
     )

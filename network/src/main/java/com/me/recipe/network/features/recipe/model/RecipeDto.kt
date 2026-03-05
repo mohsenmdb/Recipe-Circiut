@@ -7,6 +7,7 @@ import kotlinx.serialization.Serializable
 data class RecipeDto(
     @SerialName(value = "id") val id: Int?,
     @SerialName(value = "title") val title: String?,
+    @SerialName(value = "description") val description: String?,
     @SerialName(value = "user") val publisher: UserDto?,
     @SerialName(value = "image") val image: String?,
     @SerialName(value = "rating") val rating: String = "0",
