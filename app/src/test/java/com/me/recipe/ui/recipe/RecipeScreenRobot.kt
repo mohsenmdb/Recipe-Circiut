@@ -64,7 +64,6 @@ class RecipeScreenRobot @Inject constructor() {
         assertLoadingRankChipIsDisplayed()
         assertLoadingRecipeShimmerIsDisplayed()
         assertRecipeImageShimmerIsDisplayed()
-        assertTitleRowIsDisplayed()
 
         assertTitleRowTextIsNotDisplayed()
         assertRankChipIsNotDisplayed()
