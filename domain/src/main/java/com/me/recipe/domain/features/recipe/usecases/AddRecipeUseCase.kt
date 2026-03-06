@@ -2,9 +2,9 @@ package com.me.recipe.domain.features.recipe.usecases
 
 import android.net.Uri
 import com.me.recipe.domain.features.recipe.repository.AddRecipeRepository
-import com.me.recipe.shared.utils.Result
-import com.me.recipe.shared.utils.runAsResult
+import recipe.app.core.Result
 import javax.inject.Inject
+import recipe.app.core.runAsResult
 
 class AddRecipeUseCase @Inject constructor(
     private val repository: AddRecipeRepository,

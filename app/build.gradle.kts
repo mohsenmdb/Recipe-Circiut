@@ -89,9 +89,12 @@ spotless {
 }
 
 dependencies {
-    implementation(project(":shared"))
-    implementation(project(":data"))
-    implementation(project(":domain"))
+    with(projects) {
+        implementation(shared)
+        implementation(data)
+        implementation(domain)
+        implementation(core)
+    }
 
     implementation(libs.circuit.foundation)
     implementation(libs.circuit.android)

@@ -51,10 +51,12 @@ spotless {
 }
 
 dependencies {
-    implementation(project(":shared"))
-    implementation(project(":network"))
-    implementation(project(":domain"))
-    implementation(project(":cache"))
+    with(projects) {
+        implementation(shared)
+        implementation(network)
+        implementation(domain)
+        implementation(cache)
+    }
 
     implementation(libs.hilt)
     ksp(libs.hilt.compiler)

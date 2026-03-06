@@ -2,8 +2,8 @@ package com.me.recipe.domain.features.auth.usecase
 
 import com.me.recipe.domain.features.auth.model.Login
 import com.me.recipe.domain.features.auth.repository.AuthRepository
-import com.me.recipe.shared.utils.Result
-import com.me.recipe.shared.utils.runAsResult
+import recipe.app.core.runAsResult
+import recipe.app.core.Result
 import javax.inject.Inject
 
 class LoginUseCase @Inject constructor(

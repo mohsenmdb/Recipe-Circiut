@@ -52,8 +52,10 @@ spotless {
 }
 
 dependencies {
-
-    implementation(project(":shared"))
+    with(projects) {
+        implementation(shared)
+        implementation(core)
+    }
     implementation(libs.hilt)
     ksp(libs.hilt.compiler)
     implementation(libs.compose.runtime)

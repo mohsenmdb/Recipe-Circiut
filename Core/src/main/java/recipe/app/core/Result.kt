@@ -1,4 +1,4 @@
-package com.me.recipe.shared.utils
+package recipe.app.core
 
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
