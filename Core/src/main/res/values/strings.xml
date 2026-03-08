@@ -1,3 +1,8 @@
 <resources>
-    <string name="app_name">core</string>
+    <string name="not_connected_to_internet">It seems you have no internet connection. Check your connection and try again!</string>
+    <string name="connection_timeout_exception">Something went wrong, please try again a bit later.</string>
+    <string name="server_error_retry">Error occurred, try again later</string>
+    <string name="server_error_unauthorized">Username or password is wrong, check and try again.</string>
+    <string name="server_error_user_exist">User with this username already exists, try other username.</string>
+    <string name="something_went_wrong">something went wrong</string>
 </resources>

@@ -136,8 +136,6 @@ dependencies {
     testImplementation(libs.junit)
     testImplementation(libs.androidx.compose.ui.test.junit4)
     testImplementation(libs.robolectric)
-    testImplementation(libs.mock.webserver)
-    implementation(libs.retrofit)
 
     androidTestImplementation(libs.androidx.test.ext)
     androidTestImplementation(libs.androidx.test.espresso)

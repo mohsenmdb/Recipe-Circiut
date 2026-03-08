@@ -30,7 +30,7 @@ import com.me.recipe.ui.search.SearchEvent.OnRecipeClick
 import com.me.recipe.ui.search.SearchEvent.OnRecipeLongClick
 import com.me.recipe.ui.search.SearchEvent.OnSelectedCategoryChanged
 import com.me.recipe.ui.search.SearchEvent.SearchClearEvent
-import com.me.recipe.util.errorformater.ErrorFormatter
+import recipe.app.core.errorformater.ErrorFormatter
 import com.slack.circuit.codegen.annotations.CircuitInject
 import com.slack.circuit.retained.collectAsRetainedState
 import com.slack.circuit.retained.rememberRetained

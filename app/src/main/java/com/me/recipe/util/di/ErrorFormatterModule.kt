@@ -1,7 +1,7 @@
 package com.me.recipe.util.di
 
-import com.me.recipe.util.errorformater.ErrorFormatter
-import com.me.recipe.util.errorformater.ErrorFormatterImpl
+import recipe.app.core.errorformater.ErrorFormatter
+import recipe.app.core.errorformater.ErrorFormatterImpl
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn

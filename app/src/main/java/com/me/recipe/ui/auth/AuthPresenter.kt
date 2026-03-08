@@ -15,7 +15,7 @@ import com.me.recipe.shared.datastore.UserInfo
 import com.me.recipe.ui.component.util.UiMessage
 import com.me.recipe.ui.component.util.UiMessageManager
 import com.me.recipe.ui.profile.ProfileScreen
-import com.me.recipe.util.errorformater.ErrorFormatter
+import recipe.app.core.errorformater.ErrorFormatter
 import com.slack.circuit.codegen.annotations.CircuitInject
 import com.slack.circuit.retained.collectAsRetainedState
 import com.slack.circuit.retained.rememberRetained
