@@ -1,10 +1,15 @@
 package recipe.app.core
 
+import com.me.recipe.network.features.recipe.model.ServerErrorDto
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onStart
+import kotlinx.serialization.json.Json
+import recipe.app.core.errorformater.exceptions.ReadableException
+import retrofit2.HttpException
+import timber.log.Timber
 
 sealed interface Result<out T> {
 
@@ -49,9 +54,18 @@ inline fun <R> runAsResultFlow(crossinline block: suspend () -> R): Flow<Result<
 suspend inline fun <R> runAsResult(crossinline block: suspend () -> R): Result<R> {
     return try {
         Result.Success(block())
+    } catch (e: HttpException) {
+        Result.Error(handleHttpException(e))
     } catch (e: Throwable) {
         Result.Error(e)
     }
+}
+
+fun handleHttpException(e: HttpException): Throwable {
+    val errorJson = e.response()?.errorBody()?.string()
+    val dto = Json.decodeFromString<ServerErrorDto>(errorJson ?: "")
+    val error = dto.errors?.let { ReadableException(it.joinToString(",")) } ?: e
+    return error
 }
 
 inline fun <T, R> Result<T>.map(transform: (T) -> R): Result<R> {
@@ -61,3 +75,4 @@ inline fun <T, R> Result<T>.map(transform: (T) -> R): Result<R> {
         is Result.Loading -> this
     }
 }
+

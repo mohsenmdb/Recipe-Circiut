@@ -9,7 +9,6 @@ import com.me.recipe.R
 import com.me.recipe.domain.features.recipe.usecases.AddRecipeUseCase
 import com.me.recipe.ui.component.util.UiMessage
 import com.me.recipe.ui.component.util.UiMessageManager
-import recipe.app.core.errorformater.ErrorFormatter
 import com.slack.circuit.codegen.annotations.CircuitInject
 import com.slack.circuit.retained.collectAsRetainedState
 import com.slack.circuit.retained.rememberRetained
@@ -24,6 +23,7 @@ import dagger.hilt.components.SingletonComponent
 import kotlinx.collections.immutable.PersistentList
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.coroutines.launch
+import recipe.app.core.errorformater.ErrorFormatter
 
 class AddRecipePresenter @AssistedInject constructor(
     @Assisted internal val navigator: Navigator,

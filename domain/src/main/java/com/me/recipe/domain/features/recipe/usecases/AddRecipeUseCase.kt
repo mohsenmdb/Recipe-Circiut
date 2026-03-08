@@ -2,8 +2,8 @@ package com.me.recipe.domain.features.recipe.usecases
 
 import android.net.Uri
 import com.me.recipe.domain.features.recipe.repository.AddRecipeRepository
-import recipe.app.core.Result
 import javax.inject.Inject
+import recipe.app.core.Result
 import recipe.app.core.runAsResult
 
 class AddRecipeUseCase @Inject constructor(
