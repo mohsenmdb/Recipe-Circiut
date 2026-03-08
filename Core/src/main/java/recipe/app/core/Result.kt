@@ -9,7 +9,6 @@ import kotlinx.coroutines.flow.onStart
 import kotlinx.serialization.json.Json
 import recipe.app.core.errorformater.exceptions.ReadableException
 import retrofit2.HttpException
-import timber.log.Timber
 
 sealed interface Result<out T> {
 
@@ -75,4 +74,3 @@ inline fun <T, R> Result<T>.map(transform: (T) -> R): Result<R> {
         is Result.Loading -> this
     }
 }
-

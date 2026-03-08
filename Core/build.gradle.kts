@@ -2,6 +2,7 @@ plugins {
     id("com.android.library")
     id("dagger.hilt.android.plugin")
     alias(libs.plugins.ksp)
+    alias(libs.plugins.spotless)
 }
 
 ksp {
@@ -38,6 +39,18 @@ android {
     }
 }
 
+spotless {
+    kotlin {
+        target("src/**/*.kt")
+        ktlint()
+    }
+
+    kotlinGradle {
+        target("*.kts")
+        ktlint()
+    }
+}
+
 dependencies {
     implementation(projects.network)
     implementation(libs.androidx.core.ktx)
@@ -51,4 +64,5 @@ dependencies {
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.test.ext)
+    compileOnly(libs.spotless.gradlePlugin)
 }
