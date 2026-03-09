@@ -103,8 +103,9 @@ material = { group = "com.google.android.material", name = "material", version.r
 
 
 [plugins]
+hilt = { id = "com.google.dagger.hilt.android", version.ref = "dagger" }
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
-spotless = "com.diffplug.spotless:6.25.0"
+spotless = { id = "com.diffplug.spotless", version = "6.25.0" }
 android-library = { id = "com.android.library", version.ref = "agp" }
 kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 jetbrains-kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }

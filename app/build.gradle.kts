@@ -4,9 +4,8 @@ plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.plugin.compose")
     id("kotlin-parcelize")
-    id("dagger.hilt.android.plugin")
+    alias(libs.plugins.hilt)
     alias(libs.plugins.ksp)
-    alias(libs.plugins.spotless)
 }
 
 ksp {
@@ -15,9 +14,8 @@ ksp {
 
 android {
     namespace = "com.me.recipe"
-    compileSdk {
-        version = release(36)
-    }
+
+    compileSdk = 36
 
     defaultConfig {
         applicationId = "com.example.mycomposeapplication"
@@ -40,23 +38,18 @@ android {
             )
         }
     }
-//    applicationVariants.all {
-//        outputs.all {
-//            val branchName = getGitBranchName()
-//            val apkName = "$name-$branchName.apk"
-//            val output = this as com.android.build.gradle.internal.api.BaseVariantOutputImpl
-//            output.outputFileName = apkName
-//        }
-//    }
+
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
     }
+
     buildFeatures {
         compose = true
         buildConfig = true
     }
-    packagingOptions {
+
+    packaging {
         resources {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
         }
@@ -74,17 +67,6 @@ kotlin {
     compilerOptions {
         jvmTarget.set(JvmTarget.JVM_17)
         freeCompilerArgs.add("-Xcontext-receivers")
-    }
-}
-spotless {
-    kotlin {
-        target("src/**/*.kt")
-        ktlint()
-    }
-
-    kotlinGradle {
-        target("*.kts")
-        ktlint()
     }
 }
 
@@ -115,6 +97,7 @@ dependencies {
     implementation(libs.compose.navigation)
     implementation(libs.compose.activity)
     implementation(libs.compose.coil)
+
     lintChecks(libs.compose.lint.checks)
     implementation(libs.compose.icons.extended)
 
@@ -140,5 +123,4 @@ dependencies {
     androidTestImplementation(libs.androidx.test.ext)
     androidTestImplementation(libs.androidx.test.espresso)
     androidTestImplementation(libs.androidx.navigation.testing)
-    compileOnly(libs.spotless.gradlePlugin)
 }

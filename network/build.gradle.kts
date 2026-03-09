@@ -3,7 +3,6 @@ import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 plugins {
     alias(libs.plugins.ksp)
     alias(libs.plugins.android.library)
-    alias(libs.plugins.spotless)
     alias(libs.plugins.kotlin.serialization)
 }
 
@@ -39,18 +38,6 @@ kotlin {
     }
 }
 
-spotless {
-    kotlin {
-        target("src/**/*.kt")
-        ktlint()
-    }
-
-    kotlinGradle {
-        target("*.kts")
-        ktlint()
-    }
-}
-
 dependencies {
     implementation(project(":shared"))
     api(platform(libs.compose.bom))
@@ -63,7 +50,5 @@ dependencies {
     implementation(libs.okhttp.logging.interceptor)
     implementation(libs.kotlinx.serialization.json)
     implementation(libs.retrofit.converter)
-
     implementation(libs.timber)
-    compileOnly(libs.spotless.gradlePlugin)
 }
