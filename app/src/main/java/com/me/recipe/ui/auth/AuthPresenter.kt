@@ -15,7 +15,6 @@ import com.me.recipe.shared.datastore.UserInfo
 import com.me.recipe.ui.component.util.UiMessage
 import com.me.recipe.ui.component.util.UiMessageManager
 import com.me.recipe.ui.profile.ProfileScreen
-import com.me.recipe.util.errorformater.ErrorFormatter
 import com.slack.circuit.codegen.annotations.CircuitInject
 import com.slack.circuit.retained.collectAsRetainedState
 import com.slack.circuit.retained.rememberRetained
@@ -29,6 +28,7 @@ import dagger.assisted.AssistedInject
 import dagger.hilt.components.SingletonComponent
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import recipe.app.core.errorformater.ErrorFormatter
 
 class AuthPresenter @AssistedInject constructor(
     @Assisted internal val navigator: Navigator,

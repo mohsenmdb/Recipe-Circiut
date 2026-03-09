@@ -1,3 +1,3 @@
-package com.me.recipe.util.errorformater.exceptions
+package recipe.app.core.errorformater.exceptions
 
 class ReadableException(val readableMessage: String) : Exception(readableMessage)

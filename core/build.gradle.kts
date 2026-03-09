@@ -1,16 +1,17 @@
-import org.jetbrains.kotlin.gradle.dsl.JvmTarget
-
 plugins {
+    id("com.android.library")
+    alias(libs.plugins.hilt)
     alias(libs.plugins.ksp)
-    alias(libs.plugins.android.library)
-    alias(libs.plugins.kotlin.serialization)
+}
+
+ksp {
+    arg("circuit.codegen.mode", "hilt")
 }
 
 android {
-    namespace = "com.me.recipe.network"
-    compileSdk {
-        version = release(36)
-    }
+    namespace = "recipe.app.core"
+
+    compileSdk = 36
 
     defaultConfig {
         minSdk = 23
@@ -26,29 +27,28 @@ android {
             )
         }
     }
+
+    buildFeatures {
+        buildConfig = true
+    }
+
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
     }
 }
 
-kotlin {
-    compilerOptions {
-        jvmTarget.set(JvmTarget.JVM_17)
-    }
-}
-
 dependencies {
-    implementation(project(":shared"))
-    api(platform(libs.compose.bom))
-    implementation(libs.compose.runtime)
-
+    implementation(projects.network)
+    implementation(libs.androidx.core.ktx)
+    implementation(libs.androidx.appcompat)
+    implementation(libs.material)
     implementation(libs.hilt)
     ksp(libs.hilt.compiler)
-
-    implementation(libs.retrofit)
-    implementation(libs.okhttp.logging.interceptor)
-    implementation(libs.kotlinx.serialization.json)
-    implementation(libs.retrofit.converter)
     implementation(libs.timber)
+    implementation(libs.retrofit)
+    implementation(libs.kotlinx.serialization.json)
+
+    testImplementation(libs.junit)
+    androidTestImplementation(libs.androidx.test.ext)
 }

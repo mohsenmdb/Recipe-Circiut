@@ -1,4 +1,4 @@
-package com.me.recipe.util.errorformater
+package recipe.app.core.errorformater
 
 import android.content.Context
 import androidx.annotation.StringRes

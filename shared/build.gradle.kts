@@ -3,7 +3,6 @@ import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 plugins {
     alias(libs.plugins.ksp)
     alias(libs.plugins.android.library)
-    alias(libs.plugins.spotless)
 }
 
 android {
@@ -38,18 +37,6 @@ kotlin {
     }
 }
 
-spotless {
-    kotlin {
-        target("src/**/*.kt")
-        ktlint()
-    }
-
-    kotlinGradle {
-        target("*.kts")
-        ktlint()
-    }
-}
-
 dependencies {
     api(platform(libs.compose.bom))
     implementation(libs.compose.runtime)
@@ -59,5 +46,4 @@ dependencies {
 
     implementation(libs.hilt)
     ksp(libs.hilt.compiler)
-    compileOnly(libs.spotless.gradlePlugin)
 }

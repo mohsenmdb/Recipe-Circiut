@@ -3,7 +3,6 @@ import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 plugins {
     alias(libs.plugins.ksp)
     alias(libs.plugins.android.library)
-    alias(libs.plugins.spotless)
 }
 
 android {
@@ -38,28 +37,17 @@ kotlin {
     }
 }
 
-spotless {
-    kotlin {
-        target("src/**/*.kt")
-        ktlint()
-    }
-
-    kotlinGradle {
-        target("*.kts")
-        ktlint()
-    }
-}
-
 dependencies {
-    implementation(project(":shared"))
-    implementation(project(":network"))
-    implementation(project(":domain"))
-    implementation(project(":cache"))
+    with(projects) {
+        implementation(shared)
+        implementation(network)
+        implementation(domain)
+        implementation(cache)
+    }
 
     implementation(libs.hilt)
     ksp(libs.hilt.compiler)
     implementation(libs.kotlinx.collections.immutable)
     implementation(libs.timber)
     implementation(libs.squareup.okhttp)
-    compileOnly(libs.spotless.gradlePlugin)
 }

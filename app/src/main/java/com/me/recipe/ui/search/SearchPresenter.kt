@@ -30,7 +30,6 @@ import com.me.recipe.ui.search.SearchEvent.OnRecipeClick
 import com.me.recipe.ui.search.SearchEvent.OnRecipeLongClick
 import com.me.recipe.ui.search.SearchEvent.OnSelectedCategoryChanged
 import com.me.recipe.ui.search.SearchEvent.SearchClearEvent
-import com.me.recipe.util.errorformater.ErrorFormatter
 import com.slack.circuit.codegen.annotations.CircuitInject
 import com.slack.circuit.retained.collectAsRetainedState
 import com.slack.circuit.retained.rememberRetained
@@ -46,6 +45,7 @@ import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toPersistentList
 import kotlinx.coroutines.launch
+import recipe.app.core.errorformater.ErrorFormatter
 
 class SearchPresenter @AssistedInject constructor(
     @Assisted private val screen: SearchScreen,

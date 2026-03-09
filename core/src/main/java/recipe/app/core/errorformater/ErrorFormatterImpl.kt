@@ -1,10 +1,6 @@
-package com.me.recipe.util.errorformater
+package recipe.app.core.errorformater
 
 import android.content.Context
-import com.me.recipe.BuildConfig
-import com.me.recipe.R
-import com.me.recipe.util.errorformater.exceptions.ReadableException
-import com.me.recipe.util.errorformater.exceptions.RecipeDataException
 import dagger.hilt.android.qualifiers.ApplicationContext
 import java.net.ConnectException
 import java.net.SocketTimeoutException
@@ -12,6 +8,10 @@ import java.net.UnknownHostException
 import java.util.concurrent.TimeoutException
 import javax.inject.Inject
 import javax.net.ssl.SSLHandshakeException
+import recipe.app.core.BuildConfig
+import recipe.app.core.R
+import recipe.app.core.errorformater.exceptions.ReadableException
+import recipe.app.core.errorformater.exceptions.RecipeDataException
 import retrofit2.HttpException
 
 class ErrorFormatterImpl @Inject constructor(

@@ -2,9 +2,9 @@ package com.me.recipe.domain.features.auth.usecase
 
 import com.me.recipe.domain.features.auth.model.Register
 import com.me.recipe.domain.features.auth.repository.AuthRepository
-import com.me.recipe.shared.utils.Result
-import com.me.recipe.shared.utils.runAsResult
 import javax.inject.Inject
+import recipe.app.core.Result
+import recipe.app.core.runAsResult
 
 class RegisterUseCase @Inject constructor(
     private val repository: AuthRepository,
