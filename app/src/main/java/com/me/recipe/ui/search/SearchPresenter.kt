@@ -8,10 +8,11 @@ import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import com.me.recipe.BuildConfig
 import com.me.recipe.R
 import com.me.recipe.domain.features.recipe.model.Recipe
-import com.me.recipe.domain.features.recipelist.usecases.RestoreRecipesUsecase
-import com.me.recipe.domain.features.recipelist.usecases.SearchRecipesUsecase
+import com.me.recipe.domain.features.recipelist.usecases.RestoreRecipesUseCase
+import com.me.recipe.domain.features.recipelist.usecases.SearchRecipesUseCase
 import com.me.recipe.domain.util.ForceFresh
 import com.me.recipe.shared.utils.FoodCategory
 import com.me.recipe.shared.utils.RECIPE_PAGINATION_FIRST_PAGE
@@ -44,14 +45,15 @@ import dagger.hilt.components.SingletonComponent
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toPersistentList
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import recipe.app.core.errorformater.ErrorFormatter
 
 class SearchPresenter @AssistedInject constructor(
     @Assisted private val screen: SearchScreen,
     @Assisted internal val navigator: Navigator,
-    private val searchRecipesUsecase: Lazy<SearchRecipesUsecase>,
-    private val restoreRecipesUsecase: Lazy<RestoreRecipesUsecase>,
+    private val searchRecipesUseCase: Lazy<SearchRecipesUseCase>,
+    private val restoreRecipesUseCase: Lazy<RestoreRecipesUseCase>,
     private val errorFormatter: Lazy<ErrorFormatter>,
 ) : Presenter<SearchState> {
 
@@ -69,19 +71,24 @@ class SearchPresenter @AssistedInject constructor(
         var searchText by rememberRetained { mutableStateOf("") }
         var query by rememberRetained { mutableStateOf(screen.query) }
         var categoriesScrollPosition by rememberRetained { mutableStateOf(0 to 0) }
-        val recipes by searchRecipesUsecase.get().flow.collectAsRetainedState(initial = null)
-        val restoredRecipes by restoreRecipesUsecase.get().flow.collectAsRetainedState(initial = null)
-        val recipesResult = recipes?.getOrNull()
+        val recipes by searchRecipesUseCase.get().flow.collectAsRetainedState(initial = null)
+        val restoredRecipes by restoreRecipesUseCase.get().flow.collectAsRetainedState(initial = null)
+        var recipesResult by remember(recipes?.getOrNull()) { mutableStateOf(recipes?.getOrNull()) }
         val restoredRecipesResult = restoredRecipes?.getOrNull()
         var appendedRecipes by rememberRetained { mutableStateOf<ImmutableList<Recipe>>(persistentListOf()) }
         var appendingLoading by rememberRetained { mutableStateOf(false) }
+        var isLoading by remember(appendedRecipes, recipesResult, recipes?.exceptionOrNull()) {
+            mutableStateOf(appendedRecipes.isEmpty() && recipesResult == null && recipes?.exceptionOrNull() == null)
+        }
         LaunchedEffect(key1 = query, key2 = recipeListPage, key3 = forceRefresher) {
+            if (BuildConfig.DEBUG) delay(1000)
             if (recipeListPage > 1 && appendedRecipes.isEmpty()) {
-                restoreRecipesUsecase.get().invoke(RestoreRecipesUsecase.Params(query = query, page = recipeListPage))
+                restoreRecipesUseCase.get().invoke(RestoreRecipesUseCase.Params(query = query, page = recipeListPage))
                 return@LaunchedEffect
             }
 
-            searchRecipesUsecase.get().invoke(SearchRecipesUsecase.Params(query = query, page = recipeListPage, refresher = forceRefresher))
+            searchRecipesUseCase.get().invoke(SearchRecipesUseCase.Params(query = query, page = recipeListPage, refresher = forceRefresher))
+            isLoading = false
         }
         LaunchedEffect(recipesResult, restoredRecipesResult) {
             if (!restoredRecipesResult.isNullOrEmpty() && recipesResult.isNullOrEmpty()) {
@@ -93,7 +100,6 @@ class SearchPresenter @AssistedInject constructor(
             }
             appendingLoading = false
         }
-        var loading by remember(appendedRecipes, recipes?.exceptionOrNull()) { mutableStateOf(appendedRecipes.isEmpty() && recipes?.exceptionOrNull() == null) }
 
         LaunchedEffect(recipes?.exceptionOrNull()) {
             if (recipes?.exceptionOrNull() != null) {
@@ -105,7 +111,7 @@ class SearchPresenter @AssistedInject constructor(
                             positiveBtnTxt = R.string.try_again,
                             onPositiveAction = {
                                 forceRefresher = ForceFresh.refresh()
-                                loading = true
+                                isLoading = true
                                 errorDialogInfo = null
                             },
                         ),
@@ -115,6 +121,7 @@ class SearchPresenter @AssistedInject constructor(
             }
         }
         fun resetSearchState() {
+            recipesResult = null
             appendedRecipes = persistentListOf()
             recipeListPage = RECIPE_PAGINATION_FIRST_PAGE
             recipeScrollPosition = INITIAL_RECIPE_LIST_POSITION
@@ -126,6 +133,7 @@ class SearchPresenter @AssistedInject constructor(
             categoriesScrollPosition = position to offset
         }
         fun onNewSearchEvent() {
+            isLoading = true
             selectedCategory = null
             resetSearchState()
             query = searchText
@@ -141,7 +149,7 @@ class SearchPresenter @AssistedInject constructor(
             )
         }
         fun checkReachEndOfTheList(position: Int): Boolean {
-            if ((position + 1) < (recipeListPage * RECIPE_PAGINATION_PAGE_SIZE) || loading) return false
+            if ((position + 1) < (recipeListPage * RECIPE_PAGINATION_PAGE_SIZE) || isLoading) return false
             if ((recipeScrollPosition + 1) < (recipeListPage * RECIPE_PAGINATION_PAGE_SIZE)) return false
             return true
         }
@@ -154,7 +162,8 @@ class SearchPresenter @AssistedInject constructor(
         }
         return SearchState(
             recipes = appendedRecipes,
-            loading = loading,
+            isLoading = isLoading,
+            isEmpty = appendedRecipes.isEmpty(),
             appendingLoading = appendingLoading,
             selectedCategory = selectedCategory,
             categoryScrollPosition = categoriesScrollPosition,
@@ -164,6 +173,7 @@ class SearchPresenter @AssistedInject constructor(
             eventSink = { event ->
                 when (event) {
                     is OnSelectedCategoryChanged -> {
+                        isLoading = true
                         onSelectedCategoryChanged(event.category, event.position, event.offset)
                     }
                     is OnQueryChanged -> {

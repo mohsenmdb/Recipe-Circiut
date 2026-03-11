@@ -41,4 +41,5 @@
     <string name="ingredients">Ingredients</string>
     <string name="ingredients_placeholder">e.g. Eggs, Milk, Flour...</string>
     <string name="description">Description</string>
+    <string name="no_food">There is no food to eat!</string>
 </resources>

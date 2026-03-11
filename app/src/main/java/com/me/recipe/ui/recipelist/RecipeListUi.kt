@@ -46,7 +46,8 @@ internal fun RecipeListUi(
     ) { padding ->
         SearchContent(
             recipes = state.recipes,
-            showShimmer = state.loading,
+            isLoading = state.isLoading,
+            isEmpty = state.isEmpty,
             showLoadingProgressBar = state.appendingLoading,
             onRecipeClicked = { state.eventSink.invoke(RecipeListEvent.OnRecipeClick(it)) },
             onRecipeLongClicked = { state.eventSink.invoke(RecipeListEvent.OnRecipeLongClick(it)) },

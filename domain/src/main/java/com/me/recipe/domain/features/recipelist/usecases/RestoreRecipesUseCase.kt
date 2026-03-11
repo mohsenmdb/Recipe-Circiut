@@ -13,9 +13,9 @@ import kotlinx.coroutines.flow.map
  * Restore a list of recipes after process death.
  */
 
-class RestoreRecipesUsecase @Inject constructor(
+class RestoreRecipesUseCase @Inject constructor(
     private val recipeListRepository: RecipeListRepository,
-) : SubjectInteractor<RestoreRecipesUsecase.Params, Result<ImmutableList<Recipe>>>() {
+) : SubjectInteractor<RestoreRecipesUseCase.Params, Result<ImmutableList<Recipe>>>() {
     data class Params(
         val page: Int,
         val query: String,

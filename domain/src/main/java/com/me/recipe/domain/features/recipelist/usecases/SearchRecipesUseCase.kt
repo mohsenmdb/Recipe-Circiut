@@ -12,9 +12,9 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.map
 
-class SearchRecipesUsecase @Inject constructor(
+class SearchRecipesUseCase @Inject constructor(
     private val recipeListRepository: RecipeListRepository,
-) : SubjectInteractor<SearchRecipesUsecase.Params, Result<ImmutableList<Recipe>>>() {
+) : SubjectInteractor<SearchRecipesUseCase.Params, Result<ImmutableList<Recipe>>>() {
     data class Params(
         val page: Int = RECIPE_PAGINATION_FIRST_PAGE,
         val query: String = "",

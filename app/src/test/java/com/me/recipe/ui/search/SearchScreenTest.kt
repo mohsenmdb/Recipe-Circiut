@@ -45,7 +45,7 @@ class SearchScreenTest {
         val loadedState = SearchState.testData()
         val loadingState = SearchState.testData().copy(
             recipes = persistentListOf(),
-            loading = true,
+            isLoading = true,
         )
         robot(robotTestRule) {
             setRecipeListScreenLoadingThenLoaded(loadingState, loadedState)
@@ -59,7 +59,7 @@ class SearchScreenTest {
 
     @Test
     fun `while loading data show shimmer correctly`() {
-        val state = SearchState.testData().copy(loading = true)
+        val state = SearchState.testData().copy(isLoading = true)
         robot(robotTestRule) {
             setSearchScreen(state)
             assertRecipeShimmerIsDisplay()
