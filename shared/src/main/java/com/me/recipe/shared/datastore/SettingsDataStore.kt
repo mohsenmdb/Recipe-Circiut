@@ -33,12 +33,12 @@ constructor(
         observeDataStore()
     }
 
-    val isDark = mutableStateOf(false)
+    val isDark = mutableStateOf(true)
 
     fun toggleTheme() {
         scope.launch {
             context.dataStore.edit { preferences ->
-                val current = preferences[DARK_THEME_KEY] ?: false
+                val current = preferences[DARK_THEME_KEY] ?: true
                 preferences[DARK_THEME_KEY] = !current
             }
         }
