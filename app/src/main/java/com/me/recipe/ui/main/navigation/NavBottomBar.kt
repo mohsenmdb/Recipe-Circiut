@@ -13,6 +13,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.util.fastForEach
 import com.me.recipe.ui.addrecipe.AddRecipeScreen
 import com.me.recipe.ui.auth.AuthScreen
 import com.me.recipe.ui.home.HomeScreen
@@ -23,8 +24,8 @@ import com.slack.circuit.runtime.screen.Screen
 
 @Composable
 internal fun NavBottomBar(
-    selectedIndex: Int,
-    onIndexChanged: (Int) -> Unit,
+    selectedTab: NavigationTabs,
+    onIndexChanged: (NavigationTabs) -> Unit,
     navigator: Navigator,
     isUserLoggedIn: Boolean,
 ) {
@@ -46,14 +47,14 @@ internal fun NavBottomBar(
         ) {
             val menu =
                 if (isUserLoggedIn) bottomNavigationScreensWithLogin else bottomNavigationScreens
-            menu.forEachIndexed { index, tab ->
+            menu.fastForEach { tab ->
                 NavigationBarItem(
                     icon = { Icon(imageVector = tab.icon!!, contentDescription = null) },
                     label = { Text(stringResource(tab.titleRes)) },
-                    selected = selectedIndex == index,
+                    selected = selectedTab == tab,
                     colors = itemColors,
                     onClick = {
-                        onIndexChanged(index)
+                        onIndexChanged(tab)
                         navigator.resetRoot(
                             newRoot = getScreenForTab(tab, isUserLoggedIn),
                             options = Navigator.StateOptions(
@@ -68,11 +69,11 @@ internal fun NavBottomBar(
     }
 }
 
-private fun getScreenForTab(tab: NavigationDestination, isUserLoggedIn: Boolean) = when (tab) {
-    HomeDestination -> HomeScreen()
-    SearchDestination -> SearchScreen()
-    ProfileDestination -> if (isUserLoggedIn) ProfileScreen else AuthScreen
-    AddRecipeDestination -> AddRecipeScreen
+private fun getScreenForTab(tab: NavigationTabs, isUserLoggedIn: Boolean) = when (tab) {
+    HomeTab -> HomeScreen()
+    SearchTab -> SearchScreen()
+    ProfileTab -> if (isUserLoggedIn) ProfileScreen else AuthScreen
+    AddRecipeTab -> AddRecipeScreen
     else -> HomeScreen()
 }
 
