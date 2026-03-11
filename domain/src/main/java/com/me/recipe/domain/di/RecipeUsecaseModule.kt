@@ -3,8 +3,8 @@ package com.me.recipe.domain.di
 import com.me.recipe.domain.features.recipe.repository.RecipeRepository
 import com.me.recipe.domain.features.recipe.usecases.GetRecipeUseCase
 import com.me.recipe.domain.features.recipelist.repository.RecipeListRepository
-import com.me.recipe.domain.features.recipelist.usecases.RestoreRecipesUsecase
-import com.me.recipe.domain.features.recipelist.usecases.SearchRecipesUsecase
+import com.me.recipe.domain.features.recipelist.usecases.RestoreRecipesUseCase
+import com.me.recipe.domain.features.recipelist.usecases.SearchRecipesUseCase
 import com.me.recipe.domain.features.recipelist.usecases.TopRecipeUsecase
 import dagger.Module
 import dagger.Provides
@@ -20,16 +20,16 @@ object RecipeUsecaseModule {
     @Provides
     fun provideSearchRecipeUsecase(
         recipeListRepository: RecipeListRepository,
-    ): SearchRecipesUsecase {
-        return SearchRecipesUsecase(recipeListRepository = recipeListRepository)
+    ): SearchRecipesUseCase {
+        return SearchRecipesUseCase(recipeListRepository = recipeListRepository)
     }
 
     @ViewModelScoped
     @Provides
     fun provideRestoreRecipesUsecase(
         recipeListRepository: RecipeListRepository,
-    ): RestoreRecipesUsecase {
-        return RestoreRecipesUsecase(recipeListRepository = recipeListRepository)
+    ): RestoreRecipesUseCase {
+        return RestoreRecipesUseCase(recipeListRepository = recipeListRepository)
     }
 
     @ViewModelScoped
