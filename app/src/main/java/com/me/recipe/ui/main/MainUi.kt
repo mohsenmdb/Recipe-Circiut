@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
@@ -29,13 +28,12 @@ internal fun MainUi(
 ) {
     val backstack = rememberSaveableBackStack(root = HomeScreen())
     val navigator = rememberCircuitNavigator(backstack)
-    var selectedIndex by remember { mutableIntStateOf(0) }
     Scaffold(
         modifier = modifier.fillMaxSize(),
         bottomBar = {
             NavBottomBar(
-                selectedIndex = selectedIndex,
-                onIndexChanged = { selectedIndex = it },
+                selectedTab = state.selectedTab,
+                onIndexChanged = { state.eventSink.invoke(MainEvent.OnSelectedTabChanged(tab = it)) },
                 navigator = navigator,
                 isUserLoggedIn = state.isUserLoggedIn,
             )
