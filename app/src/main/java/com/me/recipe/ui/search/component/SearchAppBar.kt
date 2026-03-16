@@ -24,6 +24,9 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalFocusManager
@@ -36,26 +39,18 @@ import com.me.recipe.shared.utils.FoodCategory
 import com.me.recipe.shared.utils.getAllFoodCategories
 import com.me.recipe.ui.search.component.chip.FoodCategoryChip
 import com.me.recipe.ui.theme.RecipeTheme
+import com.slack.circuit.retained.rememberRetained
 
 @Composable
 internal fun SearchAppBar(
     query: String,
     selectedCategory: FoodCategory?,
-    categoryScrollPosition: Pair<Int, Int>,
     onQueryChanged: (String) -> Unit,
     newSearch: () -> Unit,
     onSearchClearClicked: () -> Unit,
-    onSelectedCategoryChanged: (category: String, position: Int, offset: Int) -> Unit,
+    onSelectedCategoryChanged: (category: String) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    val scrollState = rememberLazyListState()
-    LaunchedEffect(key1 = scrollState) {
-        scrollState.scrollToItem(
-            categoryScrollPosition.first,
-            categoryScrollPosition.second,
-        )
-    }
-
     Surface(
         modifier = modifier.fillMaxWidth(),
         color = MaterialTheme.colorScheme.primaryContainer,
@@ -64,14 +59,9 @@ internal fun SearchAppBar(
         Column {
             SearchTextField(query, onQueryChanged, newSearch, onSearchClearClicked)
             FoodChipsRow(
-                scrollState,
-                selectedCategory,
+                selectedCategory = selectedCategory,
                 onSelectedCategoryChanged = {
-                    onSelectedCategoryChanged(
-                        it,
-                        scrollState.firstVisibleItemIndex,
-                        scrollState.firstVisibleItemScrollOffset,
-                    )
+                    onSelectedCategoryChanged(it)
                 },
             )
         }
@@ -137,13 +127,11 @@ private fun SearchTextField(
 
 @Composable
 private fun FoodChipsRow(
-    scrollState: LazyListState,
     selectedCategory: FoodCategory?,
     onSelectedCategoryChanged: (String) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     LazyRow(
-        state = scrollState,
         contentPadding = PaddingValues(horizontal = 8.dp, vertical = 8.dp),
         horizontalArrangement = Arrangement.spacedBy(8.dp),
         modifier = modifier.testTag("testTag_FoodChipsRow"),
@@ -167,10 +155,9 @@ private fun SearchAppBarPreview() {
         SearchAppBar(
             query = FoodCategory.CHICKEN.name,
             selectedCategory = FoodCategory.CHICKEN,
-            categoryScrollPosition = Pair(0, 0),
             onQueryChanged = {},
             newSearch = {},
-            onSelectedCategoryChanged = { _, _, _ -> },
+            onSelectedCategoryChanged = { _ -> },
             onSearchClearClicked = {},
         )
     }

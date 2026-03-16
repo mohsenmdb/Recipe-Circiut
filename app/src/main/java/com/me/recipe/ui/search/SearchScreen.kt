@@ -27,7 +27,6 @@ data class SearchState(
     val isLoading: Boolean = false,
     val isEmpty: Boolean = false,
     val appendingLoading: Boolean = false,
-    var categoryScrollPosition: Pair<Int, Int> = 0 to 0,
     val eventSink: SearchEventSink,
 ) : CircuitUiState {
     companion object {
@@ -45,7 +44,7 @@ sealed interface SearchEvent : CircuitUiEvent {
     data object NewSearchEvent : SearchEvent
     data object SearchClearEvent : SearchEvent
     data class OnQueryChanged(val query: String) : SearchEvent
-    data class OnSelectedCategoryChanged(val category: String, val position: Int = 0, val offset: Int = 0) : SearchEvent
+    data class OnSelectedCategoryChanged(val category: String) : SearchEvent
     data class OnRecipeLongClick(val title: String) : SearchEvent
     data class OnRecipeClick(val recipe: Recipe) : SearchEvent
     data class OnChangeRecipeScrollPosition(val index: Int) : SearchEvent

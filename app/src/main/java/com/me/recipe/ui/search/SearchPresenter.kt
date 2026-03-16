@@ -70,7 +70,6 @@ class SearchPresenter @AssistedInject constructor(
         var selectedCategory by rememberRetained { mutableStateOf<FoodCategory?>(null) }
         var searchText by rememberRetained { mutableStateOf("") }
         var query by rememberRetained { mutableStateOf(screen.query) }
-        var categoriesScrollPosition by rememberRetained { mutableStateOf(0 to 0) }
         val recipes by searchRecipesUseCase.get().flow.collectAsRetainedState(initial = null)
         val restoredRecipes by restoreRecipesUseCase.get().flow.collectAsRetainedState(initial = null)
         var recipesResult by remember(recipes?.getOrNull()) { mutableStateOf(recipes?.getOrNull()) }
@@ -126,11 +125,10 @@ class SearchPresenter @AssistedInject constructor(
             recipeListPage = RECIPE_PAGINATION_FIRST_PAGE
             recipeScrollPosition = INITIAL_RECIPE_LIST_POSITION
         }
-        fun onSelectedCategoryChanged(category: String, position: Int, offset: Int) {
+        fun onSelectedCategoryChanged(category: String) {
             resetSearchState()
             selectedCategory = getFoodCategory(category)
             query = category
-            categoriesScrollPosition = position to offset
         }
         fun onNewSearchEvent() {
             isLoading = true
@@ -166,7 +164,6 @@ class SearchPresenter @AssistedInject constructor(
             isEmpty = appendedRecipes.isEmpty(),
             appendingLoading = appendingLoading,
             selectedCategory = selectedCategory,
-            categoryScrollPosition = categoriesScrollPosition,
             query = searchText,
             message = message,
             errors = errorDialogInfo,
@@ -174,7 +171,7 @@ class SearchPresenter @AssistedInject constructor(
                 when (event) {
                     is OnSelectedCategoryChanged -> {
                         isLoading = true
-                        onSelectedCategoryChanged(event.category, event.position, event.offset)
+                        onSelectedCategoryChanged(event.category)
                     }
                     is OnQueryChanged -> {
                         searchText = event.query

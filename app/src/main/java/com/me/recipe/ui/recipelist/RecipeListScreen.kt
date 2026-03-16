@@ -29,7 +29,6 @@ data class RecipeListState(
     val isLoading: Boolean = false,
     val isEmpty: Boolean = false,
     val appendingLoading: Boolean = false,
-    var categoryScrollPosition: Pair<Int, Int> = 0 to 0,
     val eventSink: RecipeListEventSink,
 ) : CircuitUiState {
     companion object {

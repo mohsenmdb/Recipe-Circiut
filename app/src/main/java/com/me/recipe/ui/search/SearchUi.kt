@@ -38,14 +38,11 @@ internal fun SearchUi(
             SearchAppBar(
                 query = state.query,
                 selectedCategory = state.selectedCategory,
-                categoryScrollPosition = state.categoryScrollPosition,
                 onQueryChanged = { state.eventSink.invoke(SearchEvent.OnQueryChanged(it)) },
                 newSearch = { state.eventSink.invoke(SearchEvent.NewSearchEvent) },
                 onSearchClearClicked = { state.eventSink.invoke(SearchEvent.SearchClearEvent) },
-                onSelectedCategoryChanged = { category, position, offset ->
-                    state.eventSink.invoke(
-                        SearchEvent.OnSelectedCategoryChanged(category, position, offset),
-                    )
+                onSelectedCategoryChanged = { category ->
+                    state.eventSink.invoke(SearchEvent.OnSelectedCategoryChanged(category))
                 },
             )
         },
