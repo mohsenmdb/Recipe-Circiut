@@ -2,17 +2,26 @@ package com.me.recipe.ui.search
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.RememberObserver
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.paging.PagingConfig
+import androidx.paging.PagingData
+import androidx.paging.PagingSource
+import androidx.paging.cachedIn
+import androidx.paging.compose.collectAsLazyPagingItems
 import com.me.recipe.BuildConfig
 import com.me.recipe.R
+import com.me.recipe.data.features.search.VitrineRepositoryDefault.Companion.FIRST_PAGE
 import com.me.recipe.domain.features.recipe.model.Recipe
 import com.me.recipe.domain.features.recipelist.usecases.RestoreRecipesUseCase
 import com.me.recipe.domain.features.recipelist.usecases.SearchRecipesUseCase
+import com.me.recipe.domain.features.search.ObservePagedVitrineNew
+import com.me.recipe.domain.features.search.VitrinePagingKey
 import com.me.recipe.domain.util.ForceFresh
 import com.me.recipe.shared.utils.FoodCategory
 import com.me.recipe.shared.utils.RECIPE_PAGINATION_FIRST_PAGE
@@ -45,9 +54,15 @@ import dagger.hilt.components.SingletonComponent
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toPersistentList
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.cancel
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import recipe.app.core.errorformater.ErrorFormatter
+import timber.log.Timber
 
 class SearchPresenter @AssistedInject constructor(
     @Assisted private val screen: SearchScreen,
@@ -55,6 +70,8 @@ class SearchPresenter @AssistedInject constructor(
     private val searchRecipesUseCase: Lazy<SearchRecipesUseCase>,
     private val restoreRecipesUseCase: Lazy<RestoreRecipesUseCase>,
     private val errorFormatter: Lazy<ErrorFormatter>,
+    private val pagingInteractor: Lazy<ObservePagedVitrineNew>,
+    private val vitrinePagingSource: Lazy<PagingSource<VitrinePagingKey, Recipe>>,
 ) : Presenter<SearchState> {
 
     @Composable
@@ -64,6 +81,26 @@ class SearchPresenter @AssistedInject constructor(
         val message by uiMessageManager.message.collectAsState(null)
         var errorDialogInfo by rememberRetained { mutableStateOf<GenericDialogInfo?>(null) }
         var forceRefresher by rememberRetained { mutableStateOf<ForceFresh?>(null) }
+
+
+        val retainedPagingInteractor = rememberRetained { pagingInteractor.get() }
+        val items = retainedPagingInteractor.flow
+            .rememberRetainedCachedPagingFlow()
+            .collectAsLazyPagingItems()
+
+        retainedPagingInteractor(
+            ObservePagedVitrineNew.Params(
+                pagingConfig = PAGING_CONFIG,
+                forceRefresh = forceRefresher,
+                key = VitrinePagingKey(
+                    query = screen.query,
+                    page = FIRST_PAGE,
+                    loadMore = false,
+                ),
+            ),
+        )
+
+        Timber.d("tezt items= ${items.itemCount} ${items.itemSnapshotList}")
 
         var recipeListPage by rememberRetained { mutableIntStateOf(RECIPE_PAGINATION_FIRST_PAGE) }
         var recipeScrollPosition by rememberRetained { mutableIntStateOf(INITIAL_RECIPE_LIST_POSITION) }
@@ -199,5 +236,41 @@ class SearchPresenter @AssistedInject constructor(
     }
     companion object {
         const val INITIAL_RECIPE_LIST_POSITION = 0
+        val PAGING_CONFIG = PagingConfig(
+            pageSize = 1,
+            initialLoadSize = 10,
+        )
     }
 }
+
+
+
+@Composable
+fun rememberRetainedCoroutineScope(): CoroutineScope {
+    return rememberRetained("coroutine_scope") {
+        RememberObserverHolder(
+            value = CoroutineScope(context = Dispatchers.Main + Job()),
+            onDestroy = CoroutineScope::cancel,
+        )
+    }.value
+}
+
+internal class RememberObserverHolder<T>(
+    val value: T,
+    private val onDestroy: (T) -> Unit,
+) : RememberObserver {
+    override fun onAbandoned() {
+        onDestroy(value)
+    }
+
+    override fun onForgotten() {
+        onDestroy(value)
+    }
+
+    override fun onRemembered() = Unit
+}
+
+@Composable
+inline fun <T : Any> Flow<PagingData<T>>.rememberRetainedCachedPagingFlow(
+    scope: CoroutineScope = rememberRetainedCoroutineScope(),
+): Flow<PagingData<T>> = rememberRetained(this, scope) { cachedIn(scope) }

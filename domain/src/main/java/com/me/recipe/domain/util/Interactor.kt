@@ -1,5 +1,7 @@
 package com.me.recipe.domain.util
 
+import androidx.paging.PagingConfig
+import androidx.paging.PagingData
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.minutes
 import kotlinx.atomicfu.atomic
@@ -110,4 +112,10 @@ abstract class SuspendingSubjectInteractor<P : Any, T> {
     }
 
     protected abstract fun createObservable(params: P): Flow<T>
+}
+
+abstract class PagingInteractor<P : PagingInteractor.Parameters<T>, T : Any> : SubjectInteractor<P, PagingData<T>>() {
+    interface Parameters<T : Any> {
+        val pagingConfig: PagingConfig
+    }
 }

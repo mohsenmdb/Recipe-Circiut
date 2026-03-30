@@ -49,4 +49,5 @@ dependencies {
     implementation(libs.kotlinx.collections.immutable)
     implementation(libs.kotlinx.atomicfu)
     implementation(libs.timber)
+    implementation(libs.androidx.paging.paging.common)
 }

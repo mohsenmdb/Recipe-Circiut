@@ -1,0 +1,53 @@
+package com.me.recipe.domain.features.search
+
+import androidx.paging.PagingSource
+import androidx.paging.PagingState
+import com.me.recipe.domain.features.recipe.model.Recipe
+import com.me.recipe.domain.features.search.repository.VitrineRepository
+import com.me.recipe.shared.utils.IoDispatcher
+import javax.inject.Inject
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.withContext
+
+class VitrinePagingSourceNew @Inject constructor(
+    private val repository: VitrineRepository,
+    @IoDispatcher private val ioDispatcher: CoroutineDispatcher,
+) : PagingSource<VitrinePagingKey, Recipe>() {
+
+    override fun getRefreshKey(state: PagingState<VitrinePagingKey, Recipe>): VitrinePagingKey? {
+        return state.anchorPosition?.let { anchorPosition ->
+            val anchorPageIndex = state.pages.indexOf(state.closestPageToPosition(anchorPosition))
+            state.pages.getOrNull(anchorPageIndex + 1)?.prevKey ?: state.pages.getOrNull(
+                anchorPageIndex - 1,
+            )?.nextKey
+        }
+    }
+
+    override suspend fun load(params: LoadParams<VitrinePagingKey>): LoadResult<VitrinePagingKey, Recipe> =
+        withContext(ioDispatcher) {
+            val key = requireNotNull(params.key) { "key was null for $params" }
+            try {
+                val (data: List<Recipe>, nextPageUrl) = repository.getVitrine(
+                    query = key.query,
+                    page = key.page,
+                    loadMore = key.loadMore,
+                )
+
+                val nextKey: VitrinePagingKey? = nextPageUrl.takeIf{it > 1}?.let {
+                        VitrinePagingKey(
+                            query = key.query,
+                            page = it,
+                            loadMore = true,
+                        )
+                    }
+
+                LoadResult.Page(
+                    data = data,
+                    nextKey = nextKey,
+                    prevKey = null,
+                )
+            } catch (e: Exception) {
+                LoadResult.Error(e)
+            }
+        }
+}
