@@ -37,11 +37,9 @@ class SearchScreenRobot @Inject constructor() {
         loadedState: @Composable () -> SearchState,
     ) {
         composeTestRule.setContent {
-            val loadedState = loadedState()
             val loadingState = loadingState()
-            var state by remember {
-                mutableStateOf(loadingState)
-            }
+            val loadedState = loadedState()
+            var state by remember { mutableStateOf(loadingState) }
             SearchUi(state = state)
             LaunchedEffect(Unit) {
                 delay(1000)
@@ -141,7 +139,7 @@ class SearchScreenRobot @Inject constructor() {
 
     context (RobotTestRule)
     private fun assertFirstRecipeImageIsDisplayed(recipe: Recipe) {
-        composeTestRule.onNodeWithTag("testTag_RecipeCard_Image_${recipe.id}", useUnmergedTree = true)
+        composeTestRule.onNodeWithTag("testTag_RecipeCard_${recipe.id}", useUnmergedTree = true)
             .assertIsDisplayed()
     }
 
@@ -159,7 +157,7 @@ class SearchScreenRobot @Inject constructor() {
 
     context (RobotTestRule)
     private fun assertLastRecipeImageIsDisplayed(recipe: Recipe) {
-        composeTestRule.onNodeWithTag("testTag_RecipeCard_Image_${recipe.id}", useUnmergedTree = true)
+        composeTestRule.onNodeWithTag("testTag_RecipeCard_${recipe.id}", useUnmergedTree = true)
             .assertIsDisplayed()
     }
 

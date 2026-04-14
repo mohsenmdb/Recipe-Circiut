@@ -14,6 +14,7 @@ import com.slack.circuit.runtime.CircuitUiState
 import com.slack.circuit.runtime.screen.Screen
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.parcelize.Parcelize
 
@@ -29,7 +30,6 @@ data class SearchState(
     val message: UiMessage? = null,
     val query: String = "",
     val selectedCategory: FoodCategory? = null,
-    val isLoading: Boolean = false,
     val isEmpty: Boolean = false,
     val appendingLoading: Boolean = false,
     val eventSink: SearchEventSink,
@@ -49,8 +49,10 @@ data class SearchState(
         )
 
         @Composable
-        fun testData() = SearchState(
-            items = flowOf(PagingData.from(testRecipes())).collectAsLazyPagingItems(),
+        fun testData(
+            pagingDataFlow: Flow<PagingData<Recipe>> = flowOf(PagingData.from(testRecipes())),
+        ) = SearchState(
+            items = pagingDataFlow.collectAsLazyPagingItems(),
             query = FoodCategory.CHICKEN.name,
             selectedCategory = FoodCategory.CHICKEN,
             eventSink = {},

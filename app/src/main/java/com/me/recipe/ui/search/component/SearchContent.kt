@@ -9,12 +9,13 @@ import com.me.recipe.domain.features.recipe.model.Recipe
 import com.me.recipe.ui.component.EmptyView
 import com.me.recipe.ui.search.SearchState
 import com.me.recipe.ui.search.component.shimmer.RecipeShimmer
+import com.me.recipe.ui.search.isRefreshing
 import com.me.recipe.ui.theme.RecipeTheme
+import kotlinx.coroutines.flow.flowOf
 
 @Composable
 internal fun SearchContent(
     items: LazyPagingItems<Recipe>,
-    isLoading: Boolean,
     isEmpty: Boolean,
     showLoadingProgressBar: Boolean,
     onRecipeClicked: (Recipe) -> Unit,
@@ -23,7 +24,7 @@ internal fun SearchContent(
     modifier: Modifier = Modifier,
 ) {
     when {
-        isLoading -> RecipeShimmer(imageHeight = 250.dp)
+        items.loadState.isRefreshing() && items.itemCount == 0 -> RecipeShimmer(imageHeight = 250.dp)
 
         isEmpty -> EmptyView()
 
@@ -46,7 +47,6 @@ private fun SearchContentPreview() {
     RecipeTheme(true) {
         SearchContent(
             items = SearchState.testData().items,
-            isLoading = false,
             isEmpty = false,
             showLoadingProgressBar = false,
             onRecipeClicked = {},
@@ -61,8 +61,22 @@ private fun SearchContentPreview() {
 private fun SearchContentShimmerPreview() {
     RecipeTheme(true) {
         SearchContent(
+            items = SearchState.testData(pagingDataFlow = flowOf()).items,
+            isEmpty = true,
+            showLoadingProgressBar = false,
+            onRecipeClicked = {},
+            onRecipeLongClicked = {},
+            onChangeRecipeScrollPosition = {},
+        )
+    }
+}
+
+@Preview
+@Composable
+private fun SearchContentEmptyPreview() {
+    RecipeTheme(true) {
+        SearchContent(
             items = SearchState.testData().items,
-            isLoading = true,
             isEmpty = true,
             showLoadingProgressBar = false,
             onRecipeClicked = {},

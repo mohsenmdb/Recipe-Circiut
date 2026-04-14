@@ -5,6 +5,7 @@ import com.me.recipe.ui.utils.RobotTestRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import dagger.hilt.android.testing.HiltTestApplication
 import javax.inject.Inject
+import kotlinx.coroutines.flow.flowOf
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -41,14 +42,15 @@ class SearchScreenTest {
     @Test
     fun `when state change from loading to loaded show correctly loading and loaded screens`() {
         robot(robotTestRule) {
+            mainClockAutoAdvance(false)
             setRecipeListScreenLoadingThenLoaded(
-                loadingState = { SearchState.testData().copy(isLoading = true) },
+                loadingState = { SearchState.testData(pagingDataFlow = flowOf()) },
                 loadedState = { SearchState.testData() },
             )
 
             checkScreenWhenStateIsLoading()
-            mainClockAutoAdvance(false)
             mainClockAdvanceTimeBy(1100)
+            robotTestRule.composeTestRule.waitForIdle()
             checkScreenWhenStateIsLoaded(SearchState.testRecipes())
         }
     }
@@ -56,7 +58,11 @@ class SearchScreenTest {
     @Test
     fun `while loading data show shimmer correctly`() {
         robot(robotTestRule) {
-            setSearchScreen { SearchState.testData().copy(isLoading = true) }
+            setSearchScreen {
+                SearchState.testData(
+                    pagingDataFlow = flowOf(),
+                )
+            }
             assertRecipeShimmerIsDisplay()
         }
     }

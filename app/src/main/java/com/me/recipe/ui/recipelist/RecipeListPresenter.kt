@@ -31,7 +31,6 @@ class RecipeListPresenter @AssistedInject constructor(
         return RecipeListState(
             query = screen.query,
             items = searchState.items,
-            isLoading = searchState.isLoading,
             isEmpty = searchState.isEmpty,
             appendingLoading = searchState.appendingLoading,
             selectedCategory = searchState.selectedCategory,

@@ -30,7 +30,6 @@ data class RecipeListState(
     val message: UiMessage? = null,
     val query: String = "",
     val selectedCategory: FoodCategory? = null,
-    val isLoading: Boolean = false,
     val isEmpty: Boolean = false,
     val appendingLoading: Boolean = false,
     val eventSink: RecipeListEventSink,

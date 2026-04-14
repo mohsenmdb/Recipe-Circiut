@@ -41,6 +41,7 @@ internal fun RecipeCard(
         modifier = modifier
             .padding(bottom = 6.dp, top = 6.dp, start = 12.dp, end = 12.dp)
             .fillMaxWidth()
+            .testTag("testTag_RecipeCard_${recipe.id}")
             .combinedClickable(onClick = onClick, onLongClick = onLongClick),
     ) {
         Column(modifier = Modifier.fillMaxWidth()) {
