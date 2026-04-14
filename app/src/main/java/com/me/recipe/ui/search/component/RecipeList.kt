@@ -6,10 +6,13 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.itemKey
 import com.me.recipe.domain.features.recipe.model.Recipe
+import com.me.recipe.ui.search.SearchState
+import com.me.recipe.ui.theme.RecipeTheme
 
 @Composable
 internal fun RecipeList(
@@ -49,16 +52,15 @@ internal fun RecipeList(
     }
 }
 
-// TODO fix me
-// @Preview
-// @Composable
-// private fun SearchContentPreview() {
-//    RecipeTheme(true) {
-//        RecipeList(
-//            recipes = SearchContract.State.testData().recipes,
-//            onRecipeClicked = {},
-//            onRecipeLongClicked = {},
-//            onChangeRecipeScrollPosition = {},
-//        )
-//    }
-// }
+@Preview
+@Composable
+private fun SearchContentPreview() {
+    RecipeTheme(true) {
+        RecipeList(
+            items = SearchState.testData().items,
+            onRecipeClicked = {},
+            onRecipeLongClicked = {},
+            onChangeRecipeScrollPosition = {},
+        )
+    }
+}

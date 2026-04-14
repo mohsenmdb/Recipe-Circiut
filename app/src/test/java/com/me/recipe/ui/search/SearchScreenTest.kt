@@ -5,7 +5,6 @@ import com.me.recipe.ui.utils.RobotTestRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import dagger.hilt.android.testing.HiltTestApplication
 import javax.inject.Inject
-import kotlinx.collections.immutable.persistentListOf
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -33,56 +32,53 @@ class SearchScreenTest {
 
     @Test
     fun `when all data is available then show recipe correctly`() {
-        val state = SearchState.testData()
         robot(robotTestRule) {
-            setSearchScreen(state)
-            checkScreenWhenStateIsLoaded(state)
+            setSearchScreen { SearchState.testData() }
+            checkScreenWhenStateIsLoaded(SearchState.testRecipes())
         }
     }
 
     @Test
     fun `when state change from loading to loaded show correctly loading and loaded screens`() {
-        val loadedState = SearchState.testData()
-        val loadingState = SearchState.testData().copy(
-            recipes = persistentListOf(),
-            isLoading = true,
-        )
         robot(robotTestRule) {
-            setRecipeListScreenLoadingThenLoaded(loadingState, loadedState)
+            setRecipeListScreenLoadingThenLoaded(
+                loadingState = { SearchState.testData().copy(isLoading = true) },
+                loadedState = { SearchState.testData() },
+            )
 
             checkScreenWhenStateIsLoading()
             mainClockAutoAdvance(false)
             mainClockAdvanceTimeBy(1100)
-            checkScreenWhenStateIsLoaded(loadedState)
+            checkScreenWhenStateIsLoaded(SearchState.testRecipes())
         }
     }
 
     @Test
     fun `while loading data show shimmer correctly`() {
-        val state = SearchState.testData().copy(isLoading = true)
         robot(robotTestRule) {
-            setSearchScreen(state)
+            setSearchScreen { SearchState.testData().copy(isLoading = true) }
             assertRecipeShimmerIsDisplay()
         }
     }
 
     @Test
     fun `while load more data show appending loading correctly`() {
-        val state = SearchState.testData().copy(appendingLoading = true)
         robot(robotTestRule) {
-            setSearchScreen(state)
+            setSearchScreen { SearchState.testData().copy(appendingLoading = true) }
             checkScreenWhenStateIsLoadedMore()
         }
     }
 
     @Test
     fun `when has error check error dialog show correctly`() {
-        val state = SearchState.testData().copy(
-            errors = GenericDialogInfo.testDate(),
-        )
+        val errors = GenericDialogInfo.testDate()
         robot(robotTestRule) {
-            setSearchScreen(state)
-            checkScreenWhenStateIsError(state.errors!!)
+            setSearchScreen {
+                SearchState.testData().copy(
+                    errors = errors,
+                )
+            }
+            checkScreenWhenStateIsError(errors)
         }
     }
 }

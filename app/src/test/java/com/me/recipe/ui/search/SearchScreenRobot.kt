@@ -1,5 +1,6 @@
 package com.me.recipe.ui.search
 
+import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -16,24 +17,28 @@ import com.me.recipe.shared.utils.getAllFoodCategories
 import com.me.recipe.ui.component.util.GenericDialogInfo
 import com.me.recipe.ui.utils.RobotTestRule
 import javax.inject.Inject
+import kotlinx.collections.immutable.ImmutableList
 import kotlinx.coroutines.delay
+
 class SearchScreenRobot @Inject constructor() {
 
     context (RobotTestRule)
     fun setSearchScreen(
-        state: SearchState,
+        state: @Composable () -> SearchState,
     ) {
         composeTestRule.setContent {
-            SearchUi(state = state)
+            SearchUi(state = state())
         }
     }
 
     context (RobotTestRule)
     fun setRecipeListScreenLoadingThenLoaded(
-        loadingState: SearchState,
-        loadedState: SearchState,
+        loadingState: @Composable () -> SearchState,
+        loadedState: @Composable () -> SearchState,
     ) {
         composeTestRule.setContent {
+            val loadedState = loadedState()
+            val loadingState = loadingState()
             var state by remember {
                 mutableStateOf(loadingState)
             }
@@ -61,7 +66,7 @@ class SearchScreenRobot @Inject constructor() {
 
     context (RobotTestRule)
     fun checkScreenWhenStateIsLoaded(
-        state: SearchState,
+        recipes: ImmutableList<Recipe>,
     ) {
         assertSearchTextFieldIsDisplayed()
         assertFoodChipsRowIsDisplayed()
@@ -71,13 +76,13 @@ class SearchScreenRobot @Inject constructor() {
         foodChipsRowScrollToIndex(category.lastIndex)
         assertLastFoodCategoryChipIsDisplayed(category)
 
-        assertFirstRecipeImageIsDisplayed(state.recipes.first())
-        assertFirstRecipeTitleIsDisplayed(state.recipes.first())
-        assertFirstRecipeRatingIsDisplayed(state.recipes.first())
-        recipeListScrollToIndex(state.recipes.lastIndex)
-        assertLastRecipeImageIsDisplayed(state.recipes.last())
-        assertLastRecipeTitleIsDisplayed(state.recipes.last())
-        assertLastRecipeRatingIsDisplayed(state.recipes.last())
+        assertFirstRecipeImageIsDisplayed(recipes.first())
+        assertFirstRecipeTitleIsDisplayed(recipes.first())
+        assertFirstRecipeRatingIsDisplayed(recipes.first())
+        recipeListScrollToIndex(recipes.lastIndex)
+        assertLastRecipeImageIsDisplayed(recipes.last())
+        assertLastRecipeTitleIsDisplayed(recipes.last())
+        assertLastRecipeRatingIsDisplayed(recipes.last())
     }
 
     context (RobotTestRule)

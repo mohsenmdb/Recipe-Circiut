@@ -44,8 +44,8 @@ internal fun RecipeListUi(
             )
         },
     ) { padding ->
-        // Todo fix me add items
         SearchContent(
+            items = state.items,
             isLoading = state.isLoading,
             isEmpty = state.isEmpty,
             showLoadingProgressBar = state.appendingLoading,

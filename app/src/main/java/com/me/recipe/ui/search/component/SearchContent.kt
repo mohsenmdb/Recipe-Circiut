@@ -7,11 +7,13 @@ import androidx.compose.ui.unit.dp
 import androidx.paging.compose.LazyPagingItems
 import com.me.recipe.domain.features.recipe.model.Recipe
 import com.me.recipe.ui.component.EmptyView
+import com.me.recipe.ui.search.SearchState
 import com.me.recipe.ui.search.component.shimmer.RecipeShimmer
 import com.me.recipe.ui.theme.RecipeTheme
 
 @Composable
 internal fun SearchContent(
+    items: LazyPagingItems<Recipe>,
     isLoading: Boolean,
     isEmpty: Boolean,
     showLoadingProgressBar: Boolean,
@@ -19,7 +21,6 @@ internal fun SearchContent(
     onRecipeLongClicked: (String) -> Unit,
     onChangeRecipeScrollPosition: (Int) -> Unit,
     modifier: Modifier = Modifier,
-    items: LazyPagingItems<Recipe>? = null,
 ) {
     when {
         isLoading -> RecipeShimmer(imageHeight = 250.dp)
@@ -39,12 +40,12 @@ internal fun SearchContent(
     }
 }
 
-// Todo fix me
 @Preview
 @Composable
 private fun SearchContentPreview() {
     RecipeTheme(true) {
         SearchContent(
+            items = SearchState.testData().items,
             isLoading = false,
             isEmpty = false,
             showLoadingProgressBar = false,
@@ -60,6 +61,7 @@ private fun SearchContentPreview() {
 private fun SearchContentShimmerPreview() {
     RecipeTheme(true) {
         SearchContent(
+            items = SearchState.testData().items,
             isLoading = true,
             isEmpty = true,
             showLoadingProgressBar = false,

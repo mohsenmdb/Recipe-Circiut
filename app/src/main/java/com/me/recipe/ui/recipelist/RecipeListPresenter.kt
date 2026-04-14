@@ -12,7 +12,6 @@ import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
 import dagger.hilt.components.SingletonComponent
-import kotlinx.collections.immutable.immutableListOf
 
 class RecipeListPresenter @AssistedInject constructor(
     @Assisted private val screen: RecipeListScreen,
@@ -31,7 +30,7 @@ class RecipeListPresenter @AssistedInject constructor(
         val searchState = searchPresenter.present()
         return RecipeListState(
             query = screen.query,
-            recipes = immutableListOf(),// Todo fix me
+            items = searchState.items,
             isLoading = searchState.isLoading,
             isEmpty = searchState.isEmpty,
             appendingLoading = searchState.appendingLoading,
