@@ -12,6 +12,7 @@ import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.itemKey
 import com.me.recipe.domain.features.recipe.model.Recipe
 import com.me.recipe.ui.search.SearchState
+import com.me.recipe.ui.search.isAppending
 import com.me.recipe.ui.theme.RecipeTheme
 
 @Composable
@@ -20,7 +21,6 @@ internal fun RecipeList(
     onRecipeLongClicked: (String) -> Unit,
     onChangeRecipeScrollPosition: (Int) -> Unit,
     modifier: Modifier = Modifier,
-    showLoadingProgressBar: Boolean = false,
     items: LazyPagingItems<Recipe>? = null,
 ) {
     LazyColumn(
@@ -44,7 +44,7 @@ internal fun RecipeList(
                 }
             },
         )
-        if (showLoadingProgressBar) {
+        if (items.loadState.isAppending()) {
             item {
                 AppendingLoadingView()
             }
@@ -58,6 +58,19 @@ private fun SearchContentPreview() {
     RecipeTheme(true) {
         RecipeList(
             items = SearchState.testData().items,
+            onRecipeClicked = {},
+            onRecipeLongClicked = {},
+            onChangeRecipeScrollPosition = {},
+        )
+    }
+}
+
+@Preview
+@Composable
+private fun SearchContentAppendingPreview() {
+    RecipeTheme(true) {
+        RecipeList(
+            items = SearchState.testData(SearchState.appendingTestData()).items,
             onRecipeClicked = {},
             onRecipeLongClicked = {},
             onChangeRecipeScrollPosition = {},

@@ -17,7 +17,6 @@ import kotlinx.coroutines.flow.flowOf
 internal fun SearchContent(
     items: LazyPagingItems<Recipe>,
     isEmpty: Boolean,
-    showLoadingProgressBar: Boolean,
     onRecipeClicked: (Recipe) -> Unit,
     onRecipeLongClicked: (String) -> Unit,
     onChangeRecipeScrollPosition: (Int) -> Unit,
@@ -34,7 +33,6 @@ internal fun SearchContent(
                 onRecipeClicked = onRecipeClicked,
                 onRecipeLongClicked = onRecipeLongClicked,
                 onChangeRecipeScrollPosition = onChangeRecipeScrollPosition,
-                showLoadingProgressBar = showLoadingProgressBar,
                 modifier = modifier,
             )
         }
@@ -48,7 +46,6 @@ private fun SearchContentPreview() {
         SearchContent(
             items = SearchState.testData().items,
             isEmpty = false,
-            showLoadingProgressBar = false,
             onRecipeClicked = {},
             onRecipeLongClicked = {},
             onChangeRecipeScrollPosition = {},
@@ -63,7 +60,22 @@ private fun SearchContentShimmerPreview() {
         SearchContent(
             items = SearchState.testData(pagingDataFlow = flowOf()).items,
             isEmpty = true,
-            showLoadingProgressBar = false,
+            onRecipeClicked = {},
+            onRecipeLongClicked = {},
+            onChangeRecipeScrollPosition = {},
+        )
+    }
+}
+
+@Preview
+@Composable
+private fun SearchContentAppendingPreview() {
+    RecipeTheme(true) {
+        SearchContent(
+            items = SearchState.testData(
+                pagingDataFlow = SearchState.appendingTestData(),
+            ).items,
+            isEmpty = false,
             onRecipeClicked = {},
             onRecipeLongClicked = {},
             onChangeRecipeScrollPosition = {},
@@ -78,7 +90,6 @@ private fun SearchContentEmptyPreview() {
         SearchContent(
             items = SearchState.testData().items,
             isEmpty = true,
-            showLoadingProgressBar = false,
             onRecipeClicked = {},
             onRecipeLongClicked = {},
             onChangeRecipeScrollPosition = {},

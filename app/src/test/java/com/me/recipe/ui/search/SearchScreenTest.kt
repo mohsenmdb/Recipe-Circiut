@@ -70,7 +70,11 @@ class SearchScreenTest {
     @Test
     fun `while load more data show appending loading correctly`() {
         robot(robotTestRule) {
-            setSearchScreen { SearchState.testData().copy(appendingLoading = true) }
+            setSearchScreen {
+                SearchState.testData(
+                    pagingDataFlow = SearchState.appendingTestData(),
+                )
+            }
             checkScreenWhenStateIsLoadedMore()
         }
     }
@@ -84,6 +88,7 @@ class SearchScreenTest {
                     errors = errors,
                 )
             }
+            robotTestRule.composeTestRule.waitForIdle()
             checkScreenWhenStateIsError(errors)
         }
     }

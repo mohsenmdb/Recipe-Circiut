@@ -47,7 +47,6 @@ internal fun RecipeListUi(
         SearchContent(
             items = state.items,
             isEmpty = state.isEmpty,
-            showLoadingProgressBar = state.appendingLoading,
             onRecipeClicked = { state.eventSink.invoke(RecipeListEvent.OnRecipeClick(it)) },
             onRecipeLongClicked = { state.eventSink.invoke(RecipeListEvent.OnRecipeLongClick(it)) },
             onChangeRecipeScrollPosition = { state.eventSink.invoke(RecipeListEvent.OnChangeRecipeScrollPosition(it)) },

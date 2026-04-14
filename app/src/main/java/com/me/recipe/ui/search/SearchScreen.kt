@@ -2,6 +2,8 @@ package com.me.recipe.ui.search
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Stable
+import androidx.paging.LoadState
+import androidx.paging.LoadStates
 import androidx.paging.PagingData
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
@@ -31,7 +33,6 @@ data class SearchState(
     val query: String = "",
     val selectedCategory: FoodCategory? = null,
     val isEmpty: Boolean = false,
-    val appendingLoading: Boolean = false,
     val eventSink: SearchEventSink,
 ) : CircuitUiState {
     companion object {
@@ -45,6 +46,17 @@ data class SearchState(
                 publisher = "Spice House",
                 rating = "18",
                 date = "Nov 13 2025",
+            ),
+        )
+
+        fun appendingTestData() = flowOf(
+            PagingData.from(
+                data = testRecipes(),
+                sourceLoadStates = LoadStates(
+                    refresh = LoadState.NotLoading(endOfPaginationReached = false),
+                    prepend = LoadState.NotLoading(endOfPaginationReached = true),
+                    append = LoadState.Loading,
+                ),
             ),
         )
 
