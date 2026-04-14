@@ -128,7 +128,6 @@ class SearchPresenter @AssistedInject constructor(
         }
         return SearchState(
             items = items,
-            isEmpty = items.loadState.isEmpty(items.itemCount),
             selectedCategory = selectedCategory,
             query = searchText,
             message = message,

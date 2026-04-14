@@ -30,7 +30,6 @@ data class RecipeListState(
     val message: UiMessage? = null,
     val query: String = "",
     val selectedCategory: FoodCategory? = null,
-    val isEmpty: Boolean = false,
     val eventSink: RecipeListEventSink,
 ) : CircuitUiState {
     companion object {

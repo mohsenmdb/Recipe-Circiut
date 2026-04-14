@@ -32,7 +32,6 @@ data class SearchState(
     val message: UiMessage? = null,
     val query: String = "",
     val selectedCategory: FoodCategory? = null,
-    val isEmpty: Boolean = false,
     val eventSink: SearchEventSink,
 ) : CircuitUiState {
     companion object {
@@ -56,6 +55,17 @@ data class SearchState(
                     refresh = LoadState.NotLoading(endOfPaginationReached = false),
                     prepend = LoadState.NotLoading(endOfPaginationReached = true),
                     append = LoadState.Loading,
+                ),
+            ),
+        )
+
+        fun emptyTestData() = flowOf(
+            PagingData.from(
+                data = emptyList<Recipe>(),
+                sourceLoadStates = LoadStates(
+                    refresh = LoadState.NotLoading(endOfPaginationReached = true),
+                    prepend = LoadState.NotLoading(endOfPaginationReached = true),
+                    append = LoadState.NotLoading(endOfPaginationReached = true),
                 ),
             ),
         )

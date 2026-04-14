@@ -9,6 +9,7 @@ import com.me.recipe.domain.features.recipe.model.Recipe
 import com.me.recipe.ui.component.EmptyView
 import com.me.recipe.ui.search.SearchState
 import com.me.recipe.ui.search.component.shimmer.RecipeShimmer
+import com.me.recipe.ui.search.isEmpty
 import com.me.recipe.ui.search.isRefreshing
 import com.me.recipe.ui.theme.RecipeTheme
 import kotlinx.coroutines.flow.flowOf
@@ -16,7 +17,6 @@ import kotlinx.coroutines.flow.flowOf
 @Composable
 internal fun SearchContent(
     items: LazyPagingItems<Recipe>,
-    isEmpty: Boolean,
     onRecipeClicked: (Recipe) -> Unit,
     onRecipeLongClicked: (String) -> Unit,
     onChangeRecipeScrollPosition: (Int) -> Unit,
@@ -25,7 +25,7 @@ internal fun SearchContent(
     when {
         items.loadState.isRefreshing() && items.itemCount == 0 -> RecipeShimmer(imageHeight = 250.dp)
 
-        isEmpty -> EmptyView()
+        items.loadState.isEmpty(items.itemCount) -> EmptyView()
 
         else -> {
             RecipeList(
@@ -45,7 +45,6 @@ private fun SearchContentPreview() {
     RecipeTheme(true) {
         SearchContent(
             items = SearchState.testData().items,
-            isEmpty = false,
             onRecipeClicked = {},
             onRecipeLongClicked = {},
             onChangeRecipeScrollPosition = {},
@@ -59,7 +58,6 @@ private fun SearchContentShimmerPreview() {
     RecipeTheme(true) {
         SearchContent(
             items = SearchState.testData(pagingDataFlow = flowOf()).items,
-            isEmpty = true,
             onRecipeClicked = {},
             onRecipeLongClicked = {},
             onChangeRecipeScrollPosition = {},
@@ -75,7 +73,6 @@ private fun SearchContentAppendingPreview() {
             items = SearchState.testData(
                 pagingDataFlow = SearchState.appendingTestData(),
             ).items,
-            isEmpty = false,
             onRecipeClicked = {},
             onRecipeLongClicked = {},
             onChangeRecipeScrollPosition = {},
@@ -88,8 +85,7 @@ private fun SearchContentAppendingPreview() {
 private fun SearchContentEmptyPreview() {
     RecipeTheme(true) {
         SearchContent(
-            items = SearchState.testData().items,
-            isEmpty = true,
+            items = SearchState.testData(SearchState.emptyTestData()).items,
             onRecipeClicked = {},
             onRecipeLongClicked = {},
             onChangeRecipeScrollPosition = {},

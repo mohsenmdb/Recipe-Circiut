@@ -49,7 +49,6 @@ internal fun SearchUi(
     ) { padding ->
         SearchContent(
             items = state.items,
-            isEmpty = state.isEmpty,
             onRecipeClicked = { state.eventSink.invoke(SearchEvent.OnRecipeClick(it)) },
             onRecipeLongClicked = { state.eventSink.invoke(SearchEvent.OnRecipeLongClick(it)) },
             onChangeRecipeScrollPosition = { state.eventSink.invoke(SearchEvent.OnChangeRecipeScrollPosition(it)) },
