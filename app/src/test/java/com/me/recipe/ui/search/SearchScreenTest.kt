@@ -80,6 +80,19 @@ class SearchScreenTest {
     }
 
     @Test
+    fun `when state is empty show empty state correctly`() {
+        robot(robotTestRule) {
+            setSearchScreen {
+                SearchState.testData(
+                    pagingDataFlow = SearchState.emptyTestData(),
+                )
+            }
+            robotTestRule.composeTestRule.waitForIdle()
+            checkScreenWhenStateIsEmpty()
+        }
+    }
+
+    @Test
     fun `when has error check error dialog show correctly`() {
         val errors = GenericDialogInfo.testDate()
         robot(robotTestRule) {

@@ -11,6 +11,7 @@ import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performScrollToIndex
 import androidx.test.platform.app.InstrumentationRegistry
+import com.me.recipe.R
 import com.me.recipe.domain.features.recipe.model.Recipe
 import com.me.recipe.shared.utils.FoodCategory
 import com.me.recipe.shared.utils.getAllFoodCategories
@@ -87,6 +88,13 @@ class SearchScreenRobot @Inject constructor() {
     fun checkScreenWhenStateIsLoadedMore() {
         assertLoadMoreProgressBarIsDisplay()
         assertLoadMoreTextIsDisplay()
+    }
+
+    context (RobotTestRule)
+    fun checkScreenWhenStateIsEmpty() {
+        val context = InstrumentationRegistry.getInstrumentation().targetContext
+        composeTestRule.onNodeWithText(context.getString(R.string.no_food), useUnmergedTree = true)
+            .assertIsDisplayed()
     }
 
     context (RobotTestRule)
