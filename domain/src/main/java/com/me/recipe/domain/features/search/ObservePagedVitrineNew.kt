@@ -8,7 +8,6 @@ import com.me.recipe.domain.features.recipe.model.Recipe
 import com.me.recipe.domain.util.ForceFresh
 import com.me.recipe.domain.util.PagingInteractor
 import javax.inject.Inject
-import kotlinx.collections.immutable.ImmutableList
 import kotlinx.coroutines.flow.Flow
 
 data class VitrinePagingKey(
@@ -18,7 +17,7 @@ data class VitrinePagingKey(
 )
 
 class ObservePagedVitrineNew @Inject constructor(
-    private val pagingSource: PagingSource<VitrinePagingKey, Recipe>
+    private val pagingSource: PagingSource<VitrinePagingKey, Recipe>,
 ) : PagingInteractor<ObservePagedVitrineNew.Params, Recipe>() {
 
     override fun createObservable(params: Params): Flow<PagingData<Recipe>> {
@@ -33,5 +32,5 @@ class ObservePagedVitrineNew @Inject constructor(
         override val pagingConfig: PagingConfig,
         val key: VitrinePagingKey,
         val forceRefresh: ForceFresh? = null,
-    ): PagingInteractor.Parameters<Recipe>
+    ) : PagingInteractor.Parameters<Recipe>
 }

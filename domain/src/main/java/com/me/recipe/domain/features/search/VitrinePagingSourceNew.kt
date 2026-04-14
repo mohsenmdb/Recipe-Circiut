@@ -7,7 +7,10 @@ import com.me.recipe.domain.features.search.repository.VitrineRepository
 import com.me.recipe.shared.utils.IoDispatcher
 import javax.inject.Inject
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.withContext
+import recipe.app.core.BuildConfig
+import timber.log.Timber
 
 class VitrinePagingSourceNew @Inject constructor(
     private val repository: VitrineRepository,
@@ -27,19 +30,22 @@ class VitrinePagingSourceNew @Inject constructor(
         withContext(ioDispatcher) {
             val key = requireNotNull(params.key) { "key was null for $params" }
             try {
+                if (BuildConfig.DEBUG) delay(1000)
                 val (data: List<Recipe>, nextPageUrl) = repository.getVitrine(
                     query = key.query,
                     page = key.page,
+                    pageSize = PAGE_SIZE,
                     loadMore = key.loadMore,
                 )
+                Timber.d("tezt key = $key - data = ${data.size}")
 
-                val nextKey: VitrinePagingKey? = nextPageUrl.takeIf{it > 1}?.let {
-                        VitrinePagingKey(
-                            query = key.query,
-                            page = it,
-                            loadMore = true,
-                        )
-                    }
+                val nextKey = nextPageUrl.takeIf { it > 0 && data.size >= PAGE_SIZE }?.let {
+                    VitrinePagingKey(
+                        query = key.query,
+                        page = it,
+                        loadMore = true,
+                    )
+                }
 
                 LoadResult.Page(
                     data = data,
@@ -50,4 +56,9 @@ class VitrinePagingSourceNew @Inject constructor(
                 LoadResult.Error(e)
             }
         }
+
+    companion object {
+        const val PAGE_SIZE = 10
+        const val FIRST_PAGE = 1
+    }
 }

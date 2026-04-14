@@ -1,6 +1,7 @@
 package com.me.recipe.ui.search
 
 import androidx.compose.runtime.Stable
+import androidx.paging.compose.LazyPagingItems
 import com.me.recipe.domain.features.recipe.model.Recipe
 import com.me.recipe.shared.utils.FoodCategory
 import com.me.recipe.ui.component.util.GenericDialogInfo
@@ -8,8 +9,6 @@ import com.me.recipe.ui.component.util.UiMessage
 import com.slack.circuit.runtime.CircuitUiEvent
 import com.slack.circuit.runtime.CircuitUiState
 import com.slack.circuit.runtime.screen.Screen
-import kotlinx.collections.immutable.ImmutableList
-import kotlinx.collections.immutable.persistentListOf
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
@@ -19,7 +18,7 @@ typealias SearchEventSink = (SearchEvent) -> Unit
 
 @Stable
 data class SearchState(
-    val recipes: ImmutableList<Recipe>,
+    val items: LazyPagingItems<Recipe>? = null,
     val errors: GenericDialogInfo? = null,
     val message: UiMessage? = null,
     val query: String = "",
@@ -31,7 +30,6 @@ data class SearchState(
 ) : CircuitUiState {
     companion object {
         fun testData() = SearchState(
-            recipes = persistentListOf(Recipe.testData()),
             query = FoodCategory.CHICKEN.name,
             selectedCategory = FoodCategory.CHICKEN,
             eventSink = {},

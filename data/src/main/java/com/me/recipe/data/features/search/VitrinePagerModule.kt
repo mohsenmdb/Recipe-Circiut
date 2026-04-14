@@ -8,12 +8,10 @@ import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
-import kotlinx.collections.immutable.ImmutableList
 
 @Module
 @InstallIn(SingletonComponent::class)
 interface VitrinePagerModule {
     @Binds
     fun provideVitrinePagerNew(vitrine: VitrinePagingSourceNew): PagingSource<VitrinePagingKey, Recipe>
-
 }

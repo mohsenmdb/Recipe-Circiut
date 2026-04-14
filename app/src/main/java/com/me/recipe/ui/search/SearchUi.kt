@@ -48,7 +48,7 @@ internal fun SearchUi(
         },
     ) { padding ->
         SearchContent(
-            recipes = state.recipes,
+            items = state.items,
             isLoading = state.isLoading,
             isEmpty = state.isEmpty,
             showLoadingProgressBar = state.appendingLoading,
