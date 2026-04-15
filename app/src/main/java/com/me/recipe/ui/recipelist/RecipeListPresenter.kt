@@ -30,10 +30,7 @@ class RecipeListPresenter @AssistedInject constructor(
         val searchState = searchPresenter.present()
         return RecipeListState(
             query = screen.query,
-            recipes = searchState.recipes,
-            isLoading = searchState.isLoading,
-            isEmpty = searchState.isEmpty,
-            appendingLoading = searchState.appendingLoading,
+            items = searchState.items,
             selectedCategory = searchState.selectedCategory,
             message = searchState.message,
             errors = searchState.errors,
@@ -47,8 +44,10 @@ class RecipeListPresenter @AssistedInject constructor(
                         searchState.eventSink.invoke(SearchEvent.OnRecipeClick(event.recipe))
                     is RecipeListEvent.OnRecipeLongClick ->
                         searchState.eventSink.invoke(SearchEvent.OnRecipeLongClick(event.title))
-                    is RecipeListEvent.OnChangeRecipeScrollPosition ->
-                        searchState.eventSink.invoke(SearchEvent.OnChangeRecipeScrollPosition(event.index))
+                    RecipeListEvent.OnRetryClicked ->
+                        searchState.eventSink.invoke(SearchEvent.OngRetryClicked)
+                    RecipeListEvent.OnAppendingRetryClicked ->
+                        searchState.eventSink.invoke(SearchEvent.OnAppendingRetryClicked)
                 }
             },
         )

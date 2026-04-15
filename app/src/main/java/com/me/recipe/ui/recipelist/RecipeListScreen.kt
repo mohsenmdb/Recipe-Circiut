@@ -1,15 +1,19 @@
 package com.me.recipe.ui.recipelist
 
+import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Stable
+import androidx.paging.PagingData
+import androidx.paging.compose.LazyPagingItems
+import androidx.paging.compose.collectAsLazyPagingItems
 import com.me.recipe.domain.features.recipe.model.Recipe
 import com.me.recipe.shared.utils.FoodCategory
 import com.me.recipe.ui.component.util.GenericDialogInfo
 import com.me.recipe.ui.component.util.UiMessage
+import com.me.recipe.ui.search.SearchState.Companion.testRecipes
 import com.slack.circuit.runtime.CircuitUiEvent
 import com.slack.circuit.runtime.CircuitUiState
 import com.slack.circuit.runtime.screen.Screen
-import kotlinx.collections.immutable.ImmutableList
-import kotlinx.collections.immutable.persistentListOf
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
@@ -21,19 +25,17 @@ typealias RecipeListEventSink = (RecipeListEvent) -> Unit
 
 @Stable
 data class RecipeListState(
-    val recipes: ImmutableList<Recipe>,
+    val items: LazyPagingItems<Recipe>,
     val errors: GenericDialogInfo? = null,
     val message: UiMessage? = null,
     val query: String = "",
     val selectedCategory: FoodCategory? = null,
-    val isLoading: Boolean = false,
-    val isEmpty: Boolean = false,
-    val appendingLoading: Boolean = false,
     val eventSink: RecipeListEventSink,
 ) : CircuitUiState {
     companion object {
+        @Composable
         fun testData() = RecipeListState(
-            recipes = persistentListOf(Recipe.testData()),
+            items = flowOf(PagingData.from(testRecipes())).collectAsLazyPagingItems(),
             query = FoodCategory.CHICKEN.name,
             selectedCategory = FoodCategory.CHICKEN,
             eventSink = {},
@@ -43,7 +45,8 @@ data class RecipeListState(
 
 sealed interface RecipeListEvent : CircuitUiEvent {
     data object OnNavigateBackClicked : RecipeListEvent
-    data class OnChangeRecipeScrollPosition(val index: Int) : RecipeListEvent
+    data object OnRetryClicked : RecipeListEvent
+    data object OnAppendingRetryClicked : RecipeListEvent
     data class OnRecipeLongClick(val title: String) : RecipeListEvent
     data class OnRecipeClick(val recipe: Recipe) : RecipeListEvent
     data object ClearMessage : RecipeListEvent

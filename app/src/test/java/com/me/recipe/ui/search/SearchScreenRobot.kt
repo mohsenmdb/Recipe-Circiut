@@ -1,46 +1,58 @@
 package com.me.recipe.ui.search
 
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.test.assertIsDisplayed
+import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performScrollToIndex
 import androidx.test.platform.app.InstrumentationRegistry
+import com.me.recipe.R
 import com.me.recipe.domain.features.recipe.model.Recipe
 import com.me.recipe.shared.utils.FoodCategory
 import com.me.recipe.shared.utils.getAllFoodCategories
+import com.me.recipe.ui.component.util.ErrorFormatterFake
 import com.me.recipe.ui.component.util.GenericDialogInfo
+import com.me.recipe.ui.component.util.LocalErrorFormatter
 import com.me.recipe.ui.utils.RobotTestRule
 import javax.inject.Inject
+import kotlinx.collections.immutable.ImmutableList
 import kotlinx.coroutines.delay
+
 class SearchScreenRobot @Inject constructor() {
 
     context (RobotTestRule)
     fun setSearchScreen(
-        state: SearchState,
+        state: @Composable () -> SearchState,
     ) {
         composeTestRule.setContent {
-            SearchUi(state = state)
+            CompositionLocalProvider(LocalErrorFormatter provides ErrorFormatterFake()) {
+                SearchUi(state = state())
+            }
         }
     }
 
     context (RobotTestRule)
     fun setRecipeListScreenLoadingThenLoaded(
-        loadingState: SearchState,
-        loadedState: SearchState,
+        loadingState: @Composable () -> SearchState,
+        loadedState: @Composable () -> SearchState,
     ) {
         composeTestRule.setContent {
-            var state by remember {
-                mutableStateOf(loadingState)
-            }
-            SearchUi(state = state)
-            LaunchedEffect(Unit) {
-                delay(1000)
-                state = loadedState
+            CompositionLocalProvider(LocalErrorFormatter provides ErrorFormatterFake()) {
+                val loadingState = loadingState()
+                val loadedState = loadedState()
+                var state by remember { mutableStateOf(loadingState) }
+                SearchUi(state = state)
+                LaunchedEffect(Unit) {
+                    delay(1000)
+                    state = loadedState
+                }
             }
         }
     }
@@ -61,7 +73,7 @@ class SearchScreenRobot @Inject constructor() {
 
     context (RobotTestRule)
     fun checkScreenWhenStateIsLoaded(
-        state: SearchState,
+        recipes: ImmutableList<Recipe>,
     ) {
         assertSearchTextFieldIsDisplayed()
         assertFoodChipsRowIsDisplayed()
@@ -71,19 +83,33 @@ class SearchScreenRobot @Inject constructor() {
         foodChipsRowScrollToIndex(category.lastIndex)
         assertLastFoodCategoryChipIsDisplayed(category)
 
-        assertFirstRecipeImageIsDisplayed(state.recipes.first())
-        assertFirstRecipeTitleIsDisplayed(state.recipes.first())
-        assertFirstRecipeRatingIsDisplayed(state.recipes.first())
-        recipeListScrollToIndex(state.recipes.lastIndex)
-        assertLastRecipeImageIsDisplayed(state.recipes.last())
-        assertLastRecipeTitleIsDisplayed(state.recipes.last())
-        assertLastRecipeRatingIsDisplayed(state.recipes.last())
+        assertFirstRecipeImageIsDisplayed(recipes.first())
+        assertFirstRecipeTitleIsDisplayed(recipes.first())
+        assertFirstRecipeRatingIsDisplayed(recipes.first())
+        recipeListScrollToIndex(recipes.lastIndex)
+        assertLastRecipeImageIsDisplayed(recipes.last())
+        assertLastRecipeTitleIsDisplayed(recipes.last())
+        assertLastRecipeRatingIsDisplayed(recipes.last())
     }
 
     context (RobotTestRule)
-    fun checkScreenWhenStateIsLoadedMore() {
+    fun checkScreenWhenAppendingStateIsLoading() {
         assertLoadMoreProgressBarIsDisplay()
         assertLoadMoreTextIsDisplay()
+    }
+
+    context (RobotTestRule)
+    fun checkScreenWhenAppendingStateIsError() {
+        val context = InstrumentationRegistry.getInstrumentation().targetContext
+        assertAppendingErrorMessageIsDisplayed(SearchState.TEST_ERROR_MESSAGE)
+        assertRetryButtonIsDisplayed(context.getString(R.string.try_again))
+    }
+
+    context (RobotTestRule)
+    fun checkScreenWhenStateIsEmpty() {
+        val context = InstrumentationRegistry.getInstrumentation().targetContext
+        composeTestRule.onNodeWithText(context.getString(R.string.no_food), useUnmergedTree = true)
+            .assertIsDisplayed()
     }
 
     context (RobotTestRule)
@@ -96,6 +122,14 @@ class SearchScreenRobot @Inject constructor() {
         assertGenericDialogDescriptionIsDisplayed(errors.description!!)
         assertGenericDialogPositiveButtonIsDisplayed(positiveText)
         assertGenericDialogNegativeButtonIsDisplayed(errors.negativeAction?.negativeBtnTxt!!)
+    }
+
+    context (RobotTestRule)
+    fun checkScreenWhenRefreshStateIsError() {
+        val context = InstrumentationRegistry.getInstrumentation().targetContext
+        assertErrorViewIconIsDisplayed()
+        assertErrorViewMessageIsDisplayed(SearchState.TEST_ERROR_MESSAGE)
+        assertRetryButtonIsDisplayed(context.getString(R.string.try_again))
     }
 
     context (RobotTestRule)
@@ -136,7 +170,7 @@ class SearchScreenRobot @Inject constructor() {
 
     context (RobotTestRule)
     private fun assertFirstRecipeImageIsDisplayed(recipe: Recipe) {
-        composeTestRule.onNodeWithTag("testTag_RecipeCard_Image_${recipe.id}", useUnmergedTree = true)
+        composeTestRule.onNodeWithTag("testTag_RecipeCard_${recipe.id}", useUnmergedTree = true)
             .assertIsDisplayed()
     }
 
@@ -154,7 +188,7 @@ class SearchScreenRobot @Inject constructor() {
 
     context (RobotTestRule)
     private fun assertLastRecipeImageIsDisplayed(recipe: Recipe) {
-        composeTestRule.onNodeWithTag("testTag_RecipeCard_Image_${recipe.id}", useUnmergedTree = true)
+        composeTestRule.onNodeWithTag("testTag_RecipeCard_${recipe.id}", useUnmergedTree = true)
             .assertIsDisplayed()
     }
 
@@ -225,6 +259,30 @@ class SearchScreenRobot @Inject constructor() {
     context (RobotTestRule)
     private fun assertGenericDialogNegativeButtonIsDisplayed(buttonText: String) {
         composeTestRule.onNodeWithText(buttonText, useUnmergedTree = true)
+            .assertIsDisplayed()
+    }
+
+    context (RobotTestRule)
+    private fun assertErrorViewIconIsDisplayed() {
+        composeTestRule.onNodeWithContentDescription("Error Icon", useUnmergedTree = true)
+            .assertIsDisplayed()
+    }
+
+    context (RobotTestRule)
+    private fun assertErrorViewMessageIsDisplayed(message: String) {
+        composeTestRule.onNodeWithText(message, useUnmergedTree = true)
+            .assertIsDisplayed()
+    }
+
+    context (RobotTestRule)
+    private fun assertRetryButtonIsDisplayed(buttonText: String) {
+        composeTestRule.onNodeWithText(buttonText, useUnmergedTree = true)
+            .assertIsDisplayed()
+    }
+
+    context (RobotTestRule)
+    private fun assertAppendingErrorMessageIsDisplayed(message: String) {
+        composeTestRule.onNodeWithText(message, useUnmergedTree = true)
             .assertIsDisplayed()
     }
 

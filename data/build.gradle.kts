@@ -50,4 +50,5 @@ dependencies {
     implementation(libs.kotlinx.collections.immutable)
     implementation(libs.timber)
     implementation(libs.squareup.okhttp)
+    implementation(libs.androidx.paging.paging.common)
 }

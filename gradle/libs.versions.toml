@@ -30,6 +30,7 @@ kotlinxSerializationJson = "1.10.0"
 kotlinxSerializationConvertor = "1.0.0"
 coreKtx = "1.17.0"
 material = "1.13.0"
+paging = "3.4.1"
 
 
 [libraries]
@@ -97,6 +98,8 @@ kotlinx-atomicfu = "org.jetbrains.kotlinx:atomicfu:0.25.0"
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 material = { group = "com.google.android.material", name = "material", version.ref = "material" }
 
+androidx-paging-compose = { module = "androidx.paging:paging-compose", version.ref = "paging" }
+androidx-paging-paging-common = { module = "androidx.paging:paging-common", version.ref = "paging" }
 
 [plugins]
 hilt = { id = "com.google.dagger.hilt.android", version.ref = "dagger" }

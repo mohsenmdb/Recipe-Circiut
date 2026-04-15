@@ -1,4 +1,4 @@
-package com.me.recipe.ui.search.component
+package com.me.recipe.ui.component
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
