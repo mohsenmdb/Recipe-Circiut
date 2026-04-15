@@ -93,9 +93,16 @@ class SearchScreenRobot @Inject constructor() {
     }
 
     context (RobotTestRule)
-    fun checkScreenWhenStateIsLoadedMore() {
+    fun checkScreenWhenAppendingStateIsLoading() {
         assertLoadMoreProgressBarIsDisplay()
         assertLoadMoreTextIsDisplay()
+    }
+
+    context (RobotTestRule)
+    fun checkScreenWhenAppendingStateIsError() {
+        val context = InstrumentationRegistry.getInstrumentation().targetContext
+        assertAppendingErrorMessageIsDisplayed(context.getString(R.string.server_error_retry))
+        assertRetryButtonIsDisplayed(context.getString(R.string.try_again))
     }
 
     context (RobotTestRule)
@@ -270,6 +277,12 @@ class SearchScreenRobot @Inject constructor() {
     context (RobotTestRule)
     private fun assertRetryButtonIsDisplayed(buttonText: String) {
         composeTestRule.onNodeWithText(buttonText, useUnmergedTree = true)
+            .assertIsDisplayed()
+    }
+
+    context (RobotTestRule)
+    private fun assertAppendingErrorMessageIsDisplayed(message: String) {
+        composeTestRule.onNodeWithText(message, useUnmergedTree = true)
             .assertIsDisplayed()
     }
 

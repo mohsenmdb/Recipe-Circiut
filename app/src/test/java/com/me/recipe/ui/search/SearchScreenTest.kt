@@ -75,7 +75,20 @@ class SearchScreenTest {
                     pagingDataFlow = SearchState.appendingTestData(),
                 )
             }
-            checkScreenWhenStateIsLoadedMore()
+            checkScreenWhenAppendingStateIsLoading()
+        }
+    }
+
+    @Test
+    fun `when load more data fails show appending error correctly`() {
+        robot(robotTestRule) {
+            setSearchScreen {
+                SearchState.testData(
+                    pagingDataFlow = SearchState.appendingErrorTestData(),
+                )
+            }
+            robotTestRule.composeTestRule.waitForIdle()
+            checkScreenWhenAppendingStateIsError()
         }
     }
 
