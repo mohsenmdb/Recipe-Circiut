@@ -1,21 +1,25 @@
 package com.me.recipe.ui.search
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.test.assertIsDisplayed
+import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performScrollToIndex
 import androidx.test.platform.app.InstrumentationRegistry
 import com.me.recipe.R
 import com.me.recipe.domain.features.recipe.model.Recipe
+import com.me.recipe.ui.component.util.ErrorFormatterFake
 import com.me.recipe.shared.utils.FoodCategory
 import com.me.recipe.shared.utils.getAllFoodCategories
 import com.me.recipe.ui.component.util.GenericDialogInfo
+import com.me.recipe.ui.component.util.LocalErrorFormatter
 import com.me.recipe.ui.utils.RobotTestRule
 import javax.inject.Inject
 import kotlinx.collections.immutable.ImmutableList
@@ -28,7 +32,9 @@ class SearchScreenRobot @Inject constructor() {
         state: @Composable () -> SearchState,
     ) {
         composeTestRule.setContent {
-            SearchUi(state = state())
+            CompositionLocalProvider(LocalErrorFormatter provides ErrorFormatterFake()) {
+                SearchUi(state = state())
+            }
         }
     }
 
@@ -38,13 +44,15 @@ class SearchScreenRobot @Inject constructor() {
         loadedState: @Composable () -> SearchState,
     ) {
         composeTestRule.setContent {
-            val loadingState = loadingState()
-            val loadedState = loadedState()
-            var state by remember { mutableStateOf(loadingState) }
-            SearchUi(state = state)
-            LaunchedEffect(Unit) {
-                delay(1000)
-                state = loadedState
+            CompositionLocalProvider(LocalErrorFormatter provides ErrorFormatterFake()) {
+                val loadingState = loadingState()
+                val loadedState = loadedState()
+                var state by remember { mutableStateOf(loadingState) }
+                SearchUi(state = state)
+                LaunchedEffect(Unit) {
+                    delay(1000)
+                    state = loadedState
+                }
             }
         }
     }
@@ -107,6 +115,14 @@ class SearchScreenRobot @Inject constructor() {
         assertGenericDialogDescriptionIsDisplayed(errors.description!!)
         assertGenericDialogPositiveButtonIsDisplayed(positiveText)
         assertGenericDialogNegativeButtonIsDisplayed(errors.negativeAction?.negativeBtnTxt!!)
+    }
+
+    context (RobotTestRule)
+    fun checkScreenWhenRefreshStateIsError() {
+        val context = InstrumentationRegistry.getInstrumentation().targetContext
+        assertErrorViewIconIsDisplayed()
+        assertErrorViewMessageIsDisplayed(context.getString(R.string.server_error_retry))
+        assertRetryButtonIsDisplayed(context.getString(R.string.try_again))
     }
 
     context (RobotTestRule)
@@ -235,6 +251,24 @@ class SearchScreenRobot @Inject constructor() {
 
     context (RobotTestRule)
     private fun assertGenericDialogNegativeButtonIsDisplayed(buttonText: String) {
+        composeTestRule.onNodeWithText(buttonText, useUnmergedTree = true)
+            .assertIsDisplayed()
+    }
+
+    context (RobotTestRule)
+    private fun assertErrorViewIconIsDisplayed() {
+        composeTestRule.onNodeWithContentDescription("Error Icon", useUnmergedTree = true)
+            .assertIsDisplayed()
+    }
+
+    context (RobotTestRule)
+    private fun assertErrorViewMessageIsDisplayed(message: String) {
+        composeTestRule.onNodeWithText(message, useUnmergedTree = true)
+            .assertIsDisplayed()
+    }
+
+    context (RobotTestRule)
+    private fun assertRetryButtonIsDisplayed(buttonText: String) {
         composeTestRule.onNodeWithText(buttonText, useUnmergedTree = true)
             .assertIsDisplayed()
     }

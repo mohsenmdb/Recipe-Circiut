@@ -105,4 +105,17 @@ class SearchScreenTest {
             checkScreenWhenStateIsError(errors)
         }
     }
+
+    @Test
+    fun `when refresh fails show full screen error view correctly`() {
+        robot(robotTestRule) {
+            setSearchScreen {
+                SearchState.testData(
+                    pagingDataFlow = SearchState.errorTestData(),
+                )
+            }
+            robotTestRule.composeTestRule.waitForIdle()
+            checkScreenWhenRefreshStateIsError()
+        }
+    }
 }

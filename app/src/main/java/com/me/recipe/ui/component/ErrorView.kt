@@ -33,7 +33,7 @@ internal fun ErrorView(message: String, onClick: OnClick, modifier: Modifier = M
     ) {
         Icon(
             imageVector = Icons.Outlined.WifiTetheringError,
-            contentDescription = "No Food",
+            contentDescription = "Error Icon",
             modifier = Modifier.size(150.dp),
         )
 
