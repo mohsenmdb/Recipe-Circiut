@@ -45,7 +45,8 @@ data class RecipeListState(
 
 sealed interface RecipeListEvent : CircuitUiEvent {
     data object OnNavigateBackClicked : RecipeListEvent
-    data class OnChangeRecipeScrollPosition(val index: Int) : RecipeListEvent
+    data object OnRetryClicked : RecipeListEvent
+    data object OnAppendingRetryClicked : RecipeListEvent
     data class OnRecipeLongClick(val title: String) : RecipeListEvent
     data class OnRecipeClick(val recipe: Recipe) : RecipeListEvent
     data object ClearMessage : RecipeListEvent

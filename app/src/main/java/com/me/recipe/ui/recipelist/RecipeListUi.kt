@@ -48,7 +48,8 @@ internal fun RecipeListUi(
             items = state.items,
             onRecipeClicked = { state.eventSink.invoke(RecipeListEvent.OnRecipeClick(it)) },
             onRecipeLongClicked = { state.eventSink.invoke(RecipeListEvent.OnRecipeLongClick(it)) },
-            onChangeRecipeScrollPosition = { state.eventSink.invoke(RecipeListEvent.OnChangeRecipeScrollPosition(it)) },
+            onAppendingRetryClicked = { state.eventSink.invoke(RecipeListEvent.OnAppendingRetryClicked) },
+            onRetryClicked = { state.eventSink.invoke(RecipeListEvent.OnRetryClicked) },
             modifier = Modifier.padding(padding),
         )
         state.errors?.let { GenericDialog(it) }

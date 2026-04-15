@@ -82,6 +82,17 @@ data class SearchState(
             ),
         )
 
+        fun appendingErrorTestData() = flowOf(
+            PagingData.from(
+                data = testRecipes(),
+                sourceLoadStates = LoadStates(
+                    refresh = LoadState.NotLoading(endOfPaginationReached = true),
+                    prepend = LoadState.NotLoading(endOfPaginationReached = true),
+                    append = LoadState.Error(ConnectException()),
+                ),
+            ),
+        )
+
         @Composable
         fun testData(
             pagingDataFlow: Flow<PagingData<Recipe>> = flowOf(PagingData.from(testRecipes())),
@@ -102,6 +113,7 @@ sealed interface SearchEvent : CircuitUiEvent {
     data class OnSelectedCategoryChanged(val category: String) : SearchEvent
     data class OnRecipeLongClick(val title: String) : SearchEvent
     data class OnRecipeClick(val recipe: Recipe) : SearchEvent
-    data class OnChangeRecipeScrollPosition(val index: Int) : SearchEvent
+    data object OngRetryClicked : SearchEvent
+    data object OnAppendingRetryClicked : SearchEvent
     data object ClearMessage : SearchEvent
 }

@@ -51,7 +51,8 @@ internal fun SearchUi(
             items = state.items,
             onRecipeClicked = { state.eventSink.invoke(SearchEvent.OnRecipeClick(it)) },
             onRecipeLongClicked = { state.eventSink.invoke(SearchEvent.OnRecipeLongClick(it)) },
-            onChangeRecipeScrollPosition = { state.eventSink.invoke(SearchEvent.OnChangeRecipeScrollPosition(it)) },
+            onAppendingRetryClicked = { state.eventSink.invoke(SearchEvent.OnAppendingRetryClicked) },
+            onRetryClicked = { state.eventSink.invoke(SearchEvent.OnAppendingRetryClicked) },
             modifier = Modifier.padding(padding),
         )
 

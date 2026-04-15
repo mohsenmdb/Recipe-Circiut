@@ -17,6 +17,7 @@ import com.me.recipe.ui.search.isEmpty
 import com.me.recipe.ui.search.isRefreshing
 import com.me.recipe.ui.search.refreshErrorOrNull
 import com.me.recipe.ui.theme.RecipeTheme
+import com.me.recipe.util.compose.OnClick
 import kotlinx.coroutines.flow.flowOf
 
 @Composable
@@ -24,7 +25,8 @@ internal fun SearchContent(
     items: LazyPagingItems<Recipe>,
     onRecipeClicked: (Recipe) -> Unit,
     onRecipeLongClicked: (String) -> Unit,
-    onChangeRecipeScrollPosition: (Int) -> Unit,
+    onAppendingRetryClicked: OnClick,
+    onRetryClicked: OnClick,
     modifier: Modifier = Modifier,
 ) {
     val errorFormatter = LocalErrorFormatter.current
@@ -35,7 +37,7 @@ internal fun SearchContent(
 
         items.loadState.refreshErrorOrNull() != null -> {
             items.loadState.refreshErrorOrNull()?.throwable?.let(errorFormatter::format)?.let { readableMessage ->
-                ErrorView(message = readableMessage, modifier = modifier)
+                ErrorView(message = readableMessage, onClick = onRetryClicked, modifier = modifier)
             }
         }
 
@@ -44,7 +46,8 @@ internal fun SearchContent(
                 items = items,
                 onRecipeClicked = onRecipeClicked,
                 onRecipeLongClicked = onRecipeLongClicked,
-                onChangeRecipeScrollPosition = onChangeRecipeScrollPosition,
+                onAppendingRetryClicked = onAppendingRetryClicked,
+                errorFormatter = errorFormatter,
                 modifier = modifier,
             )
         }
@@ -60,7 +63,8 @@ private fun SearchContentPreview() {
                 items = SearchState.testData().items,
                 onRecipeClicked = {},
                 onRecipeLongClicked = {},
-                onChangeRecipeScrollPosition = {},
+                onAppendingRetryClicked = {},
+                onRetryClicked = {},
             )
         }
     }
@@ -75,7 +79,8 @@ private fun SearchContentShimmerPreview() {
                 items = SearchState.testData(pagingDataFlow = flowOf()).items,
                 onRecipeClicked = {},
                 onRecipeLongClicked = {},
-                onChangeRecipeScrollPosition = {},
+                onAppendingRetryClicked = {},
+                onRetryClicked = {},
             )
         }
     }
@@ -92,7 +97,8 @@ private fun SearchContentAppendingPreview() {
                 ).items,
                 onRecipeClicked = {},
                 onRecipeLongClicked = {},
-                onChangeRecipeScrollPosition = {},
+                onAppendingRetryClicked = {},
+                onRetryClicked = {},
             )
         }
     }
@@ -107,7 +113,8 @@ private fun SearchContentEmptyPreview() {
                 items = SearchState.testData(SearchState.emptyTestData()).items,
                 onRecipeClicked = {},
                 onRecipeLongClicked = {},
-                onChangeRecipeScrollPosition = {},
+                onAppendingRetryClicked = {},
+                onRetryClicked = {},
             )
         }
     }
@@ -122,7 +129,8 @@ private fun SearchContentErrorPreview() {
                 items = SearchState.testData(SearchState.errorTestData()).items,
                 onRecipeClicked = {},
                 onRecipeLongClicked = {},
-                onChangeRecipeScrollPosition = {},
+                onAppendingRetryClicked = {},
+                onRetryClicked = {},
             )
         }
     }

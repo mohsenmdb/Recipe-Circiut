@@ -25,11 +25,12 @@ import com.me.recipe.ui.component.util.UiMessageManager
 import com.me.recipe.ui.recipe.RecipeScreen
 import com.me.recipe.ui.search.SearchEvent.ClearMessage
 import com.me.recipe.ui.search.SearchEvent.NewSearchEvent
-import com.me.recipe.ui.search.SearchEvent.OnChangeRecipeScrollPosition
+import com.me.recipe.ui.search.SearchEvent.OnAppendingRetryClicked
 import com.me.recipe.ui.search.SearchEvent.OnQueryChanged
 import com.me.recipe.ui.search.SearchEvent.OnRecipeClick
 import com.me.recipe.ui.search.SearchEvent.OnRecipeLongClick
 import com.me.recipe.ui.search.SearchEvent.OnSelectedCategoryChanged
+import com.me.recipe.ui.search.SearchEvent.OngRetryClicked
 import com.me.recipe.ui.search.SearchEvent.SearchClearEvent
 import com.slack.circuit.codegen.annotations.CircuitInject
 import com.slack.circuit.retained.rememberRetained
@@ -132,23 +133,20 @@ class SearchPresenter @AssistedInject constructor(
             errors = errorDialogInfo,
             eventSink = { event ->
                 when (event) {
-                    is OnSelectedCategoryChanged -> {
-                        onSelectedCategoryChanged(event.category)
-                    }
-                    is OnQueryChanged -> {
-                        searchText = event.query
+                    is OnSelectedCategoryChanged -> onSelectedCategoryChanged(event.category)
+                    is OnQueryChanged -> searchText = event.query
+                    NewSearchEvent -> onNewSearchEvent()
+                    is OnRecipeClick -> navigateToRecipePage(event.recipe)
+                    OnAppendingRetryClicked -> items.retry()
+                    OngRetryClicked -> forceRefresher = ForceFresh.refresh()
+                    ClearMessage -> stableScope.launch { uiMessageManager.clearMessage() }
+                    is OnRecipeLongClick -> {
+                        stableScope.launch { uiMessageManager.emitMessage(UiMessage.createSnackbar(event.title)) }
                     }
                     SearchClearEvent -> {
                         searchText = ""
                         query = ""
                     }
-                    NewSearchEvent -> onNewSearchEvent()
-                    is OnRecipeClick -> navigateToRecipePage(event.recipe)
-                    is OnChangeRecipeScrollPosition -> {}
-                    is OnRecipeLongClick -> {
-                        stableScope.launch { uiMessageManager.emitMessage(UiMessage.createSnackbar(event.title)) }
-                    }
-                    ClearMessage -> stableScope.launch { uiMessageManager.clearMessage() }
                 }
             },
         )

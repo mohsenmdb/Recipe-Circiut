@@ -44,8 +44,10 @@ class RecipeListPresenter @AssistedInject constructor(
                         searchState.eventSink.invoke(SearchEvent.OnRecipeClick(event.recipe))
                     is RecipeListEvent.OnRecipeLongClick ->
                         searchState.eventSink.invoke(SearchEvent.OnRecipeLongClick(event.title))
-                    is RecipeListEvent.OnChangeRecipeScrollPosition ->
-                        searchState.eventSink.invoke(SearchEvent.OnChangeRecipeScrollPosition(event.index))
+                    RecipeListEvent.OnRetryClicked ->
+                        searchState.eventSink.invoke(SearchEvent.OngRetryClicked)
+                    RecipeListEvent.OnAppendingRetryClicked ->
+                        searchState.eventSink.invoke(SearchEvent.OnAppendingRetryClicked)
                 }
             },
         )

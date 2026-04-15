@@ -22,9 +22,10 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.me.recipe.R
 import com.me.recipe.ui.theme.RecipeTheme
+import com.me.recipe.util.compose.OnClick
 
 @Composable
-internal fun ErrorView(message: String, modifier: Modifier = Modifier) {
+internal fun ErrorView(message: String, onClick: OnClick, modifier: Modifier = Modifier) {
     Column(
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -44,6 +45,9 @@ internal fun ErrorView(message: String, modifier: Modifier = Modifier) {
             textAlign = TextAlign.Center,
             modifier = Modifier.padding(horizontal = 20.dp),
         )
+
+        Spacer(Modifier.height(8.dp))
+        RetryButton(onClick = onClick)
     }
 }
 
@@ -51,6 +55,6 @@ internal fun ErrorView(message: String, modifier: Modifier = Modifier) {
 @Composable
 private fun EmptyViewPreview() {
     RecipeTheme(true) {
-        ErrorView(message = "Error occurred, try again later")
+        ErrorView(message = "Error occurred, try again later", onClick = {})
     }
 }

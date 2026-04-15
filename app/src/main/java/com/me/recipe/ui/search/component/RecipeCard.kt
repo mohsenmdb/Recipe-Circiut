@@ -39,7 +39,7 @@ internal fun RecipeCard(
         shape = MaterialTheme.shapes.small,
         elevation = CardDefaults.cardElevation(4.dp),
         modifier = modifier
-            .padding(bottom = 6.dp, top = 6.dp, start = 12.dp, end = 12.dp)
+            .padding(horizontal = 12.dp)
             .fillMaxWidth()
             .testTag("testTag_RecipeCard_${recipe.id}")
             .combinedClickable(onClick = onClick, onLongClick = onLongClick),
