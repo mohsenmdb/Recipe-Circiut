@@ -55,7 +55,13 @@ class CategoriesRepositoryDefault @Inject constructor(
                 val cacheResult = getCachedCategories(category)
                 val recipes = recipeEntityMapper.toDomainList(cacheResult).toPersistentList()
                 if (recipes.isEmpty()) return@forEach
-                add(CategoryRecipe(CategoryRowType.ROW, category, recipes))
+                add(
+                    CategoryRecipe(
+                        rowType = CategoryRowType.ROW,
+                        category = category,
+                        recipes = recipes,
+                    ),
+                )
             }
         }.toPersistentList()
 

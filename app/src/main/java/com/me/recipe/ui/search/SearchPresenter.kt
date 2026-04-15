@@ -1,7 +1,6 @@
 package com.me.recipe.ui.search
 
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.RememberObserver
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -11,10 +10,8 @@ import androidx.paging.CombinedLoadStates
 import androidx.paging.LoadState
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
-import androidx.paging.PagingSource
 import androidx.paging.cachedIn
 import androidx.paging.compose.collectAsLazyPagingItems
-import com.me.recipe.R
 import com.me.recipe.domain.features.recipe.model.Recipe
 import com.me.recipe.domain.features.search.ObservePagedVitrineNew
 import com.me.recipe.domain.features.search.VitrinePagingKey
@@ -23,7 +20,6 @@ import com.me.recipe.domain.util.ForceFresh
 import com.me.recipe.shared.utils.FoodCategory
 import com.me.recipe.shared.utils.getFoodCategory
 import com.me.recipe.ui.component.util.GenericDialogInfo
-import com.me.recipe.ui.component.util.PositiveAction
 import com.me.recipe.ui.component.util.UiMessage
 import com.me.recipe.ui.component.util.UiMessageManager
 import com.me.recipe.ui.recipe.RecipeScreen
@@ -52,16 +48,13 @@ import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import recipe.app.core.errorformater.ErrorFormatter
+import timber.log.Timber
 
 class SearchPresenter @AssistedInject constructor(
     @Assisted private val screen: SearchScreen,
     @Assisted internal val navigator: Navigator,
-    // TODO remove us
-//    private val searchRecipesUseCase: Lazy<SearchRecipesUseCase>,
-//    private val restoreRecipesUseCase: Lazy<RestoreRecipesUseCase>,
     private val errorFormatter: Lazy<ErrorFormatter>,
     private val pagingInteractor: Lazy<ObservePagedVitrineNew>,
-    private val vitrinePagingSource: Lazy<PagingSource<VitrinePagingKey, Recipe>>,
 ) : Presenter<SearchState> {
 
     @Composable
@@ -93,25 +86,26 @@ class SearchPresenter @AssistedInject constructor(
             ),
         )
 
-// TODO handle error state on view instead of dialog and handle appending error
-        LaunchedEffect(items.loadState.refreshErrorOrNull()) {
-            if (items.loadState.refreshErrorOrNull() != null) {
-                errorDialogInfo = GenericDialogInfo.Builder()
-                    .title(R.string.error)
-                    .description(errorFormatter.get().format(items.loadState.refreshErrorOrNull()!!.throwable))
-                    .positive(
-                        PositiveAction(
-                            positiveBtnTxt = R.string.try_again,
-                            onPositiveAction = {
-                                forceRefresher = ForceFresh.refresh()
-                                errorDialogInfo = null
-                            },
-                        ),
-                    )
-                    .onDismiss { errorDialogInfo = null }
-                    .build()
-            }
-        }
+        Timber.d("tezt error = ${items.loadState.refreshErrorOrNull()}")
+
+//        LaunchedEffect(items.loadState.refreshErrorOrNull()) {
+//            if (items.loadState.refreshErrorOrNull() != null) {
+//                errorDialogInfo = GenericDialogInfo.Builder()
+//                    .title(R.string.error)
+//                    .description(errorFormatter.get().format(items.loadState.refreshErrorOrNull()!!.throwable))
+//                    .positive(
+//                        PositiveAction(
+//                            positiveBtnTxt = R.string.try_again,
+//                            onPositiveAction = {
+//                                forceRefresher = ForceFresh.refresh()
+//                                errorDialogInfo = null
+//                            },
+//                        ),
+//                    )
+//                    .onDismiss { errorDialogInfo = null }
+//                    .build()
+//            }
+//        }
         fun onSelectedCategoryChanged(category: String) {
             selectedCategory = getFoodCategory(category)
             query = category

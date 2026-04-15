@@ -10,7 +10,6 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.withContext
 import recipe.app.core.BuildConfig
-import timber.log.Timber
 
 class VitrinePagingSourceNew @Inject constructor(
     private val repository: VitrineRepository,
@@ -37,7 +36,6 @@ class VitrinePagingSourceNew @Inject constructor(
                     pageSize = PAGE_SIZE,
                     loadMore = key.loadMore,
                 )
-                Timber.d("tezt key = $key - data = ${data.size}")
 
                 val nextKey = nextPageUrl.takeIf { it > 0 && data.size >= PAGE_SIZE }?.let {
                     VitrinePagingKey(

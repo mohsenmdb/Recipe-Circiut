@@ -14,6 +14,7 @@ import com.me.recipe.ui.component.util.UiMessage
 import com.slack.circuit.runtime.CircuitUiEvent
 import com.slack.circuit.runtime.CircuitUiState
 import com.slack.circuit.runtime.screen.Screen
+import java.net.ConnectException
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.coroutines.flow.Flow
@@ -64,6 +65,17 @@ data class SearchState(
                 data = emptyList<Recipe>(),
                 sourceLoadStates = LoadStates(
                     refresh = LoadState.NotLoading(endOfPaginationReached = true),
+                    prepend = LoadState.NotLoading(endOfPaginationReached = true),
+                    append = LoadState.NotLoading(endOfPaginationReached = true),
+                ),
+            ),
+        )
+
+        fun errorTestData() = flowOf(
+            PagingData.from(
+                data = emptyList<Recipe>(),
+                sourceLoadStates = LoadStates(
+                    refresh = LoadState.Error(ConnectException()),
                     prepend = LoadState.NotLoading(endOfPaginationReached = true),
                     append = LoadState.NotLoading(endOfPaginationReached = true),
                 ),
