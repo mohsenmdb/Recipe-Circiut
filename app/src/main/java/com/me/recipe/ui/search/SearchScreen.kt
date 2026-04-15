@@ -36,6 +36,8 @@ data class SearchState(
     val eventSink: SearchEventSink,
 ) : CircuitUiState {
     companion object {
+        const val TEST_ERROR_MESSAGE = "Test paging error"
+
         fun testRecipes(): ImmutableList<Recipe> = persistentListOf(
             Recipe.testData(),
             Recipe.testData().copy(
@@ -75,7 +77,7 @@ data class SearchState(
             PagingData.from(
                 data = emptyList<Recipe>(),
                 sourceLoadStates = LoadStates(
-                    refresh = LoadState.Error(ConnectException()),
+                    refresh = LoadState.Error(ConnectException(TEST_ERROR_MESSAGE)),
                     prepend = LoadState.NotLoading(endOfPaginationReached = true),
                     append = LoadState.NotLoading(endOfPaginationReached = true),
                 ),
@@ -88,7 +90,7 @@ data class SearchState(
                 sourceLoadStates = LoadStates(
                     refresh = LoadState.NotLoading(endOfPaginationReached = true),
                     prepend = LoadState.NotLoading(endOfPaginationReached = true),
-                    append = LoadState.Error(ConnectException()),
+                    append = LoadState.Error(ConnectException(TEST_ERROR_MESSAGE)),
                 ),
             ),
         )

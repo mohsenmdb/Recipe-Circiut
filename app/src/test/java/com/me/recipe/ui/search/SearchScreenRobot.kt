@@ -15,9 +15,9 @@ import androidx.compose.ui.test.performScrollToIndex
 import androidx.test.platform.app.InstrumentationRegistry
 import com.me.recipe.R
 import com.me.recipe.domain.features.recipe.model.Recipe
-import com.me.recipe.ui.component.util.ErrorFormatterFake
 import com.me.recipe.shared.utils.FoodCategory
 import com.me.recipe.shared.utils.getAllFoodCategories
+import com.me.recipe.ui.component.util.ErrorFormatterFake
 import com.me.recipe.ui.component.util.GenericDialogInfo
 import com.me.recipe.ui.component.util.LocalErrorFormatter
 import com.me.recipe.ui.utils.RobotTestRule
@@ -101,7 +101,7 @@ class SearchScreenRobot @Inject constructor() {
     context (RobotTestRule)
     fun checkScreenWhenAppendingStateIsError() {
         val context = InstrumentationRegistry.getInstrumentation().targetContext
-        assertAppendingErrorMessageIsDisplayed(context.getString(R.string.server_error_retry))
+        assertAppendingErrorMessageIsDisplayed(SearchState.TEST_ERROR_MESSAGE)
         assertRetryButtonIsDisplayed(context.getString(R.string.try_again))
     }
 
@@ -128,7 +128,7 @@ class SearchScreenRobot @Inject constructor() {
     fun checkScreenWhenRefreshStateIsError() {
         val context = InstrumentationRegistry.getInstrumentation().targetContext
         assertErrorViewIconIsDisplayed()
-        assertErrorViewMessageIsDisplayed(context.getString(R.string.server_error_retry))
+        assertErrorViewMessageIsDisplayed(SearchState.TEST_ERROR_MESSAGE)
         assertRetryButtonIsDisplayed(context.getString(R.string.try_again))
     }
 
