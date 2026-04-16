@@ -2,6 +2,7 @@ package com.me.recipe.ui.profile
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.PrimaryTabRow
 import androidx.compose.material3.Tab
 import androidx.compose.material3.Text
@@ -27,32 +28,43 @@ internal fun ProfileUi(
             tabs = state.tabs,
             onTabClick = { state.eventSink(ProfileEvent.OnTabClick(it)) },
         )
-        when (state.selectedTab) {
-            UserInfoTab -> UserInfoContent()
-            MyRecipesTab -> MyRecipesContent()
-        }
+
+        CircuitContent(
+            modifier = Modifier.fillMaxSize(),
+            screen = when (state.selectedTab) {
+                UserInfoTab -> UserInfoScreen
+                MyRecipesTab -> MyRecipesScreen
+                else -> UserInfoScreen
+            },
+            onNavEvent = {
+                state.eventSink(ProfileEvent.NestedNavEvent(it))
+            },
+        )
     }
 }
 
 @Composable
-private fun TabsRow(selectedTab: Int, tabs: ImmutableList<ProfileTabs>, onTabClick: (ProfileTabs) -> Unit) {
+private fun TabsRow(
+    selectedTab: Int,
+    tabs: ImmutableList<ProfileTabs>,
+    onTabClick: (ProfileTabs) -> Unit,
+) {
     PrimaryTabRow(selectedTabIndex = selectedTab) {
         tabs.forEachIndexed { index, tab ->
             Tab(
                 selected = selectedTab == index,
                 onClick = { onTabClick(tab) },
-                text = { Text(stringResource(tab.titleRes)) },
+                text = { TabText(tab) },
             )
         }
     }
 }
 
 @Composable
-fun UserInfoContent(modifier: Modifier = Modifier) {
-    CircuitContent(modifier = modifier.fillMaxSize(), screen = UserInfoScreen, onNavEvent = {})
-}
-
-@Composable
-fun MyRecipesContent(modifier: Modifier = Modifier) {
-    CircuitContent(modifier = modifier.fillMaxSize(), screen = MyRecipesScreen, onNavEvent = {})
+private fun TabText(tab: ProfileTabs) {
+    Text(
+        text = stringResource(tab.titleRes),
+        style = MaterialTheme.typography.titleMedium,
+        color = MaterialTheme.colorScheme.onSurface,
+    )
 }

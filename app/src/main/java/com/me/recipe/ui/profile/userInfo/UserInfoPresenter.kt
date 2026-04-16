@@ -57,6 +57,7 @@ class UserInfoPresenter @AssistedInject constructor(
                     UserInfoEvent.OnLogoutClicked -> scope.launch {
                         userDataStore.get().logout()
                         uiMessageManager.emitMessage(UiMessage.createToast(R.string.logout))
+                        //todo fix me i am not working
                         navigator.resetRoot(AuthScreen)
                     }
                 }

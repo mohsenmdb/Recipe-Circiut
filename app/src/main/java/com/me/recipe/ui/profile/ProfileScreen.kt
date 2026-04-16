@@ -2,6 +2,7 @@ package com.me.recipe.ui.profile
 
 import androidx.compose.runtime.Stable
 import com.me.recipe.R
+import com.slack.circuit.foundation.NavEvent
 import com.slack.circuit.runtime.CircuitUiEvent
 import com.slack.circuit.runtime.CircuitUiState
 import com.slack.circuit.runtime.screen.Screen
@@ -27,6 +28,7 @@ data class ProfileState(
 
 sealed interface ProfileEvent : CircuitUiEvent {
     data class OnTabClick(val tab: ProfileTabs) : ProfileEvent
+    data class NestedNavEvent(val navEvent: NavEvent) : ProfileEvent
 }
 
 interface ProfileTabs {

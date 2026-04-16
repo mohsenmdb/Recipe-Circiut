@@ -5,6 +5,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import com.slack.circuit.codegen.annotations.CircuitInject
+import com.slack.circuit.foundation.NavEvent
 import com.slack.circuit.retained.rememberRetained
 import com.slack.circuit.runtime.Navigator
 import com.slack.circuit.runtime.presenter.Presenter
@@ -27,6 +28,11 @@ class ProfilePresenter @AssistedInject constructor(
                 when (event) {
                     is ProfileEvent.OnTabClick -> {
                         selectedTab = event.tab
+                    }
+
+                    is ProfileEvent.NestedNavEvent -> {
+                        val screen = (event.navEvent as? NavEvent.GoTo)?.screen ?: return@ProfileState
+                        navigator.goTo(screen)
                     }
                 }
             },
