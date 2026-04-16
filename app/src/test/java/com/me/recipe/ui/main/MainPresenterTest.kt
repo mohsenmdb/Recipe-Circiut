@@ -12,6 +12,7 @@ import com.me.recipe.shared.datastore.UserInfo
 import com.me.recipe.ui.main.navigation.HomeTab
 import com.me.recipe.ui.main.navigation.ProfileTab
 import com.me.recipe.ui.utils.MainDispatcherRule
+import com.me.recipe.ui.utils.lazyOfDagger
 import com.slack.circuit.runtime.Navigator
 import com.slack.circuit.test.FakeNavigator
 import com.slack.circuit.test.test
@@ -112,7 +113,7 @@ class MainPresenterTest {
     ): MainPresenter {
         return MainPresenter(
             navigator = navigator,
-            getLoginStateUseCase = lazyOf(GetLoginStateUseCase(userDataStore)),
+            getLoginStateUseCase = lazyOfDagger(GetLoginStateUseCase(userDataStore)),
         )
     }
 
@@ -122,6 +123,4 @@ class MainPresenterTest {
             ioDispatcher = mainDispatcherRule.testDispatcher,
         )
     }
-
-    private fun <T> lazyOf(value: T): Lazy<T> = Lazy { value }
 }
