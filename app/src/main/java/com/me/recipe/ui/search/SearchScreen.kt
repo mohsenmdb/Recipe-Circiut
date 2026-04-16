@@ -22,7 +22,7 @@ import kotlinx.coroutines.flow.flowOf
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
-data class SearchScreen(val query: String = "") : Screen
+data class SearchScreen(val query: String = "", val onlyMyRecipes: Boolean = false) : Screen
 
 typealias SearchEventSink = (SearchEvent) -> Unit
 

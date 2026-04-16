@@ -42,4 +42,7 @@
     <string name="ingredients_placeholder">e.g. Eggs, Milk, Flour...</string>
     <string name="description">Description</string>
     <string name="no_food">There is no food to eat!</string>
+
+    <string name="tab_user_info">User Info</string>
+    <string name="tab_my_recipes">My Recipes</string>
 </resources>

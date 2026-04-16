@@ -83,6 +83,7 @@ class SearchPresenter @AssistedInject constructor(
                     query = query,
                     page = FIRST_PAGE,
                     loadMore = false,
+                    onlyMyRecipes = screen.onlyMyRecipes,
                 ),
             ),
         )
