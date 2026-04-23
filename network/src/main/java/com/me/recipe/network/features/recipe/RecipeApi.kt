@@ -21,6 +21,12 @@ interface RecipeApi {
         @Query("query") query: String,
     ): RecipeSearchDto
 
+    @GET("recipes/me")
+    suspend fun mine(
+        @Query("page") page: Int,
+        @Query("pageSize") size: Int,
+    ): RecipeSearchDto
+
     @GET("recipes/one/{id}")
     suspend fun get(
         @Path("id") id: Int,

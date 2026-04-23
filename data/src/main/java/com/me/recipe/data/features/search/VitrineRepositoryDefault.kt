@@ -14,8 +14,18 @@ class VitrineRepositoryDefault @Inject constructor(
     private val mapper: Lazy<RecipeDtoMapper>,
 ) : VitrineRepository {
 
-    override suspend fun getVitrine(query: String, page: Int, pageSize: Int, loadMore: Boolean): Vitrine {
-        val response: RecipeSearchDto = listApi.get().search(page, pageSize, query)
+    override suspend fun getVitrine(
+        query: String,
+        page: Int,
+        pageSize: Int,
+        onlyMyRecipes: Boolean,
+        loadMore: Boolean,
+    ): Vitrine {
+        val response: RecipeSearchDto = if (onlyMyRecipes) {
+            listApi.get().mine(page, pageSize)
+        } else {
+            listApi.get().search(page, pageSize, query)
+        }
         val items = mapper.get().toDomainList(response.data.results).toImmutableList()
         val nextPage = page + 1
         return Vitrine(

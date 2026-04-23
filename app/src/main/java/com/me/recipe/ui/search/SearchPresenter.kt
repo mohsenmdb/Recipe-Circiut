@@ -49,7 +49,6 @@ import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import recipe.app.core.errorformater.ErrorFormatter
-import timber.log.Timber
 
 class SearchPresenter @AssistedInject constructor(
     @Assisted private val screen: SearchScreen,
@@ -83,11 +82,10 @@ class SearchPresenter @AssistedInject constructor(
                     query = query,
                     page = FIRST_PAGE,
                     loadMore = false,
+                    onlyMyRecipes = screen.onlyMyRecipes,
                 ),
             ),
         )
-
-        Timber.d("tezt error = ${items.loadState.refreshErrorOrNull()}")
 
 //        LaunchedEffect(items.loadState.refreshErrorOrNull()) {
 //            if (items.loadState.refreshErrorOrNull() != null) {
