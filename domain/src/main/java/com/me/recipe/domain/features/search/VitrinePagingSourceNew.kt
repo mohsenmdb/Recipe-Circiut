@@ -35,11 +35,13 @@ class VitrinePagingSourceNew @Inject constructor(
                     page = key.page,
                     pageSize = PAGE_SIZE,
                     loadMore = key.loadMore,
+                    onlyMyRecipes = key.onlyMyRecipes,
                 )
 
                 val nextKey = nextPageUrl.takeIf { it > 0 && data.size >= PAGE_SIZE }?.let {
                     VitrinePagingKey(
                         query = key.query,
+                        onlyMyRecipes = key.onlyMyRecipes,
                         page = it,
                         loadMore = true,
                     )

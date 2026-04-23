@@ -14,6 +14,7 @@ data class VitrinePagingKey(
     val query: String,
     val page: Int,
     val loadMore: Boolean,
+    val onlyMyRecipes: Boolean = false,
 )
 
 class ObservePagedVitrineNew @Inject constructor(
