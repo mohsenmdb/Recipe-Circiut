@@ -121,6 +121,10 @@ dependencies {
     testImplementation(libs.androidx.compose.ui.test.junit4)
     testImplementation(libs.robolectric)
 
+    testImplementation(libs.assertk)
+    testImplementation(libs.circuit.test)
+    testImplementation(libs.kotlinx.coroutines.test)
+
     androidTestImplementation(libs.androidx.test.ext)
     androidTestImplementation(libs.androidx.test.espresso)
     androidTestImplementation(libs.androidx.navigation.testing)
