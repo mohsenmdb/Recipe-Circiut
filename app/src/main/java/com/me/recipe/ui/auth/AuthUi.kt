@@ -22,10 +22,12 @@ import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
@@ -46,10 +48,16 @@ internal fun AuthUi(
     modifier: Modifier = Modifier,
 ) {
     val snackbarHostState = remember { SnackbarHostState() }
+    val focusManager = LocalFocusManager.current
     val containerColor by animateColorAsState(
         targetValue = MaterialTheme.colorScheme.background,
         animationSpec = spring(stiffness = Spring.StiffnessVeryLow),
     )
+    LaunchedEffect(state.message) {
+        if (state.message != null) {
+            focusManager.clearFocus(force = true)
+        }
+    }
     MessageEffect(
         snackbarHostState = snackbarHostState,
         uiMessage = state.message,
