@@ -36,9 +36,7 @@ internal fun ProfileUi(
                 MyRecipesTab -> MyRecipesScreen
                 else -> UserInfoScreen
             },
-            onNavEvent = {
-                state.eventSink(ProfileEvent.NestedNavEvent(it))
-            },
+            navigator = state.navigator,
         )
     }
 }

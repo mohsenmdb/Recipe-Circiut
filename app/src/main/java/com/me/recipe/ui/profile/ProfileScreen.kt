@@ -2,9 +2,9 @@ package com.me.recipe.ui.profile
 
 import androidx.compose.runtime.Stable
 import com.me.recipe.R
-import com.slack.circuit.foundation.NavEvent
 import com.slack.circuit.runtime.CircuitUiEvent
 import com.slack.circuit.runtime.CircuitUiState
+import com.slack.circuit.runtime.Navigator
 import com.slack.circuit.runtime.screen.Screen
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
@@ -19,6 +19,7 @@ typealias ProfileEventSink = (ProfileEvent) -> Unit
 data class ProfileState(
     val tabs: ImmutableList<ProfileTabs> = profileTabs,
     val selectedTab: ProfileTabs = UserInfoTab,
+    val navigator: Navigator,
     val eventSink: ProfileEventSink,
 ) : CircuitUiState {
     companion object {
@@ -28,7 +29,6 @@ data class ProfileState(
 
 sealed interface ProfileEvent : CircuitUiEvent {
     data class OnTabClick(val tab: ProfileTabs) : ProfileEvent
-    data class NestedNavEvent(val navEvent: NavEvent) : ProfileEvent
 }
 
 interface ProfileTabs {

@@ -43,6 +43,7 @@ dependencies {
 
     implementation(libs.datastore.preferences)
     implementation(libs.kotlinx.collections.immutable)
+    implementation(libs.timber)
 
     implementation(libs.hilt)
     ksp(libs.hilt.compiler)
