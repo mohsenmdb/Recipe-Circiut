@@ -118,7 +118,10 @@ dependencies {
 
     testImplementation(libs.hilt.testing)
     testImplementation(libs.junit)
+    testImplementation(libs.assertk)
     testImplementation(libs.androidx.compose.ui.test.junit4)
+    testImplementation(libs.circuit.test)
+    testImplementation(libs.kotlinx.coroutines.test)
     testImplementation(libs.robolectric)
 
     androidTestImplementation(libs.androidx.test.ext)

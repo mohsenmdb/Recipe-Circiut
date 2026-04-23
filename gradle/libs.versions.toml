@@ -11,6 +11,7 @@ retrofitVersion = "3.0.0"
 roomVersion = "2.8.4"
 timberVersion = "5.0.1"
 junitVersion = "4.13.2"
+assertk = "0.28.1"
 appcompat = "1.7.1"
 
 composeNavigation = "2.9.7"
@@ -31,6 +32,7 @@ kotlinxSerializationConvertor = "1.0.0"
 coreKtx = "1.17.0"
 material = "1.13.0"
 paging = "3.4.1"
+kotlinxCoroutines = "1.10.2"
 
 
 [libraries]
@@ -79,6 +81,7 @@ compose-lint-checks = { module = "com.slack.lint.compose:compose-lint-checks", v
 
 
 junit = { module = "junit:junit", version.ref = "junitVersion" }
+assertk = { module = "com.willowtreeapps.assertk:assertk", version.ref = "assertk" }
 androidx-test-ext = { module = "androidx.test.ext:junit", version.ref = "androidxTestExt" }
 androidx-test-espresso = { module = "androidx.test.espresso:espresso-core", version.ref = "androidxTestEspresso" }
 androidx-compose-ui-test-junit4 = { module = "androidx.compose.ui:ui-test-junit4" }
@@ -93,7 +96,9 @@ circuit-android = { module = "com.slack.circuit:circuitx-android", version.ref =
 circuit-codegen-annotations = { module = "com.slack.circuit:circuit-codegen-annotations", version.ref = "circuit" }
 circuit-gesturenav = { module = "com.slack.circuit:circuitx-gesture-navigation", version.ref = "circuit" }
 circuit-overlay = { module = "com.slack.circuit:circuit-overlay", version.ref = "circuit" }
+circuit-test = { module = "com.slack.circuit:circuit-test", version.ref = "circuit" }
 circuit-codegen = { module = "com.slack.circuit:circuit-codegen", version.ref = "circuit" }
+kotlinx-coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test-jvm", version.ref = "kotlinxCoroutines" }
 kotlinx-atomicfu = "org.jetbrains.kotlinx:atomicfu:0.25.0"
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 material = { group = "com.google.android.material", name = "material", version.ref = "material" }
