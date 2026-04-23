@@ -8,6 +8,9 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.test.assertIsDisplayed
+import androidx.compose.ui.test.onAllNodesWithContentDescription
+import androidx.compose.ui.test.onAllNodesWithTag
+import androidx.compose.ui.test.onAllNodesWithText
 import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
@@ -75,6 +78,7 @@ class SearchScreenRobot @Inject constructor() {
     fun checkScreenWhenStateIsLoaded(
         recipes: ImmutableList<Recipe>,
     ) {
+        waitUntilNodeWithTagExists("testTag_SearchTextField")
         assertSearchTextFieldIsDisplayed()
         assertFoodChipsRowIsDisplayed()
 
@@ -94,6 +98,7 @@ class SearchScreenRobot @Inject constructor() {
 
     context (RobotTestRule)
     fun checkScreenWhenAppendingStateIsLoading() {
+        waitUntilNodeWithTagExists("testTag_LoadingView_CircularProgressIndicator")
         assertLoadMoreProgressBarIsDisplay()
         assertLoadMoreTextIsDisplay()
     }
@@ -101,6 +106,7 @@ class SearchScreenRobot @Inject constructor() {
     context (RobotTestRule)
     fun checkScreenWhenAppendingStateIsError() {
         val context = InstrumentationRegistry.getInstrumentation().targetContext
+        waitUntilNodeWithTextExists(SearchState.TEST_ERROR_MESSAGE)
         assertAppendingErrorMessageIsDisplayed(SearchState.TEST_ERROR_MESSAGE)
         assertRetryButtonIsDisplayed(context.getString(R.string.try_again))
     }
@@ -108,6 +114,7 @@ class SearchScreenRobot @Inject constructor() {
     context (RobotTestRule)
     fun checkScreenWhenStateIsEmpty() {
         val context = InstrumentationRegistry.getInstrumentation().targetContext
+        waitUntilNodeWithTextExists(context.getString(R.string.no_food))
         composeTestRule.onNodeWithText(context.getString(R.string.no_food), useUnmergedTree = true)
             .assertIsDisplayed()
     }
@@ -127,6 +134,7 @@ class SearchScreenRobot @Inject constructor() {
     context (RobotTestRule)
     fun checkScreenWhenRefreshStateIsError() {
         val context = InstrumentationRegistry.getInstrumentation().targetContext
+        waitUntilNodeWithContentDescriptionExists("Error Icon")
         assertErrorViewIconIsDisplayed()
         assertErrorViewMessageIsDisplayed(SearchState.TEST_ERROR_MESSAGE)
         assertRetryButtonIsDisplayed(context.getString(R.string.try_again))
@@ -299,6 +307,33 @@ class SearchScreenRobot @Inject constructor() {
         ignoreFrameDuration: Boolean = false,
     ) {
         composeTestRule.mainClock.advanceTimeBy(milliseconds, ignoreFrameDuration)
+    }
+
+    context (RobotTestRule)
+    private fun waitUntilNodeWithTagExists(tag: String, timeoutMillis: Long = 5_000) {
+        composeTestRule.waitUntil(timeoutMillis) {
+            composeTestRule.onAllNodesWithTag(tag, useUnmergedTree = true)
+                .fetchSemanticsNodes().isNotEmpty()
+        }
+    }
+
+    context (RobotTestRule)
+    private fun waitUntilNodeWithTextExists(text: String, timeoutMillis: Long = 5_000) {
+        composeTestRule.waitUntil(timeoutMillis) {
+            composeTestRule.onAllNodesWithText(text, useUnmergedTree = true)
+                .fetchSemanticsNodes().isNotEmpty()
+        }
+    }
+
+    context (RobotTestRule)
+    private fun waitUntilNodeWithContentDescriptionExists(
+        contentDescription: String,
+        timeoutMillis: Long = 5_000,
+    ) {
+        composeTestRule.waitUntil(timeoutMillis) {
+            composeTestRule.onAllNodesWithContentDescription(contentDescription, useUnmergedTree = true)
+                .fetchSemanticsNodes().isNotEmpty()
+        }
     }
 
     operator fun invoke(
