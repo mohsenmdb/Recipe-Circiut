@@ -12,12 +12,14 @@ import com.me.recipe.shared.datastore.LoginState
 import com.me.recipe.shared.datastore.UserDataStore
 import com.me.recipe.shared.datastore.UserInfo
 import com.me.recipe.ui.auth.AuthScreen
+import com.me.recipe.ui.profile.userInfo.UserInfoEvent
+import com.me.recipe.ui.profile.userInfo.UserInfoPresenter
+import com.me.recipe.ui.profile.userInfo.UserInfoScreen
 import com.me.recipe.ui.utils.MainDispatcherRule
 import com.me.recipe.ui.utils.lazyOfDagger
 import com.slack.circuit.runtime.Navigator
 import com.slack.circuit.test.FakeNavigator
 import com.slack.circuit.test.test
-import dagger.Lazy
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.advanceUntilIdle
@@ -32,7 +34,7 @@ import org.robolectric.annotation.Config
 @RunWith(RobolectricTestRunner::class)
 @Config(application = Application::class)
 @OptIn(ExperimentalCoroutinesApi::class)
-class ProfilePresenterTest {
+class UserInfoPresenterTest {
 
     @get:Rule
     val mainDispatcherRule = MainDispatcherRule()
@@ -48,18 +50,18 @@ class ProfilePresenterTest {
 
     @Test
     fun `present - initial state is logged out`() = runTest {
-        val navigator = FakeNavigator(ProfileScreen)
+        val navigator = FakeNavigator(UserInfoScreen)
         val userDataStore = createUserDataStore()
         userDataStore.logout()
         advanceUntilIdle()
 
-        createProfilePresenter(
+        createUserInfoPresenter(
             navigator = navigator,
             userDataStore = userDataStore,
         ).test {
             val state = awaitItem()
 
-            assertThat(state.profile).isEqualTo(UserInfo())
+            assertThat(state.userInfo).isEqualTo(UserInfo())
             assertThat(state.message).isNull()
             navigator.expectNoResetRootEvents()
 
@@ -68,7 +70,7 @@ class ProfilePresenterTest {
     }
 
     @Test
-    fun `present - when user is logged in then profile is updated`() = runTest {
+    fun `present - when user is logged in then user info is updated`() = runTest {
         val user = UserInfo(
             accessToken = "token",
             username = "chef_user",
@@ -80,15 +82,15 @@ class ProfilePresenterTest {
         userDataStore.setUser(user)
         userDataStore.userFlow.first { it is LoginState.LoggedIn }
 
-        createProfilePresenter(
+        createUserInfoPresenter(
             userDataStore = userDataStore,
         ).test {
             val initialState = awaitItem()
-            assertThat(initialState.profile).isEqualTo(UserInfo())
+            assertThat(initialState.userInfo).isEqualTo(UserInfo())
             assertThat(initialState.message).isNull()
 
             val loadedState = awaitItem()
-            assertThat(loadedState.profile).isEqualTo(user)
+            assertThat(loadedState.userInfo).isEqualTo(user)
             assertThat(loadedState.message).isNull()
 
             cancelAndIgnoreRemainingEvents()
@@ -104,18 +106,18 @@ class ProfilePresenterTest {
             lastName = "Tester",
             age = "24",
         )
-        val navigator = FakeNavigator(ProfileScreen)
+        val navigator = FakeNavigator(UserInfoScreen)
         val userDataStore = createUserDataStore()
         userDataStore.setUser(user)
         userDataStore.userFlow.first { it is LoginState.LoggedIn }
 
-        createProfilePresenter(
+        createUserInfoPresenter(
             navigator = navigator,
             userDataStore = userDataStore,
         ).test {
             skipItems(1)
             val loadedState = awaitItem()
-            loadedState.eventSink(ProfileEvent.OnLogoutClicked)
+            loadedState.eventSink(UserInfoEvent.OnLogoutClicked)
 
             val logoutState = awaitItem()
             assertThat(logoutState.message?.message?.textRes).isEqualTo(R.string.logout)
@@ -139,18 +141,18 @@ class ProfilePresenterTest {
         userDataStore.setUser(user)
         userDataStore.userFlow.first { it is LoginState.LoggedIn }
 
-        createProfilePresenter(
+        createUserInfoPresenter(
             userDataStore = userDataStore,
         ).test {
             awaitItem()
             val loadedState = awaitItem()
 
-            loadedState.eventSink(ProfileEvent.OnLogoutClicked)
+            loadedState.eventSink(UserInfoEvent.OnLogoutClicked)
 
             val stateWithMessage = awaitItem()
             assertThat(stateWithMessage.message?.message?.textRes).isEqualTo(R.string.logout)
 
-            stateWithMessage.eventSink(ProfileEvent.ClearMessage)
+            stateWithMessage.eventSink(UserInfoEvent.ClearMessage)
 
             val clearedState = awaitItem()
             assertThat(clearedState.message).isNull()
@@ -159,11 +161,11 @@ class ProfilePresenterTest {
         }
     }
 
-    private fun createProfilePresenter(
-        navigator: Navigator = FakeNavigator(ProfileScreen),
+    private fun createUserInfoPresenter(
+        navigator: Navigator = FakeNavigator(UserInfoScreen),
         userDataStore: UserDataStore = createUserDataStore(),
-    ): ProfilePresenter {
-        return ProfilePresenter(
+    ): UserInfoPresenter {
+        return UserInfoPresenter(
             navigator = navigator,
             getLoginStateUseCase = lazyOfDagger(GetLoginStateUseCase(userDataStore)),
             userDataStore = lazyOfDagger(userDataStore),
