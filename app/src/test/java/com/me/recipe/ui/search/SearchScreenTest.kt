@@ -16,7 +16,7 @@ import org.robolectric.shadows.ShadowLog
 
 @HiltAndroidTest
 @RunWith(RobolectricTestRunner::class)
-@Config(application = HiltTestApplication::class, qualifiers = "w1080dp-h3000dp-xhdpi")
+@Config(application = HiltTestApplication::class, qualifiers = "w1080dp-h2400dp-xhdpi")
 class SearchScreenTest {
 
     @get:Rule
