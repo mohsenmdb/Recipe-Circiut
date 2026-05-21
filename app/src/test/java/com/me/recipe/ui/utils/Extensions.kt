@@ -4,7 +4,7 @@ import app.cash.turbine.ReceiveTurbine
 import com.me.recipe.ui.auth.AuthState
 import dagger.Lazy
 
-fun <T> lazyOfDagger(value: T): dagger.Lazy<T> = Lazy { value }
+fun <T> lazyOfDagger(value: T): Lazy<T> = Lazy { value }
 
 suspend fun ReceiveTurbine<AuthState>.awaitState(
     predicate: (AuthState) -> Boolean,
