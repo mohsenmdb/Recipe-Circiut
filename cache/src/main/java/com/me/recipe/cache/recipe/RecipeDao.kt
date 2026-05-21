@@ -6,6 +6,7 @@ import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import com.me.recipe.cache.recipe.model.RecipeEntity
 import com.me.recipe.shared.utils.RECIPE_PAGINATION_PAGE_SIZE
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface RecipeDao {
@@ -27,6 +28,14 @@ interface RecipeDao {
 
     @Query("DELETE FROM recipes WHERE id = :primaryKey")
     suspend fun deleteRecipe(primaryKey: Int): Int
+
+    suspend fun updateRecipe(recipe: RecipeEntity): Long {
+        deleteRecipe(recipe.id)
+        return insertRecipe(recipe)
+    }
+
+    @Query("SELECT * FROM recipes WHERE is_today_recipe")
+    fun observeTodayRecipe(): Flow<RecipeEntity?>
 
     /**
      * Retrieve recipes for a particular page.

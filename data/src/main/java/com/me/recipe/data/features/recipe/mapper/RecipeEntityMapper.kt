@@ -23,7 +23,7 @@ class RecipeEntityMapper : DomainMapper<RecipeEntity, Recipe> {
         )
     }
 
-    fun mapFromDomainModel(domainModel: Recipe): RecipeEntity {
+    fun mapFromDomainModel(domainModel: Recipe, isTodayRecipe: Boolean = false): RecipeEntity {
         return RecipeEntity(
             id = domainModel.id,
             title = domainModel.title,
@@ -34,6 +34,7 @@ class RecipeEntityMapper : DomainMapper<RecipeEntity, Recipe> {
             ingredients = domainModel.ingredients.joinToString(","),
             date = domainModel.date,
             dateCached = DateUtils.dateToLong(DateUtils.createTimestamp()),
+            isTodayRecipe = isTodayRecipe,
         )
     }
 

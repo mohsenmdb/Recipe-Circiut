@@ -4,6 +4,11 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
+data class RecipeContainerDto(
+    @SerialName(value = "data") val data: RecipeDto?,
+)
+
+@Serializable
 data class RecipeDto(
     @SerialName(value = "id") val id: Int?,
     @SerialName(value = "title") val title: String?,

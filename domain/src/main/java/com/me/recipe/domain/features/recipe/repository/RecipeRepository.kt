@@ -8,4 +8,5 @@ interface RecipeRepository {
         recipeId: Int,
         uid: String,
     ): Flow<Recipe>
+    fun getTodayRecipe(): Flow<Recipe>
 }

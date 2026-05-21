@@ -9,11 +9,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import com.me.recipe.domain.features.recipe.model.Recipe
 import com.me.recipe.ui.component.util.DefaultSnackbar
 import com.me.recipe.ui.component.util.MessageEffect
+import com.me.recipe.ui.component.util.UiMessage
 import com.me.recipe.ui.recipe.components.RecipeDetail
 import com.me.recipe.ui.recipe.components.shimmer.RecipeShimmerView
 import com.me.recipe.ui.theme.RecipeTheme
+import com.me.recipe.util.compose.OnClick
 import com.slack.circuit.codegen.annotations.CircuitInject
 import dagger.hilt.components.SingletonComponent
 
@@ -24,13 +27,33 @@ internal fun RecipeUi(
     modifier: Modifier = Modifier,
 ) {
     BackHandler(onBack = { state.eventSink(RecipeEvent.OnBackClicked) })
+
+    RecipeContent(
+        isLoading = state.isLoading,
+        message = state.message,
+        recipe = state.recipe,
+        clearMessage = { state.eventSink(RecipeEvent.ClearMessage) },
+        onLikeClicked = { state.eventSink(RecipeEvent.OnLikeClicked) },
+        modifier = modifier,
+    )
+}
+
+@Composable
+internal fun RecipeContent(
+    recipe: Recipe,
+    isLoading: Boolean,
+    message: UiMessage?,
+    clearMessage: OnClick,
+    onLikeClicked: OnClick,
+    modifier: Modifier = Modifier,
+) {
     val snackbarHostState = remember { SnackbarHostState() }
+
     MessageEffect(
         snackbarHostState = snackbarHostState,
-        uiMessage = state.message,
-        onClearMessage = { state.eventSink(RecipeEvent.ClearMessage) },
+        uiMessage = message,
+        onClearMessage = clearMessage,
     )
-
     Scaffold(
         containerColor = MaterialTheme.colorScheme.background,
         snackbarHost = {
@@ -40,13 +63,13 @@ internal fun RecipeUi(
         },
         modifier = modifier,
     ) { padding ->
-        if (state.isLoading) {
+        if (isLoading) {
             RecipeShimmerView()
         } else {
             RecipeDetail(
-                recipe = state.recipe,
+                recipe = recipe,
                 modifier = Modifier.padding(padding),
-                onLikeClicked = { state.eventSink(RecipeEvent.OnLikeClicked) },
+                onLikeClicked = onLikeClicked,
             )
         }
     }
