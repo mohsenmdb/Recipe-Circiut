@@ -11,6 +11,7 @@ retrofitVersion = "3.0.0"
 roomVersion = "2.8.4"
 timberVersion = "5.0.1"
 junitVersion = "4.13.2"
+assertk = "0.28.1"
 appcompat = "1.7.1"
 
 composeNavigation = "2.9.7"
@@ -91,8 +92,8 @@ circuit-android = { module = "com.slack.circuit:circuitx-android", version.ref =
 circuit-codegen-annotations = { module = "com.slack.circuit:circuit-codegen-annotations", version.ref = "circuit" }
 circuit-gesturenav = { module = "com.slack.circuit:circuitx-gesture-navigation", version.ref = "circuit" }
 circuit-overlay = { module = "com.slack.circuit:circuit-overlay", version.ref = "circuit" }
-circuit-codegen = { module = "com.slack.circuit:circuit-codegen", version.ref = "circuit" }
 circuit-test = { module = "com.slack.circuit:circuit-test", version.ref = "circuit" }
+circuit-codegen = { module = "com.slack.circuit:circuit-codegen", version.ref = "circuit" }
 kotlinx-coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test-jvm", version.ref = "kotlinxCoroutines" }
 
 kotlinx-atomicfu = "org.jetbrains.kotlinx:atomicfu:0.25.0"

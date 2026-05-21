@@ -2,6 +2,7 @@ package com.me.recipe.ui.search
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Stable
+import androidx.compose.runtime.remember
 import androidx.paging.LoadState
 import androidx.paging.LoadStates
 import androidx.paging.PagingData
@@ -98,12 +99,15 @@ data class SearchState(
         @Composable
         fun testData(
             pagingDataFlow: Flow<PagingData<Recipe>> = flowOf(PagingData.from(testRecipes())),
-        ) = SearchState(
-            items = pagingDataFlow.collectAsLazyPagingItems(),
-            query = FoodCategory.CHICKEN.name,
-            selectedCategory = FoodCategory.CHICKEN,
-            eventSink = {},
-        )
+        ): SearchState {
+            val stablePagingDataFlow = remember { pagingDataFlow }
+            return SearchState(
+                items = stablePagingDataFlow.collectAsLazyPagingItems(),
+                query = FoodCategory.CHICKEN.name,
+                selectedCategory = FoodCategory.CHICKEN,
+                eventSink = {},
+            )
+        }
     }
 }
 

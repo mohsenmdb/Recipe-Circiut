@@ -155,6 +155,7 @@ class AuthPresenter @AssistedInject constructor(
                     AuthEvent.ClearMessage -> scope.launch { uiMessageManager.clearMessage() }
                     AuthEvent.OnSubmitClicked -> {
                         when (authMode) {
+                            AuthMode.LOGIN -> scope.launch { loginUser() }
                             AuthMode.REGISTER -> {
                                 if (password != retryPassword) {
                                     hasPasswordError = true
@@ -163,12 +164,6 @@ class AuthPresenter @AssistedInject constructor(
                                     scope.launch { registerUser() }
                                 }
                             }
-
-                            AuthMode.LOGIN -> {
-                                scope.launch { loginUser() }
-                            }
-
-                            else -> {}
                         }
                     }
                     is AuthEvent.OnFirstNameChange -> firstName = event.firstName
