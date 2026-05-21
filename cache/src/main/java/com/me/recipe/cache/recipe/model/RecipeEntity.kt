@@ -42,4 +42,7 @@ data class RecipeEntity(
      */
     @ColumnInfo(name = "date_cached")
     var dateCached: Long,
+
+    @ColumnInfo(name = "is_today_recipe")
+    var isTodayRecipe: Boolean,
 )

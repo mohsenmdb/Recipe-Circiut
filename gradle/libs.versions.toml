@@ -33,6 +33,8 @@ coreKtx = "1.17.0"
 material = "1.13.0"
 paging = "3.4.1"
 kotlinxCoroutines = "1.10.2"
+store = "5.1.0-alpha05"
+threetenabp = "1.4.8"
 
 
 [libraries]
@@ -101,6 +103,9 @@ material = { group = "com.google.android.material", name = "material", version.r
 
 androidx-paging-compose = { module = "androidx.paging:paging-compose", version.ref = "paging" }
 androidx-paging-paging-common = { module = "androidx.paging:paging-common", version.ref = "paging" }
+
+store5 = { module = "org.mobilenativefoundation.store:store5", version.ref = "store"}
+threeTenAbp = { module = "com.jakewharton.threetenabp:threetenabp", version.ref = "threetenabp"}
 
 [plugins]
 hilt = { id = "com.google.dagger.hilt.android", version.ref = "dagger" }

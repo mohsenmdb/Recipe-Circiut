@@ -19,6 +19,7 @@ import com.me.recipe.ui.auth.AuthScreen
 import com.me.recipe.ui.home.HomeScreen
 import com.me.recipe.ui.profile.ProfileScreen
 import com.me.recipe.ui.search.SearchScreen
+import com.me.recipe.ui.today.TodayRecipeScreen
 import com.slack.circuit.runtime.Navigator
 import com.slack.circuit.runtime.screen.Screen
 
@@ -74,10 +75,11 @@ private fun getScreenForTab(tab: NavigationTabs, isUserLoggedIn: Boolean) = when
     SearchTab -> SearchScreen()
     ProfileTab -> if (isUserLoggedIn) ProfileScreen else AuthScreen
     AddRecipeTab -> AddRecipeScreen
+    TodayRecipeTab -> TodayRecipeScreen
     else -> HomeScreen()
 }
 
 private fun isHomeDestination(screen: Screen?) = when (screen) {
-    is HomeScreen, is SearchScreen, is AuthScreen, is ProfileScreen, is AddRecipeScreen -> true
+    is HomeScreen, is SearchScreen, is AuthScreen, is ProfileScreen, is AddRecipeScreen, is TodayRecipeScreen -> true
     else -> false
 }

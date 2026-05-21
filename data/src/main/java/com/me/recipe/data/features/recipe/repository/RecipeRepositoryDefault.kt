@@ -3,6 +3,8 @@ package com.me.recipe.data.features.recipe.repository
 import com.me.recipe.cache.recipe.RecipeDao
 import com.me.recipe.data.features.recipe.mapper.RecipeDtoMapper
 import com.me.recipe.data.features.recipe.mapper.RecipeEntityMapper
+import com.me.recipe.data.features.recipe.store.TodayRecipeStore
+import com.me.recipe.data.utils.observe
 import com.me.recipe.domain.features.recipe.model.Recipe
 import com.me.recipe.domain.features.recipe.repository.RecipeRepository
 import com.me.recipe.network.features.recipe.RecipeApi
@@ -18,6 +20,7 @@ class RecipeRepositoryDefault @Inject constructor(
     private val recipeApi: RecipeApi,
     private val entityMapper: RecipeEntityMapper,
     private val recipeDtoMapper: RecipeDtoMapper,
+    private val todayRecipeStore: TodayRecipeStore,
     @IoDispatcher private var ioDispatcher: CoroutineDispatcher,
 ) : RecipeRepository {
     override fun getRecipe(
@@ -49,6 +52,11 @@ class RecipeRepositoryDefault @Inject constructor(
 
     private suspend fun getRecipeFromNetwork(recipeId: Int): Recipe {
         val recipes = recipeApi.get(recipeId)
-        return recipeDtoMapper.mapToDomainModel(recipes)
+        return recipeDtoMapper.mapToDomainModel(recipes.data)
+    }
+
+    override fun getTodayRecipe(): Flow<Recipe> {
+        return todayRecipeStore.observe(key = Unit, forceFresh = false)
+            .flowOn(ioDispatcher)
     }
 }

@@ -9,20 +9,20 @@ import java.util.UUID
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toPersistentList
 
-class RecipeDtoMapper : DomainMapper<RecipeDto, Recipe> {
+class RecipeDtoMapper : DomainMapper<RecipeDto?, Recipe> {
 
-    override fun mapToDomainModel(model: RecipeDto, uid: String?): Recipe {
-        val timestamp = model.updatedAt ?: model.createdAt ?: 0L
+    override fun mapToDomainModel(model: RecipeDto?, uid: String?): Recipe {
+        val timestamp = model?.updatedAt ?: model?.createdAt ?: 0L
         return Recipe(
-            id = model.id ?: -1,
+            id = model?.id ?: -1,
             uid = uid ?: UUID.randomUUID().toString(),
-            title = model.title.orEmpty(),
-            description = model.description.orEmpty(),
+            title = model?.title.orEmpty(),
+            description = model?.description.orEmpty(),
             // this replace is just for local server not production
-            image = model.image.orEmpty().replace("http://localhost:3000/", LOCAL_HOST_PATH),
-            rating = model.rating,
-            publisher = model.publisher?.username.orEmpty(),
-            ingredients = model.ingredients?.split(",")?.toPersistentList() ?: persistentListOf(),
+            image = model?.image.orEmpty().replace("http://localhost:3000/", LOCAL_HOST_PATH),
+            rating = model?.rating.orEmpty(),
+            publisher = model?.publisher?.username.orEmpty(),
+            ingredients = model?.ingredients?.split(",")?.toPersistentList() ?: persistentListOf(),
             date = timestamp.toDate(),
         )
     }

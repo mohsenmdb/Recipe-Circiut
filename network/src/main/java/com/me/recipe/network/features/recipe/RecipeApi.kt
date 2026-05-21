@@ -1,7 +1,7 @@
 package com.me.recipe.network.features.recipe
 
 import com.me.recipe.network.features.recipe.model.CategoriesDto
-import com.me.recipe.network.features.recipe.model.RecipeDto
+import com.me.recipe.network.features.recipe.model.RecipeContainerDto
 import com.me.recipe.network.features.recipe.model.RecipeSearchDto
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
@@ -30,7 +30,7 @@ interface RecipeApi {
     @GET("recipes/one/{id}")
     suspend fun get(
         @Path("id") id: Int,
-    ): RecipeDto
+    ): RecipeContainerDto
 
     @GET("recipes/categories")
     suspend fun categories(): CategoriesDto?

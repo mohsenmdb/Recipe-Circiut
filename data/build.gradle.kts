@@ -51,4 +51,6 @@ dependencies {
     implementation(libs.timber)
     implementation(libs.squareup.okhttp)
     implementation(libs.androidx.paging.paging.common)
+    implementation(libs.threeTenAbp)
+    api(libs.store5)
 }

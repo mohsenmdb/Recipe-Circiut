@@ -5,6 +5,7 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.material.icons.filled.Today
 import androidx.compose.ui.graphics.vector.ImageVector
 import com.me.recipe.R
 
@@ -38,5 +39,11 @@ object AddRecipeTab : NavigationTabs {
     override val icon = Icons.Filled.Add
 }
 
-val bottomNavigationScreens = listOf(HomeTab, SearchTab, ProfileTab)
-val bottomNavigationScreensWithLogin = listOf(HomeTab, SearchTab, AddRecipeTab, ProfileTab)
+object TodayRecipeTab : NavigationTabs {
+    override val route = "TodayRecipe"
+    override val titleRes = R.string.navigate_today_recipe
+    override val icon = Icons.Filled.Today
+}
+
+val bottomNavigationScreens = listOf(HomeTab, SearchTab, TodayRecipeTab, ProfileTab)
+val bottomNavigationScreensWithLogin = listOf(HomeTab, SearchTab, AddRecipeTab, TodayRecipeTab, ProfileTab)
