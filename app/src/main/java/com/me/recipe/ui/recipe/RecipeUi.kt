@@ -13,6 +13,7 @@ import com.me.recipe.domain.features.recipe.model.Recipe
 import com.me.recipe.ui.component.util.DefaultSnackbar
 import com.me.recipe.ui.component.util.MessageEffect
 import com.me.recipe.ui.component.util.UiMessage
+import com.me.recipe.ui.recipe.components.RecipeAppBar
 import com.me.recipe.ui.recipe.components.RecipeDetail
 import com.me.recipe.ui.recipe.components.shimmer.RecipeShimmerView
 import com.me.recipe.ui.theme.RecipeTheme
@@ -35,6 +36,12 @@ internal fun RecipeUi(
         clearMessage = { state.eventSink(RecipeEvent.ClearMessage) },
         onLikeClicked = { state.eventSink(RecipeEvent.OnLikeClicked) },
         modifier = modifier,
+        topBar = {
+            RecipeAppBar(
+                title = state.recipe.title,
+                onBackPress = { state.eventSink(RecipeEvent.OnBackClicked) },
+            )
+        },
     )
 }
 
@@ -46,6 +53,7 @@ internal fun RecipeContent(
     clearMessage: OnClick,
     onLikeClicked: OnClick,
     modifier: Modifier = Modifier,
+    topBar: @Composable () -> Unit = {},
 ) {
     val snackbarHostState = remember { SnackbarHostState() }
 
@@ -56,6 +64,7 @@ internal fun RecipeContent(
     )
     Scaffold(
         containerColor = MaterialTheme.colorScheme.background,
+        topBar = topBar,
         snackbarHost = {
             DefaultSnackbar(snackbarHostState = snackbarHostState) {
                 snackbarHostState.currentSnackbarData?.dismiss()
@@ -64,7 +73,7 @@ internal fun RecipeContent(
         modifier = modifier,
     ) { padding ->
         if (isLoading) {
-            RecipeShimmerView()
+            RecipeShimmerView(modifier = Modifier.padding(padding))
         } else {
             RecipeDetail(
                 recipe = recipe,

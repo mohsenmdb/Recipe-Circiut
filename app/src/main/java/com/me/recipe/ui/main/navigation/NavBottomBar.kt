@@ -1,8 +1,5 @@
 package com.me.recipe.ui.main.navigation
 
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.expandVertically
-import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -37,11 +34,7 @@ internal fun NavBottomBar(
         unselectedIconColor = MaterialTheme.colorScheme.onSurfaceVariant,
         unselectedTextColor = MaterialTheme.colorScheme.onSurfaceVariant,
     )
-    AnimatedVisibility(
-        visible = isHomeDestination(navigator.peek()),
-        enter = expandVertically(),
-        exit = shrinkVertically(),
-    ) {
+    if (isHomeDestination(navigator.peek())) {
         NavigationBar(
             containerColor = MaterialTheme.colorScheme.primaryContainer,
             modifier = Modifier.fillMaxWidth(),

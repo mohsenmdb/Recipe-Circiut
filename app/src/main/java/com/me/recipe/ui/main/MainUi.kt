@@ -1,6 +1,7 @@
 package com.me.recipe.ui.main
 
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -35,6 +36,8 @@ internal fun MainUi(
     val navigator = rememberCircuitNavigator(backstack)
     Scaffold(
         modifier = modifier.fillMaxSize(),
+        // Status bar insets are left to each screen so its top bar can draw behind the status bar.
+        contentWindowInsets = WindowInsets(0, 0, 0, 0),
         bottomBar = {
             NavBottomBar(
                 selectedTab = state.selectedTab,

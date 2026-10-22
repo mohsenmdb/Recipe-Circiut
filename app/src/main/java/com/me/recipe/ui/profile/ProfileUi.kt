@@ -1,10 +1,16 @@
 package com.me.recipe.ui.profile
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.statusBars
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.PrimaryTabRow
 import androidx.compose.material3.Tab
+import androidx.compose.material3.TabRowDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -30,7 +36,7 @@ internal fun ProfileUi(
         )
 
         CircuitContent(
-            modifier = Modifier.fillMaxSize(),
+            modifier = Modifier.fillMaxSize().consumeWindowInsets(WindowInsets.statusBars),
             screen = when (state.selectedTab) {
                 UserInfoTab -> UserInfoScreen
                 MyRecipesTab -> MyRecipesScreen
@@ -47,7 +53,12 @@ private fun TabsRow(
     tabs: ImmutableList<ProfileTabs>,
     onTabClick: (ProfileTabs) -> Unit,
 ) {
-    PrimaryTabRow(selectedTabIndex = selectedTab) {
+    PrimaryTabRow(
+        selectedTabIndex = selectedTab,
+        modifier = Modifier
+            .background(TabRowDefaults.primaryContainerColor)
+            .statusBarsPadding(),
+    ) {
         tabs.forEachIndexed { index, tab ->
             Tab(
                 selected = selectedTab == index,
