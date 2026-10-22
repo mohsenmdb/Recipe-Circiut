@@ -16,20 +16,20 @@ import kotlinx.collections.immutable.ImmutableList
 import kotlinx.coroutines.delay
 class RecipeScreenRobot @Inject constructor() {
 
-    context (RobotTestRule)
+    context(rule: RobotTestRule)
     fun setRecipeScreen(
         state: RecipeState,
     ) {
-        composeTestRule.setContent {
+        rule.composeTestRule.setContent {
             RecipeUi(state = state)
         }
     }
 
-    context (RobotTestRule)
+    context(rule: RobotTestRule)
     fun setRecipeScreenLoadingThenLoaded(
         data: RecipeState,
     ) {
-        composeTestRule.setContent {
+        rule.composeTestRule.setContent {
             var state by remember {
                 mutableStateOf(data)
             }
@@ -41,7 +41,7 @@ class RecipeScreenRobot @Inject constructor() {
         }
     }
 
-    context (RobotTestRule)
+    context(rule: RobotTestRule)
     fun checkScreenWhenStateIsLoaded(
         ingredients: ImmutableList<String>,
     ) {
@@ -59,7 +59,7 @@ class RecipeScreenRobot @Inject constructor() {
         assertLoadingRecipeShimmerIsNotDisplayed()
     }
 
-    context (RobotTestRule)
+    context(rule: RobotTestRule)
     fun checkScreenWhenStateIsLoading() {
         assertLoadingRankChipIsDisplayed()
         assertLoadingRecipeShimmerIsDisplayed()
@@ -73,135 +73,135 @@ class RecipeScreenRobot @Inject constructor() {
         assertIngredientTextIsNotDisplayed()
     }
 
-    context (RobotTestRule)
+    context(rule: RobotTestRule)
     private fun assertRecipeImageIsDisplayed() {
-        composeTestRule.onNodeWithTag("testTag_RecipeImage", useUnmergedTree = true)
+        rule.composeTestRule.onNodeWithTag("testTag_RecipeImage", useUnmergedTree = true)
             .assertIsDisplayed()
     }
 
-    context (RobotTestRule)
+    context(rule: RobotTestRule)
     private fun assertRecipeImageShimmerIsDisplayed() {
-        composeTestRule.onNodeWithTag("testTag_recipeImage_shimmer", useUnmergedTree = true)
+        rule.composeTestRule.onNodeWithTag("testTag_recipeImage_shimmer", useUnmergedTree = true)
             .assertIsDisplayed()
     }
 
-    context (RobotTestRule)
+    context(rule: RobotTestRule)
     private fun assertTitleRowTextIsDisplayed() {
-        composeTestRule.onNodeWithTag("testTag_TitleRow_Text", useUnmergedTree = true)
+        rule.composeTestRule.onNodeWithTag("testTag_TitleRow_Text", useUnmergedTree = true)
             .assertIsDisplayed()
     }
 
-    context (RobotTestRule)
+    context(rule: RobotTestRule)
     private fun assertTitleRowTextIsNotDisplayed() {
-        composeTestRule.onNodeWithTag("testTag_TitleRow_Text", useUnmergedTree = true)
+        rule.composeTestRule.onNodeWithTag("testTag_TitleRow_Text", useUnmergedTree = true)
             .assertIsNotDisplayed()
     }
 
-    context (RobotTestRule)
+    context(rule: RobotTestRule)
     private fun assertTitleRowIsDisplayed() {
-        composeTestRule.onNodeWithTag("testTag_TitleRow", useUnmergedTree = true)
+        rule.composeTestRule.onNodeWithTag("testTag_TitleRow", useUnmergedTree = true)
             .assertIsDisplayed()
     }
 
-    context (RobotTestRule)
+    context(rule: RobotTestRule)
     private fun assertLoadingRankChipIsDisplayed() {
-        composeTestRule.onNodeWithTag("testTag_LoadingRankChip", useUnmergedTree = true)
+        rule.composeTestRule.onNodeWithTag("testTag_LoadingRankChip", useUnmergedTree = true)
             .assertIsDisplayed()
     }
 
-    context (RobotTestRule)
+    context(rule: RobotTestRule)
     private fun assertLoadingRankChipIsNotDisplayed() {
-        composeTestRule.onNodeWithTag("testTag_LoadingRankChip", useUnmergedTree = true)
+        rule.composeTestRule.onNodeWithTag("testTag_LoadingRankChip", useUnmergedTree = true)
             .assertIsNotDisplayed()
     }
 
-    context (RobotTestRule)
+    context(rule: RobotTestRule)
     private fun assertRankChipIsDisplayed() {
-        composeTestRule.onNodeWithTag("testTag_RankChip", useUnmergedTree = true)
+        rule.composeTestRule.onNodeWithTag("testTag_RankChip", useUnmergedTree = true)
             .assertIsDisplayed()
     }
 
-    context (RobotTestRule)
+    context(rule: RobotTestRule)
     private fun assertRankChipIsNotDisplayed() {
-        composeTestRule.onNodeWithTag("testTag_RankChip", useUnmergedTree = true)
+        rule.composeTestRule.onNodeWithTag("testTag_RankChip", useUnmergedTree = true)
             .assertIsNotDisplayed()
     }
 
-    context (RobotTestRule)
+    context(rule: RobotTestRule)
     private fun assertRecipeInfoViewIsDisplayed() {
-        composeTestRule.onNodeWithTag("testTag_RecipeInfoView", useUnmergedTree = true)
+        rule.composeTestRule.onNodeWithTag("testTag_RecipeInfoView", useUnmergedTree = true)
             .assertIsDisplayed()
     }
 
-    context (RobotTestRule)
+    context(rule: RobotTestRule)
     private fun assertRecipeInfoViewIsNotDisplayed() {
-        composeTestRule.onNodeWithTag("testTag_RecipeInfoView", useUnmergedTree = true)
+        rule.composeTestRule.onNodeWithTag("testTag_RecipeInfoView", useUnmergedTree = true)
             .assertIsNotDisplayed()
     }
 
-    context (RobotTestRule)
+    context(rule: RobotTestRule)
     private fun assertRecipeInfoViewTextIsDisplayed() {
-        composeTestRule.onNodeWithTag("testTag_RecipeInfoView_Text", useUnmergedTree = true)
+        rule.composeTestRule.onNodeWithTag("testTag_RecipeInfoView_Text", useUnmergedTree = true)
             .assertIsDisplayed()
     }
 
-    context (RobotTestRule)
+    context(rule: RobotTestRule)
     private fun assertRecipeInfoViewTextIsNotDisplayed() {
-        composeTestRule.onNodeWithTag("testTag_RecipeInfoView_Text", useUnmergedTree = true)
+        rule.composeTestRule.onNodeWithTag("testTag_RecipeInfoView_Text", useUnmergedTree = true)
             .assertIsNotDisplayed()
     }
 
-    context (RobotTestRule)
+    context(rule: RobotTestRule)
     private fun assertRecipeInfoViewHorizontalDividerIsDisplayed() {
-        composeTestRule.onNodeWithTag("testTag_RecipeInfoView_HorizontalDivider", useUnmergedTree = true)
+        rule.composeTestRule.onNodeWithTag("testTag_RecipeInfoView_HorizontalDivider", useUnmergedTree = true)
             .assertIsDisplayed()
     }
 
-    context (RobotTestRule)
+    context(rule: RobotTestRule)
     private fun assertRecipeInfoViewHorizontalDividerIsNotDisplayed() {
-        composeTestRule.onNodeWithTag("testTag_RecipeInfoView_HorizontalDivider", useUnmergedTree = true)
+        rule.composeTestRule.onNodeWithTag("testTag_RecipeInfoView_HorizontalDivider", useUnmergedTree = true)
             .assertIsNotDisplayed()
     }
 
-    context (RobotTestRule)
+    context(rule: RobotTestRule)
     private fun assertLoadingRecipeShimmerIsDisplayed() {
-        composeTestRule.onNodeWithTag("testTag_LoadingRecipeShimmer", useUnmergedTree = true)
+        rule.composeTestRule.onNodeWithTag("testTag_LoadingRecipeShimmer", useUnmergedTree = true)
             .assertIsDisplayed()
     }
 
-    context (RobotTestRule)
+    context(rule: RobotTestRule)
     private fun assertLoadingRecipeShimmerIsNotDisplayed() {
-        composeTestRule.onNodeWithTag("testTag_LoadingRecipeShimmer", useUnmergedTree = true)
+        rule.composeTestRule.onNodeWithTag("testTag_LoadingRecipeShimmer", useUnmergedTree = true)
             .assertIsNotDisplayed()
     }
 
-    context (RobotTestRule)
+    context(rule: RobotTestRule)
     private fun assertIngredientTextIsNotDisplayed() {
-        composeTestRule.onNodeWithTag("testTag_ingredient_Text", useUnmergedTree = true)
+        rule.composeTestRule.onNodeWithTag("testTag_ingredient_Text", useUnmergedTree = true)
             .assertIsNotDisplayed()
     }
 
-    context (RobotTestRule)
+    context(rule: RobotTestRule)
     private fun assertIngredientIsDisplayed(
         text: String,
     ) {
-        composeTestRule.onNodeWithText(text, useUnmergedTree = true)
+        rule.composeTestRule.onNodeWithText(text, useUnmergedTree = true)
             .assertIsDisplayed()
     }
 
-    context (RobotTestRule)
+    context(rule: RobotTestRule)
     fun mainClockAutoAdvance(
         autoAdvance: Boolean,
     ) {
-        composeTestRule.mainClock.autoAdvance = autoAdvance
+        rule.composeTestRule.mainClock.autoAdvance = autoAdvance
     }
 
-    context (RobotTestRule)
+    context(rule: RobotTestRule)
     fun mainClockAdvanceTimeBy(
         milliseconds: Long,
         ignoreFrameDuration: Boolean = false,
     ) {
-        composeTestRule.mainClock.advanceTimeBy(milliseconds, ignoreFrameDuration)
+        rule.composeTestRule.mainClock.advanceTimeBy(milliseconds, ignoreFrameDuration)
     }
 
     operator fun invoke(

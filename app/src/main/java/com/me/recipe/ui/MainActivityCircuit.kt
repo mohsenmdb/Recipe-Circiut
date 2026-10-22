@@ -14,6 +14,7 @@ import com.slack.circuit.foundation.Circuit
 import com.slack.circuit.foundation.CircuitCompositionLocals
 import com.slack.circuit.foundation.NavigableCircuitContent
 import com.slack.circuit.foundation.rememberCircuitNavigator
+import com.slack.circuit.foundation.rememberDefaultCircuitSaver
 import com.slack.circuitx.android.rememberAndroidScreenAwareNavigator
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
@@ -38,7 +39,10 @@ class MainActivityCircuit : AppCompatActivity() {
             RecipeTheme(settingsDataStore.isDark.value) {
                 CompositionLocalProvider(LocalErrorFormatter provides errorFormatter) {
                     CircuitCompositionLocals(circuit = circuit) {
-                        val backStack = rememberSaveableBackStack(root = SplashScreen)
+                        val backStack = rememberSaveableBackStack(
+                            circuitSaver = rememberDefaultCircuitSaver(),
+                            root = SplashScreen,
+                        )
                         val navigator = rememberAndroidScreenAwareNavigator(
                             delegate = rememberCircuitNavigator(
                                 backStack = backStack,

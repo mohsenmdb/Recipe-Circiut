@@ -16,6 +16,7 @@ import com.slack.circuit.backstack.rememberSaveableBackStack
 import com.slack.circuit.codegen.annotations.CircuitInject
 import com.slack.circuit.foundation.NavigableCircuitContent
 import com.slack.circuit.foundation.rememberCircuitNavigator
+import com.slack.circuit.foundation.rememberDefaultCircuitSaver
 import com.slack.circuit.runtime.Navigator
 import com.slack.circuitx.gesturenavigation.GestureNavigationDecorationFactory
 import dagger.hilt.components.SingletonComponent
@@ -26,7 +27,10 @@ internal fun MainUi(
     state: MainState,
     modifier: Modifier = Modifier,
 ) {
-    val backstack = rememberSaveableBackStack(root = HomeScreen())
+    val backstack = rememberSaveableBackStack(
+        circuitSaver = rememberDefaultCircuitSaver(),
+        root = HomeScreen(),
+    )
     val navigator = rememberCircuitNavigator(backstack)
     Scaffold(
         modifier = modifier.fillMaxSize(),
@@ -54,8 +58,8 @@ private fun Content(
     navigator: Navigator,
     backstack: SaveableBackStack,
 ) {
-    val gestureNavigationDecoration = remember(navigator) {
-        GestureNavigationDecorationFactory(onBackInvoked = navigator::pop)
+    val gestureNavigationDecoration = remember {
+        GestureNavigationDecorationFactory()
     }
 
     NavigableCircuitContent(
