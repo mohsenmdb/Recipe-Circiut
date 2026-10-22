@@ -38,14 +38,19 @@ class RecipeListPresenter @AssistedInject constructor(
                 when (event) {
                     RecipeListEvent.OnNavigateBackClicked ->
                         navigator.pop()
+
                     RecipeListEvent.ClearMessage ->
                         searchState.eventSink.invoke(SearchEvent.ClearMessage)
+
                     is RecipeListEvent.OnRecipeClick ->
                         searchState.eventSink.invoke(SearchEvent.OnRecipeClick(event.recipe))
+
                     is RecipeListEvent.OnRecipeLongClick ->
                         searchState.eventSink.invoke(SearchEvent.OnRecipeLongClick(event.title))
+
                     RecipeListEvent.OnRetryClicked ->
                         searchState.eventSink.invoke(SearchEvent.OngRetryClicked)
+
                     RecipeListEvent.OnAppendingRetryClicked ->
                         searchState.eventSink.invoke(SearchEvent.OnAppendingRetryClicked)
                 }

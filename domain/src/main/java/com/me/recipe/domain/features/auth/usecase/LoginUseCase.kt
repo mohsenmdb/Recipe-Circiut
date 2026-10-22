@@ -13,9 +13,7 @@ class LoginUseCase @Inject constructor(
         val username: String,
         val password: String,
     )
-    suspend operator fun invoke(params: Params): Result<Login> {
-        return runAsResult {
-            repository.login(params.username, params.password)
-        }
+    suspend operator fun invoke(params: Params): Result<Login> = runAsResult {
+        repository.login(params.username, params.password)
     }
 }

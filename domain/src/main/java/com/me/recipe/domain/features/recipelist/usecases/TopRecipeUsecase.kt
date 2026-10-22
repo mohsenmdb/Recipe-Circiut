@@ -7,7 +7,5 @@ import javax.inject.Inject
 class TopRecipeUsecase @Inject constructor(
     private val recipeListRepository: RecipeListRepository,
 ) {
-    suspend operator fun invoke(): Recipe {
-        return recipeListRepository.getTopRecipe()
-    }
+    suspend operator fun invoke(): Recipe = recipeListRepository.getTopRecipe()
 }

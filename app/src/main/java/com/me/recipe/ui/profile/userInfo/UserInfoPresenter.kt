@@ -54,6 +54,7 @@ class UserInfoPresenter @AssistedInject constructor(
             eventSink = { event ->
                 when (event) {
                     UserInfoEvent.ClearMessage -> scope.launch { uiMessageManager.clearMessage() }
+
                     UserInfoEvent.OnLogoutClicked -> scope.launch {
                         userDataStore.get().logout()
                         uiMessageManager.emitMessage(UiMessage.createToast(R.string.logout))

@@ -8,19 +8,12 @@ sealed interface StringResource {
     fun resolve(context: Context): String
 
     data class Text(val text: String) : StringResource {
-        override fun resolve(context: Context): String {
-            return text
-        }
+        override fun resolve(context: Context): String = text
     }
     data class ResId(@StringRes val stringId: Int) : StringResource {
-        override fun resolve(context: Context): String {
-            return context.getString(stringId)
-        }
+        override fun resolve(context: Context): String = context.getString(stringId)
     }
-    data class ResIdWithParams(@StringRes val stringId: Int, val params: List<Any>) :
-        StringResource {
-        override fun resolve(context: Context): String {
-            return context.getString(stringId, *params.toTypedArray())
-        }
+    data class ResIdWithParams(@StringRes val stringId: Int, val params: List<Any>) : StringResource {
+        override fun resolve(context: Context): String = context.getString(stringId, *params.toTypedArray())
     }
 }

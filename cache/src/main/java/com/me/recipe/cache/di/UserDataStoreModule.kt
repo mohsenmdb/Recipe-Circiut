@@ -16,6 +16,5 @@ import kotlinx.coroutines.CoroutineDispatcher
 object UserDataStoreModule {
     @Provides
     @Singleton
-    internal fun provideUserDataStore(@ApplicationContext context: Context, @IoDispatcher ioDispatcher: CoroutineDispatcher): UserDataStore =
-        UserDataStore(context, ioDispatcher)
+    internal fun provideUserDataStore(@ApplicationContext context: Context, @IoDispatcher ioDispatcher: CoroutineDispatcher): UserDataStore = UserDataStore(context, ioDispatcher)
 }

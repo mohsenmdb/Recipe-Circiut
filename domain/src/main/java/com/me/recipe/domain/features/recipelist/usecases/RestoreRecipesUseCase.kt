@@ -20,11 +20,9 @@ class RestoreRecipesUseCase @Inject constructor(
         val page: Int,
         val query: String,
     )
-    override fun createObservable(params: Params): Flow<Result<ImmutableList<Recipe>>> {
-        return recipeListRepository.restore(params.page, params.query)
-            .map(Result.Companion::success)
-            .catch {
-                emit(Result.failure(it))
-            }
-    }
+    override fun createObservable(params: Params): Flow<Result<ImmutableList<Recipe>>> = recipeListRepository.restore(params.page, params.query)
+        .map(Result.Companion::success)
+        .catch {
+            emit(Result.failure(it))
+        }
 }

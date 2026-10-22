@@ -58,8 +58,7 @@ class UserDataStore @Inject constructor(
             ),
         )
     }
-    fun getAccessToken(): String? =
-        if (_userFlow.value is LoginState.LoggedIn) (_userFlow.value as LoginState.LoggedIn).user.accessToken else null
+    fun getAccessToken(): String? = if (_userFlow.value is LoginState.LoggedIn) (_userFlow.value as LoginState.LoggedIn).user.accessToken else null
 
     suspend fun setUser(user: UserInfo) = withContext(ioDispatcher) {
         context.userDataStore.edit { prefs ->

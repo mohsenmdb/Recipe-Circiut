@@ -21,13 +21,11 @@ class ObservePagedVitrineNew @Inject constructor(
     private val pagingSource: PagingSource<VitrinePagingKey, Recipe>,
 ) : PagingInteractor<ObservePagedVitrineNew.Params, Recipe>() {
 
-    override fun createObservable(params: Params): Flow<PagingData<Recipe>> {
-        return Pager(
-            config = params.pagingConfig,
-            initialKey = params.key,
-            pagingSourceFactory = { pagingSource },
-        ).flow
-    }
+    override fun createObservable(params: Params): Flow<PagingData<Recipe>> = Pager(
+        config = params.pagingConfig,
+        initialKey = params.key,
+        pagingSourceFactory = { pagingSource },
+    ).flow
 
     data class Params(
         override val pagingConfig: PagingConfig,

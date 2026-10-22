@@ -12,8 +12,7 @@ import javax.inject.Inject
 import kotlinx.collections.immutable.PersistentList
 import kotlinx.collections.immutable.toPersistentList
 
-class CategoryDtoMapper @Inject constructor(private val recipeDtoMapper: RecipeDtoMapper) :
-    NullableInputMapper<CategoriesDto, PersistentList<CategoryRecipe>> {
+class CategoryDtoMapper @Inject constructor(private val recipeDtoMapper: RecipeDtoMapper) : NullableInputMapper<CategoriesDto, PersistentList<CategoryRecipe>> {
     override fun map(input: CategoriesDto?): PersistentList<CategoryRecipe> {
         return buildList {
             input?.categories?.forEach {
@@ -30,28 +29,24 @@ class CategoryDtoMapper @Inject constructor(private val recipeDtoMapper: RecipeD
         }.toPersistentList()
     }
 
-    private fun getRowType(type: RowTypeDto?): CategoryRowType {
-        return when (type) {
-            RowTypeDto.ROW -> CategoryRowType.ROW
-            RowTypeDto.SLIDER -> CategoryRowType.SLIDER
-            else -> CategoryRowType.UNKNOWN
-        }
+    private fun getRowType(type: RowTypeDto?): CategoryRowType = when (type) {
+        RowTypeDto.ROW -> CategoryRowType.ROW
+        RowTypeDto.SLIDER -> CategoryRowType.SLIDER
+        else -> CategoryRowType.UNKNOWN
     }
-    private fun mapCategory(category: FoodCategoryDto?): FoodCategory {
-        return when (category) {
-            FoodCategoryDto.CHICKEN -> FoodCategory.CHICKEN
-            FoodCategoryDto.SOUP -> FoodCategory.SOUP
-            FoodCategoryDto.DESSERT -> FoodCategory.DESSERT
-            FoodCategoryDto.VEGETARIAN -> FoodCategory.VEGETARIAN
-            FoodCategoryDto.MILK -> FoodCategory.MILK
-            FoodCategoryDto.VEGAN -> FoodCategory.VEGAN
-            FoodCategoryDto.PIZZA -> FoodCategory.PIZZA
-            FoodCategoryDto.DONUT -> FoodCategory.DONUT
-            FoodCategoryDto.WATER -> FoodCategory.WATER
-            FoodCategoryDto.BEEF -> FoodCategory.BEEF
-            FoodCategoryDto.PASTA -> FoodCategory.PASTA
-            FoodCategoryDto.ALL -> FoodCategory.ALL
-            else -> FoodCategory.UNKNOWN
-        }
+    private fun mapCategory(category: FoodCategoryDto?): FoodCategory = when (category) {
+        FoodCategoryDto.CHICKEN -> FoodCategory.CHICKEN
+        FoodCategoryDto.SOUP -> FoodCategory.SOUP
+        FoodCategoryDto.DESSERT -> FoodCategory.DESSERT
+        FoodCategoryDto.VEGETARIAN -> FoodCategory.VEGETARIAN
+        FoodCategoryDto.MILK -> FoodCategory.MILK
+        FoodCategoryDto.VEGAN -> FoodCategory.VEGAN
+        FoodCategoryDto.PIZZA -> FoodCategory.PIZZA
+        FoodCategoryDto.DONUT -> FoodCategory.DONUT
+        FoodCategoryDto.WATER -> FoodCategory.WATER
+        FoodCategoryDto.BEEF -> FoodCategory.BEEF
+        FoodCategoryDto.PASTA -> FoodCategory.PASTA
+        FoodCategoryDto.ALL -> FoodCategory.ALL
+        else -> FoodCategory.UNKNOWN
     }
 }

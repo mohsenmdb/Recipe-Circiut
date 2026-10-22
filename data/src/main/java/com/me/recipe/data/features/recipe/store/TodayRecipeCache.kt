@@ -17,10 +17,8 @@ class TodayRecipeCache @Inject constructor(
         recipeDao.updateRecipe(recipeEntityMapper.mapFromDomainModel(response, true))
     }
 
-    override fun read(key: Unit): Flow<Recipe?> {
-        return recipeDao.observeTodayRecipe().map { recipe ->
-            recipe?.let { recipeEntityMapper.mapToDomainModel(recipe) }
-        }
+    override fun read(key: Unit): Flow<Recipe?> = recipeDao.observeTodayRecipe().map { recipe ->
+        recipe?.let { recipeEntityMapper.mapToDomainModel(recipe) }
     }
 
     override suspend fun delete(key: Unit) {

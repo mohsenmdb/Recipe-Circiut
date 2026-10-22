@@ -10,10 +10,8 @@ class RobotTestRule(
 ) : TestRule {
 
     val composeTestRule = createComposeRule()
-    override fun apply(base: Statement, description: Description): Statement {
-        return RuleChain
-            .outerRule(HiltAndroidAutoInjectRule(testInstance))
-            .around(composeTestRule)
-            .apply(base, description)
-    }
+    override fun apply(base: Statement, description: Description): Statement = RuleChain
+        .outerRule(HiltAndroidAutoInjectRule(testInstance))
+        .around(composeTestRule)
+        .apply(base, description)
 }

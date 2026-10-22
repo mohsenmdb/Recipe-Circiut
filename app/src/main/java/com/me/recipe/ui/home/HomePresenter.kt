@@ -98,11 +98,15 @@ class HomePresenter @AssistedInject constructor(
                     is HomeEvent.OnCategoryClicked -> {
                         navigator.goTo(RecipeListScreen(event.category.value))
                     }
+
                     is HomeEvent.OnRecipeLongClick -> {
                         stableScope.launch { uiMessageManager.emitMessage(UiMessage.createSnackbar(event.title)) }
                     }
+
                     HomeEvent.ToggleDarkTheme -> settingsDataStore.get().toggleTheme()
+
                     HomeEvent.ClearMessage -> stableScope.launch { uiMessageManager.clearMessage() }
+
                     HomeEvent.OnRetryClicked -> stableScope.launch {
                         refresher = ForceFresh.refresh()
                     }

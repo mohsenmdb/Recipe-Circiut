@@ -76,24 +76,23 @@ class MyRecipesPresenterTest {
     }
 
     @Test
-    fun `present - when recipe is long clicked and clear message is clicked then message is removed`() =
-        runTest {
-            createMyRecipesPresenter().test {
-                val initialState = awaitItem()
+    fun `present - when recipe is long clicked and clear message is clicked then message is removed`() = runTest {
+        createMyRecipesPresenter().test {
+            val initialState = awaitItem()
 
-                initialState.eventSink(MyRecipesEvent.OnRecipeLongClick("Thai Soup"))
+            initialState.eventSink(MyRecipesEvent.OnRecipeLongClick("Thai Soup"))
 
-                val stateWithMessage = awaitItem()
-                assertThat(stateWithMessage.message?.message?.text).isEqualTo("Thai Soup")
+            val stateWithMessage = awaitItem()
+            assertThat(stateWithMessage.message?.message?.text).isEqualTo("Thai Soup")
 
-                stateWithMessage.eventSink(MyRecipesEvent.ClearMessage)
+            stateWithMessage.eventSink(MyRecipesEvent.ClearMessage)
 
-                val clearedState = awaitItem()
-                assertThat(clearedState.message).isNull()
+            val clearedState = awaitItem()
+            assertThat(clearedState.message).isNull()
 
-                cancelAndIgnoreRemainingEvents()
-            }
+            cancelAndIgnoreRemainingEvents()
         }
+    }
 
     @Test
     fun `present - when navigate back is clicked then navigator pops`() = runTest {
@@ -116,13 +115,11 @@ class MyRecipesPresenterTest {
         screen: MyRecipesScreen = MyRecipesScreen,
         navigator: Navigator = FakeNavigator(ProfileScreen, MyRecipesScreen),
         searchPresenterFactory: SearchPresenter.Factory = RecordingSearchPresenterFactory(),
-    ): MyRecipesPresenter {
-        return MyRecipesPresenter(
-            screen = screen,
-            navigator = navigator,
-            searchPresenterFactory = searchPresenterFactory,
-        )
-    }
+    ): MyRecipesPresenter = MyRecipesPresenter(
+        screen = screen,
+        navigator = navigator,
+        searchPresenterFactory = searchPresenterFactory,
+    )
 
     private class RecordingSearchPresenterFactory : SearchPresenter.Factory {
         var createdScreen: SearchScreen? = null
@@ -147,12 +144,10 @@ class MyRecipesPresenterTest {
     private class TestRecipePagingSource : PagingSource<VitrinePagingKey, Recipe>() {
         override fun getRefreshKey(state: PagingState<VitrinePagingKey, Recipe>): VitrinePagingKey? = null
 
-        override suspend fun load(params: LoadParams<VitrinePagingKey>): LoadResult<VitrinePagingKey, Recipe> {
-            return LoadResult.Page(
-                data = listOf(Recipe.Companion.testData()),
-                prevKey = null,
-                nextKey = null,
-            )
-        }
+        override suspend fun load(params: LoadParams<VitrinePagingKey>): LoadResult<VitrinePagingKey, Recipe> = LoadResult.Page(
+            data = listOf(Recipe.Companion.testData()),
+            prevKey = null,
+            nextKey = null,
+        )
     }
 }

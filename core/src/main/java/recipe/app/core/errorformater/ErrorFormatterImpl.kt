@@ -17,30 +17,36 @@ import retrofit2.HttpException
 class ErrorFormatterImpl @Inject constructor(
     @ApplicationContext private val context: Context,
 ) : ErrorFormatter {
-    override fun format(throwable: Throwable?): String {
-        return formater(throwable)
-    }
+    override fun format(throwable: Throwable?): String = formater(throwable)
 
     private fun formater(throwable: Throwable?): String {
         val errorMessage: StringResource = when (throwable) {
             is ReadableException -> StringResource.Text(throwable.readableMessage)
+
             is RecipeDataException -> StringResource.ResId(R.string.something_went_wrong)
+
             is UnknownHostException, is ConnectException -> StringResource.ResId(R.string.not_connected_to_internet)
+
             is SocketTimeoutException, is TimeoutException -> StringResource.ResId(R.string.connection_timeout_exception)
+
             is SSLHandshakeException -> StringResource.ResId(R.string.server_error_retry)
+
             is HttpException -> {
                 when {
                     throwable.code() == UNAUTHORIZED_ERROR_CODE -> {
                         StringResource.ResId(R.string.server_error_unauthorized)
                     }
+
                     throwable.code() == USER_ALREADY_EXIST_ERROR_CODE -> {
                         StringResource.ResId(R.string.server_error_user_exist)
                     }
+
                     else -> {
                         StringResource.ResId(R.string.server_error_retry)
                     }
                 }
             }
+
             else -> StringResource.ResId(R.string.server_error_retry)
         }
 

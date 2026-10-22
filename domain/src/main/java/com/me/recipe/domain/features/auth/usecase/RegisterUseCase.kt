@@ -17,15 +17,13 @@ class RegisterUseCase @Inject constructor(
         val password: String,
     )
 
-    suspend operator fun invoke(params: Params): Result<Register> {
-        return runAsResult {
-            repository.register(
-                username = params.username,
-                firstName = params.firstName,
-                lastName = params.lastName,
-                age = params.age,
-                password = params.password,
-            )
-        }
+    suspend operator fun invoke(params: Params): Result<Register> = runAsResult {
+        repository.register(
+            username = params.username,
+            firstName = params.firstName,
+            lastName = params.lastName,
+            age = params.age,
+            password = params.password,
+        )
     }
 }

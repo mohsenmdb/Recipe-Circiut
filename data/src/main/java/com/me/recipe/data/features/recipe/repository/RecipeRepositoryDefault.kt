@@ -44,10 +44,8 @@ class RecipeRepositoryDefault @Inject constructor(
         }
     }.flowOn(ioDispatcher)
 
-    private suspend fun getRecipeFromCache(recipeId: Int, uid: String): Recipe? {
-        return recipeDao.getRecipeById(recipeId)?.let { recipeEntity ->
-            entityMapper.mapToDomainModel(recipeEntity, uid)
-        }
+    private suspend fun getRecipeFromCache(recipeId: Int, uid: String): Recipe? = recipeDao.getRecipeById(recipeId)?.let { recipeEntity ->
+        entityMapper.mapToDomainModel(recipeEntity, uid)
     }
 
     private suspend fun getRecipeFromNetwork(recipeId: Int): Recipe {
@@ -55,8 +53,6 @@ class RecipeRepositoryDefault @Inject constructor(
         return recipeDtoMapper.mapToDomainModel(recipes.data)
     }
 
-    override fun getTodayRecipe(): Flow<Recipe> {
-        return todayRecipeStore.observe(key = Unit, forceFresh = false)
-            .flowOn(ioDispatcher)
-    }
+    override fun getTodayRecipe(): Flow<Recipe> = todayRecipeStore.observe(key = Unit, forceFresh = false)
+        .flowOn(ioDispatcher)
 }

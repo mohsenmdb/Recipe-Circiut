@@ -27,7 +27,5 @@ class RecipeDtoMapper : DomainMapper<RecipeDto?, Recipe> {
         )
     }
 
-    fun toDomainList(initial: List<RecipeDto>): List<Recipe> {
-        return initial.map { mapToDomainModel(it) }
-    }
+    fun toDomainList(initial: List<RecipeDto>): List<Recipe> = initial.map { mapToDomainModel(it) }
 }

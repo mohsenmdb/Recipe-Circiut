@@ -29,10 +29,9 @@ class CategoriesRepositoryDefault @Inject constructor(
     @IoDispatcher private var ioDispatcher: CoroutineDispatcher,
 ) : CategoriesRepository {
 
-    override fun categoriesRecipes(): Flow<ImmutableList<CategoryRecipe>> =
-        flow {
-            emit(getCategoriesFromNetwork())
-        }.flowOn(ioDispatcher)
+    override fun categoriesRecipes(): Flow<ImmutableList<CategoryRecipe>> = flow {
+        emit(getCategoriesFromNetwork())
+    }.flowOn(ioDispatcher)
 
     private suspend fun getCategoriesFromNetwork(): PersistentList<CategoryRecipe> {
         val response = recipeApi.categories()
@@ -43,32 +42,28 @@ class CategoriesRepositoryDefault @Inject constructor(
         return categories
     }
 
-    override fun categoriesRecipesOffline(): Flow<ImmutableList<CategoryRecipe>> {
-        return flow {
-            emit(getOfflineCategories())
-        }.flowOn(ioDispatcher)
-    }
+    override fun categoriesRecipesOffline(): Flow<ImmutableList<CategoryRecipe>> = flow {
+        emit(getOfflineCategories())
+    }.flowOn(ioDispatcher)
 
-    private suspend fun getOfflineCategories(): PersistentList<CategoryRecipe> =
-        buildList {
-            getAllFoodCategories().forEach { category ->
-                val cacheResult = getCachedCategories(category)
-                val recipes = recipeEntityMapper.toDomainList(cacheResult).toPersistentList()
-                if (recipes.isEmpty()) return@forEach
-                add(
-                    CategoryRecipe(
-                        rowType = CategoryRowType.ROW,
-                        category = category,
-                        recipes = recipes,
-                    ),
-                )
-            }
-        }.toPersistentList()
+    private suspend fun getOfflineCategories(): PersistentList<CategoryRecipe> = buildList {
+        getAllFoodCategories().forEach { category ->
+            val cacheResult = getCachedCategories(category)
+            val recipes = recipeEntityMapper.toDomainList(cacheResult).toPersistentList()
+            if (recipes.isEmpty()) return@forEach
+            add(
+                CategoryRecipe(
+                    rowType = CategoryRowType.ROW,
+                    category = category,
+                    recipes = recipes,
+                ),
+            )
+        }
+    }.toPersistentList()
 
-    private suspend fun getCachedCategories(category: FoodCategory): List<RecipeEntity> =
-        recipeDao.searchRecipes(
-            pageSize = RECIPE_CATEGORY_PAGE_SIZE,
-            query = category.name,
-            page = 1,
-        )
+    private suspend fun getCachedCategories(category: FoodCategory): List<RecipeEntity> = recipeDao.searchRecipes(
+        pageSize = RECIPE_CATEGORY_PAGE_SIZE,
+        query = category.name,
+        page = 1,
+    )
 }

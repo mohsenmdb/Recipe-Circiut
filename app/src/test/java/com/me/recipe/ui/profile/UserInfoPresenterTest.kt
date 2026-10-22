@@ -164,18 +164,14 @@ class UserInfoPresenterTest {
     private fun createUserInfoPresenter(
         navigator: Navigator = FakeNavigator(UserInfoScreen),
         userDataStore: UserDataStore = createUserDataStore(),
-    ): UserInfoPresenter {
-        return UserInfoPresenter(
-            navigator = navigator,
-            getLoginStateUseCase = lazyOfDagger(GetLoginStateUseCase(userDataStore)),
-            userDataStore = lazyOfDagger(userDataStore),
-        )
-    }
+    ): UserInfoPresenter = UserInfoPresenter(
+        navigator = navigator,
+        getLoginStateUseCase = lazyOfDagger(GetLoginStateUseCase(userDataStore)),
+        userDataStore = lazyOfDagger(userDataStore),
+    )
 
-    private fun createUserDataStore(): UserDataStore {
-        return UserDataStore(
-            context = context,
-            ioDispatcher = mainDispatcherRule.testDispatcher,
-        )
-    }
+    private fun createUserDataStore(): UserDataStore = UserDataStore(
+        context = context,
+        ioDispatcher = mainDispatcherRule.testDispatcher,
+    )
 }

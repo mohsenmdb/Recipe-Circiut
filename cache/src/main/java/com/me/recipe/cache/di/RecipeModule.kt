@@ -14,7 +14,5 @@ object RecipeModule {
 
     @Singleton
     @Provides
-    fun provideRecipeDao(db: AppDatabase): RecipeDao {
-        return db.recipeDao()
-    }
+    fun provideRecipeDao(db: AppDatabase): RecipeDao = db.recipeDao()
 }

@@ -49,6 +49,7 @@ class RecipePresenter @AssistedInject constructor(
             eventSink = { event ->
                 when (event) {
                     RecipeEvent.OnBackClicked -> navigator.pop()
+
                     RecipeEvent.ClearMessage ->
                         stableScope.launch { uiMessageManager.clearMessage() }
 

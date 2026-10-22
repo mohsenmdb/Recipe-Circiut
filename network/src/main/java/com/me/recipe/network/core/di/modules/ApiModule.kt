@@ -15,13 +15,9 @@ object ApiModule {
 
     @Provides
     @Singleton
-    fun providesRecipeService(retrofit: Retrofit): RecipeApi {
-        return retrofit.create(RecipeApi::class.java)
-    }
+    fun providesRecipeService(retrofit: Retrofit): RecipeApi = retrofit.create(RecipeApi::class.java)
 
     @Provides
     @Singleton
-    fun providesAuthService(retrofit: Retrofit): AuthApi {
-        return retrofit.create(AuthApi::class.java)
-    }
+    fun providesAuthService(retrofit: Retrofit): AuthApi = retrofit.create(AuthApi::class.java)
 }

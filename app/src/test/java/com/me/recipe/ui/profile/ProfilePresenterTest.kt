@@ -49,7 +49,5 @@ class ProfilePresenterTest {
 
     private fun createProfilePresenter(
         navigator: Navigator = FakeNavigator(ProfileScreen),
-    ): ProfilePresenter {
-        return ProfilePresenter(navigator = navigator)
-    }
+    ): ProfilePresenter = ProfilePresenter(navigator = navigator)
 }

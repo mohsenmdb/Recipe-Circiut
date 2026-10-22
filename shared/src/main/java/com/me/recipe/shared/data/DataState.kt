@@ -9,19 +9,15 @@ data class DataState<out T>(
 
         fun <T> success(
             data: T,
-        ): DataState<T> {
-            return DataState(
-                data = data,
-            )
-        }
+        ): DataState<T> = DataState(
+            data = data,
+        )
 
         fun <T> error(
             message: Throwable,
-        ): DataState<T> {
-            return DataState(
-                error = message,
-            )
-        }
+        ): DataState<T> = DataState(
+            error = message,
+        )
 
         fun <T> loading(): DataState<T> = DataState(loading = true)
     }

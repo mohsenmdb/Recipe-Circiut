@@ -15,19 +15,13 @@ object RecipeMapperModule {
 
     @Singleton
     @Provides
-    fun provideRecipeDtoMapper(): RecipeDtoMapper {
-        return RecipeDtoMapper()
-    }
+    fun provideRecipeDtoMapper(): RecipeDtoMapper = RecipeDtoMapper()
 
     @Singleton
     @Provides
-    fun provideCategoryDtoMapper(recipeDtoMapper: RecipeDtoMapper): CategoryDtoMapper {
-        return CategoryDtoMapper(recipeDtoMapper)
-    }
+    fun provideCategoryDtoMapper(recipeDtoMapper: RecipeDtoMapper): CategoryDtoMapper = CategoryDtoMapper(recipeDtoMapper)
 
     @Singleton
     @Provides
-    fun provideCacheRecipeMapper(): RecipeEntityMapper {
-        return RecipeEntityMapper()
-    }
+    fun provideCacheRecipeMapper(): RecipeEntityMapper = RecipeEntityMapper()
 }

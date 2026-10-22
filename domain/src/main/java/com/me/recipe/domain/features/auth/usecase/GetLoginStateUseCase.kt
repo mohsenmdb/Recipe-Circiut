@@ -9,7 +9,5 @@ import kotlinx.coroutines.flow.Flow
 class GetLoginStateUseCase @Inject constructor(
     private val userDataStore: UserDataStore,
 ) : SubjectInteractor<Any, LoginState>() {
-    override fun createObservable(params: Any): Flow<LoginState> {
-        return userDataStore.userFlow
-    }
+    override fun createObservable(params: Any): Flow<LoginState> = userDataStore.userFlow
 }
