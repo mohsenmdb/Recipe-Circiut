@@ -1,9 +1,13 @@
 package com.me.recipe.ui
 
+import android.graphics.Color
 import android.os.Bundle
+import androidx.activity.SystemBarStyle
 import androidx.activity.compose.setContent
+import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.DisposableEffect
 import com.me.recipe.shared.datastore.SettingsDataStore
 import com.me.recipe.ui.component.util.LocalErrorFormatter
 import com.me.recipe.ui.splash.SplashScreen
@@ -36,7 +40,15 @@ class MainActivityCircuit : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         getPushNotificationPermission()
         setContent {
-            RecipeTheme(settingsDataStore.isDark.value) {
+            val isDark = settingsDataStore.isDark.value
+            DisposableEffect(isDark) {
+                enableEdgeToEdge(
+                    statusBarStyle = SystemBarStyle.auto(Color.TRANSPARENT, Color.TRANSPARENT) { isDark },
+                    navigationBarStyle = SystemBarStyle.auto(Color.TRANSPARENT, Color.TRANSPARENT) { isDark },
+                )
+                onDispose {}
+            }
+            RecipeTheme(isDark) {
                 CompositionLocalProvider(LocalErrorFormatter provides errorFormatter) {
                     CircuitCompositionLocals(circuit = circuit) {
                         val backStack = rememberSaveableBackStack(

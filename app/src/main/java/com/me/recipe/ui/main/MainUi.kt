@@ -1,6 +1,7 @@
 package com.me.recipe.ui.main
 
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
@@ -63,7 +64,9 @@ private fun Content(
     }
 
     NavigableCircuitContent(
-        modifier = Modifier.padding(paddingValues),
+        modifier = Modifier
+            .padding(paddingValues)
+            .consumeWindowInsets(paddingValues),
         navigator = navigator,
         backStack = backstack,
         decoratorFactory = gestureNavigationDecoration,
