@@ -9,9 +9,7 @@ class AuthRepositoryFake(
     private val registerResult: Result<Register> = Result.success(Register.EMPTY),
 ) : AuthRepository {
 
-    override suspend fun login(username: String, password: String): Login {
-        return loginResult.getOrThrow()
-    }
+    override suspend fun login(username: String, password: String): Login = loginResult.getOrThrow()
 
     override suspend fun register(
         username: String,
@@ -19,7 +17,5 @@ class AuthRepositoryFake(
         lastName: String,
         age: Int?,
         password: String,
-    ): Register {
-        return registerResult.getOrThrow()
-    }
+    ): Register = registerResult.getOrThrow()
 }

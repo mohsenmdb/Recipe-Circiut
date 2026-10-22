@@ -5,11 +5,11 @@ import com.me.recipe.domain.features.recipe.model.Recipe
 import com.me.recipe.ui.component.util.UiMessage
 import com.slack.circuit.runtime.CircuitUiEvent
 import com.slack.circuit.runtime.CircuitUiState
-import com.slack.circuit.runtime.screen.Screen
+import com.slack.circuit.runtime.screen.ParcelableScreen
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
-data object TodayRecipeScreen : Screen
+data object TodayRecipeScreen : ParcelableScreen
 
 typealias TodayEventSink = (TodayRecipeEvent) -> Unit
 

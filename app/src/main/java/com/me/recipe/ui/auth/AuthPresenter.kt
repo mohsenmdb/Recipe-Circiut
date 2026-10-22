@@ -137,14 +137,17 @@ class AuthPresenter @AssistedInject constructor(
             eventSink = { event ->
                 when (event) {
                     is AuthEvent.OnUsernameChange -> username = event.username
+
                     is AuthEvent.OnPasswordChange -> {
                         password = event.password
                         hasPasswordError = false
                     }
+
                     is AuthEvent.OnRetryPasswordChange -> {
                         retryPassword = event.password
                         hasPasswordError = false
                     }
+
                     AuthEvent.OnSwitchModeClicked -> {
                         hasPasswordError = false
                         password = ""
@@ -152,10 +155,13 @@ class AuthPresenter @AssistedInject constructor(
                         authMode =
                             if (authMode == AuthMode.LOGIN) AuthMode.REGISTER else AuthMode.LOGIN
                     }
+
                     AuthEvent.ClearMessage -> scope.launch { uiMessageManager.clearMessage() }
+
                     AuthEvent.OnSubmitClicked -> {
                         when (authMode) {
                             AuthMode.LOGIN -> scope.launch { loginUser() }
+
                             AuthMode.REGISTER -> {
                                 if (password != retryPassword) {
                                     hasPasswordError = true
@@ -166,8 +172,11 @@ class AuthPresenter @AssistedInject constructor(
                             }
                         }
                     }
+
                     is AuthEvent.OnFirstNameChange -> firstName = event.firstName
+
                     is AuthEvent.OnLastNameChange -> lastName = event.lastName
+
                     is AuthEvent.OnAgeChange -> {
                         event.age.toIntOrNull() ?: return@AuthState
                         age = event.age

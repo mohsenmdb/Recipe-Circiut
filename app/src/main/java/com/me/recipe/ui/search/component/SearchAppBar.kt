@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
@@ -21,8 +22,6 @@ import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalFocusManager
@@ -51,7 +50,7 @@ internal fun SearchAppBar(
         color = MaterialTheme.colorScheme.primaryContainer,
         shadowElevation = 4.dp,
     ) {
-        Column {
+        Column(modifier = Modifier.statusBarsPadding()) {
             SearchTextField(query, onQueryChanged, newSearch, onSearchClearClicked)
             FoodChipsRow(
                 selectedCategory = selectedCategory,

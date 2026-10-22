@@ -7,14 +7,15 @@ import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.graphics.drawable.BitmapDrawable
 import android.net.Uri
 import android.os.Build
 import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
-import coil.ImageLoader
-import coil.request.ImageRequest
+import coil3.ImageLoader
+import coil3.request.ImageRequest
+import coil3.request.target
+import coil3.toBitmap
 import com.me.recipe.R
 import com.me.recipe.shared.utils.TAG
 import com.me.recipe.util.extention.encodeToUtf8
@@ -73,14 +74,14 @@ object NotificationBuilder {
             val loader = ImageLoader(context)
             val req = ImageRequest.Builder(context)
                 .data(banner)
-                .target { result ->
-                    val bitmap = (result as BitmapDrawable).bitmap
+                .target(onSuccess = { result ->
+                    val bitmap = result.toBitmap()
 //                    builder.setLargeIcon(bitmap)
                     builder.setStyle(
                         NotificationCompat.BigPictureStyle().bigPicture(bitmap),
                     )
                     NotificationManagerCompat.from(context).notify(NOTIFICATION_ID, builder.build())
-                }
+                })
                 .build()
             loader.enqueue(req)
             return

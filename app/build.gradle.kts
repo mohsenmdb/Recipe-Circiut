@@ -15,12 +15,12 @@ ksp {
 android {
     namespace = "com.me.recipe"
 
-    compileSdk = 36
+    compileSdk = 37
 
     defaultConfig {
         applicationId = "com.example.mycomposeapplication"
-        minSdk = 23
-        targetSdk = 34
+        minSdk = 24
+        targetSdk = 36
         versionCode = 1
         versionName = "1.0"
 
@@ -40,8 +40,8 @@ android {
     }
 
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_17
-        targetCompatibility = JavaVersion.VERSION_17
+        sourceCompatibility = JavaVersion.VERSION_21
+        targetCompatibility = JavaVersion.VERSION_21
     }
 
     buildFeatures {
@@ -63,10 +63,9 @@ android {
 }
 
 kotlin {
-    jvmToolchain(17)
+    jvmToolchain(21)
     compilerOptions {
-        jvmTarget.set(JvmTarget.JVM_17)
-        freeCompilerArgs.add("-Xcontext-receivers")
+        jvmTarget.set(JvmTarget.JVM_21)
     }
 }
 
@@ -97,6 +96,7 @@ dependencies {
     implementation(libs.compose.navigation)
     implementation(libs.compose.activity)
     implementation(libs.compose.coil)
+    implementation(libs.coil.network.okhttp)
 
     lintChecks(libs.compose.lint.checks)
     implementation(libs.compose.icons.extended)

@@ -22,11 +22,9 @@ class SearchRecipesUseCase @Inject constructor(
         val refresher: ForceFresh? = null,
 
     )
-    override fun createObservable(params: Params): Flow<Result<ImmutableList<Recipe>>> {
-        return recipeListRepository.search(params.page, params.query, params.size)
-            .map(Result.Companion::success)
-            .catch {
-                emit(Result.failure(it))
-            }
-    }
+    override fun createObservable(params: Params): Flow<Result<ImmutableList<Recipe>>> = recipeListRepository.search(params.page, params.query, params.size)
+        .map(Result.Companion::success)
+        .catch {
+            emit(Result.failure(it))
+        }
 }

@@ -5,13 +5,13 @@ import androidx.compose.runtime.Stable
 import com.me.recipe.ui.component.util.UiMessage
 import com.slack.circuit.runtime.CircuitUiEvent
 import com.slack.circuit.runtime.CircuitUiState
-import com.slack.circuit.runtime.screen.Screen
+import com.slack.circuit.runtime.screen.ParcelableScreen
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
-data object AddRecipeScreen : Screen
+data object AddRecipeScreen : ParcelableScreen
 
 typealias AddRecipeEventSink = (AddRecipeEvent) -> Unit
 

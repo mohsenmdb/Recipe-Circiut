@@ -2,9 +2,13 @@ package com.me.recipe.ui.today
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.statusBars
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -39,6 +43,7 @@ internal fun TodayRecipeUi(
             modifier = Modifier
                 .fillMaxWidth()
                 .background(MaterialTheme.colorScheme.primaryContainer)
+                .statusBarsPadding()
                 .padding(vertical = 16.dp),
         )
         RecipeContent(
@@ -47,7 +52,7 @@ internal fun TodayRecipeUi(
             recipe = state.recipe,
             clearMessage = { state.eventSink(TodayRecipeEvent.ClearMessage) },
             onLikeClicked = { state.eventSink(TodayRecipeEvent.OnLikeClicked) },
-            modifier = modifier,
+            modifier = modifier.consumeWindowInsets(WindowInsets.statusBars),
         )
     }
 }

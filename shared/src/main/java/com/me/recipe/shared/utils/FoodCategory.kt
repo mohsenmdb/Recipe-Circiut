@@ -19,10 +19,6 @@ enum class FoodCategory(val value: String) {
     UNKNOWN("Unknown"),
 }
 
-fun getAllFoodCategories(): ImmutableList<FoodCategory> {
-    return FoodCategory.entries.toPersistentList()
-}
+fun getAllFoodCategories(): ImmutableList<FoodCategory> = FoodCategory.entries.toPersistentList()
 
-fun getFoodCategory(value: String): FoodCategory {
-    return FoodCategory.valueOf(value.uppercase())
-}
+fun getFoodCategory(value: String): FoodCategory = FoodCategory.valueOf(value.uppercase())

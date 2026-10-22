@@ -15,11 +15,9 @@ class GetRecipeUseCase @Inject constructor(
         val recipeId: Int,
         val uid: String,
     )
-    override fun createObservable(params: Params): Flow<Result<Recipe>> {
-        return recipeRepository.getRecipe(params.recipeId, params.uid)
-            .map(Result.Companion::success)
-            .catch {
-                emit(Result.failure(it))
-            }
-    }
+    override fun createObservable(params: Params): Flow<Result<Recipe>> = recipeRepository.getRecipe(params.recipeId, params.uid)
+        .map(Result.Companion::success)
+        .catch {
+            emit(Result.failure(it))
+        }
 }

@@ -10,11 +10,9 @@ import kotlinx.coroutines.flow.map
 class GetTodayRecipeUseCase @Inject constructor(
     private val recipeRepository: RecipeRepository,
 ) {
-    operator fun invoke(): Flow<Result<Recipe>> {
-        return recipeRepository.getTodayRecipe()
-            .map(Result.Companion::success)
-            .catch {
-                emit(Result.failure(it))
-            }
-    }
+    operator fun invoke(): Flow<Result<Recipe>> = recipeRepository.getTodayRecipe()
+        .map(Result.Companion::success)
+        .catch {
+            emit(Result.failure(it))
+        }
 }

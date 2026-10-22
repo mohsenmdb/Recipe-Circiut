@@ -88,12 +88,19 @@ class AddRecipePresenter @AssistedInject constructor(
             eventSink = { event ->
                 when (event) {
                     AddRecipeEvent.ClearMessage -> scope.launch { uiMessageManager.clearMessage() }
+
                     is AddRecipeEvent.OnTitleChanged -> title = event.value
+
                     is AddRecipeEvent.OnDescriptionChanged -> description = event.value
+
                     is AddRecipeEvent.OnIngredientsChanged -> ingredientText = event.value
+
                     is AddRecipeEvent.OnImageSelected -> imageUri = event.uri
+
                     AddRecipeEvent.OnSubmitClicked -> scope.launch { sendRecipe() }
+
                     is AddRecipeEvent.OnRemoveIngredientsClicked -> ingredientsList = ingredientsList.remove(event.item)
+
                     AddRecipeEvent.OnAddIngredientsClicked -> {
                         ingredientsList = ingredientsList.add(ingredientText.trim().replaceFirstChar { it.uppercaseChar() })
                         ingredientText = ""

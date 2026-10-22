@@ -8,13 +8,13 @@ import com.me.recipe.ui.component.util.GenericDialogInfo
 import com.me.recipe.ui.component.util.UiMessage
 import com.slack.circuit.runtime.CircuitUiEvent
 import com.slack.circuit.runtime.CircuitUiState
-import com.slack.circuit.runtime.screen.Screen
+import com.slack.circuit.runtime.screen.ParcelableScreen
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
-data class HomeScreen(val title: String? = null) : Screen
+data class HomeScreen(val title: String? = null) : ParcelableScreen
 
 typealias HomeEventSink = (HomeEvent) -> Unit
 

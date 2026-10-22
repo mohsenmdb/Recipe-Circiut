@@ -16,10 +16,8 @@ object CacheModule {
 
     @Singleton
     @Provides
-    fun provideDb(@ApplicationContext app: Context): AppDatabase {
-        return Room
-            .databaseBuilder(app, AppDatabase::class.java, AppDatabase.DATABASE_NAME)
-            .fallbackToDestructiveMigration()
-            .build()
-    }
+    fun provideDb(@ApplicationContext app: Context): AppDatabase = Room
+        .databaseBuilder(app, AppDatabase::class.java, AppDatabase.DATABASE_NAME)
+        .fallbackToDestructiveMigration()
+        .build()
 }

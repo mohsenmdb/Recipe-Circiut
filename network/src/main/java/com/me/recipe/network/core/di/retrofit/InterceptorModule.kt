@@ -19,16 +19,14 @@ object InterceptorModule {
     @Provides
     @Singleton
     @AuthenticationInterceptorQualifier
-    internal fun provideAuthenticationInterceptor(userDataStore: UserDataStore): Interceptor =
-        AuthenticationInterceptor(userDataStore)
+    internal fun provideAuthenticationInterceptor(userDataStore: UserDataStore): Interceptor = AuthenticationInterceptor(userDataStore)
 
     @Provides
     @Singleton
     @LoggingInterceptorQualifier
-    internal fun provideLoggingInterceptor(): Interceptor =
-        HttpLoggingInterceptor { message -> Timber.d(message) }.apply {
-            level = HttpLoggingInterceptor.Level.BODY
-        }
+    internal fun provideLoggingInterceptor(): Interceptor = HttpLoggingInterceptor { message -> Timber.d(message) }.apply {
+        level = HttpLoggingInterceptor.Level.BODY
+    }
 }
 
 @Qualifier

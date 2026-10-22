@@ -209,20 +209,16 @@ class AuthPresenterTest {
         userDataStore: UserDataStore = createUserDataStore(),
         authRepository: AuthRepository = AuthRepositoryFake(),
         errorFormatter: ErrorFormatter = ErrorFormatterFake(),
-    ): AuthPresenter {
-        return AuthPresenter(
-            navigator = navigator,
-            loginUseCase = lazyOfDagger(LoginUseCase(authRepository)),
-            registerUseCase = lazyOfDagger(RegisterUseCase(authRepository)),
-            userDataStore = lazyOfDagger(userDataStore),
-            errorFormatter = lazyOfDagger(errorFormatter),
-        )
-    }
+    ): AuthPresenter = AuthPresenter(
+        navigator = navigator,
+        loginUseCase = lazyOfDagger(LoginUseCase(authRepository)),
+        registerUseCase = lazyOfDagger(RegisterUseCase(authRepository)),
+        userDataStore = lazyOfDagger(userDataStore),
+        errorFormatter = lazyOfDagger(errorFormatter),
+    )
 
-    private fun createUserDataStore(): UserDataStore {
-        return UserDataStore(
-            context = context,
-            ioDispatcher = mainDispatcherRule.testDispatcher,
-        )
-    }
+    private fun createUserDataStore(): UserDataStore = UserDataStore(
+        context = context,
+        ioDispatcher = mainDispatcherRule.testDispatcher,
+    )
 }

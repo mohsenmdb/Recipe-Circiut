@@ -109,17 +109,13 @@ class MainPresenterTest {
     private fun createMainPresenter(
         navigator: Navigator = FakeNavigator(MainScreen),
         userDataStore: UserDataStore = createUserDataStore(),
-    ): MainPresenter {
-        return MainPresenter(
-            navigator = navigator,
-            getLoginStateUseCase = lazyOfDagger(GetLoginStateUseCase(userDataStore)),
-        )
-    }
+    ): MainPresenter = MainPresenter(
+        navigator = navigator,
+        getLoginStateUseCase = lazyOfDagger(GetLoginStateUseCase(userDataStore)),
+    )
 
-    private fun createUserDataStore(): UserDataStore {
-        return UserDataStore(
-            context = context,
-            ioDispatcher = mainDispatcherRule.testDispatcher,
-        )
-    }
+    private fun createUserDataStore(): UserDataStore = UserDataStore(
+        context = context,
+        ioDispatcher = mainDispatcherRule.testDispatcher,
+    )
 }

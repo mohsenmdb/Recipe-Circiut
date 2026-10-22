@@ -1,6 +1,8 @@
 package com.me.recipe.ui.main
 
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
@@ -16,6 +18,7 @@ import com.slack.circuit.backstack.rememberSaveableBackStack
 import com.slack.circuit.codegen.annotations.CircuitInject
 import com.slack.circuit.foundation.NavigableCircuitContent
 import com.slack.circuit.foundation.rememberCircuitNavigator
+import com.slack.circuit.foundation.rememberDefaultCircuitSaver
 import com.slack.circuit.runtime.Navigator
 import com.slack.circuitx.gesturenavigation.GestureNavigationDecorationFactory
 import dagger.hilt.components.SingletonComponent
@@ -26,10 +29,15 @@ internal fun MainUi(
     state: MainState,
     modifier: Modifier = Modifier,
 ) {
-    val backstack = rememberSaveableBackStack(root = HomeScreen())
+    val backstack = rememberSaveableBackStack(
+        circuitSaver = rememberDefaultCircuitSaver(),
+        root = HomeScreen(),
+    )
     val navigator = rememberCircuitNavigator(backstack)
     Scaffold(
         modifier = modifier.fillMaxSize(),
+        // Status bar insets are left to each screen so its top bar can draw behind the status bar.
+        contentWindowInsets = WindowInsets(0, 0, 0, 0),
         bottomBar = {
             NavBottomBar(
                 selectedTab = state.selectedTab,
@@ -54,12 +62,14 @@ private fun Content(
     navigator: Navigator,
     backstack: SaveableBackStack,
 ) {
-    val gestureNavigationDecoration = remember(navigator) {
-        GestureNavigationDecorationFactory(onBackInvoked = navigator::pop)
+    val gestureNavigationDecoration = remember {
+        GestureNavigationDecorationFactory()
     }
 
     NavigableCircuitContent(
-        modifier = Modifier.padding(paddingValues),
+        modifier = Modifier
+            .padding(paddingValues)
+            .consumeWindowInsets(paddingValues),
         navigator = navigator,
         backStack = backstack,
         decoratorFactory = gestureNavigationDecoration,

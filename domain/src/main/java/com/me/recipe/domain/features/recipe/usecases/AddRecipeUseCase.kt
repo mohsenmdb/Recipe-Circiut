@@ -16,14 +16,12 @@ class AddRecipeUseCase @Inject constructor(
         val imageUri: Uri,
     )
 
-    suspend operator fun invoke(params: Params): Result<Unit> {
-        return runAsResult {
-            repository.addRecipe(
-                title = params.title,
-                description = params.description,
-                ingredients = params.ingredients,
-                imageUri = params.imageUri,
-            )
-        }
+    suspend operator fun invoke(params: Params): Result<Unit> = runAsResult {
+        repository.addRecipe(
+            title = params.title,
+            description = params.description,
+            ingredients = params.ingredients,
+            imageUri = params.imageUri,
+        )
     }
 }

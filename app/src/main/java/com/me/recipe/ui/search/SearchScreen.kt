@@ -14,7 +14,7 @@ import com.me.recipe.ui.component.util.GenericDialogInfo
 import com.me.recipe.ui.component.util.UiMessage
 import com.slack.circuit.runtime.CircuitUiEvent
 import com.slack.circuit.runtime.CircuitUiState
-import com.slack.circuit.runtime.screen.Screen
+import com.slack.circuit.runtime.screen.ParcelableScreen
 import java.net.ConnectException
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
@@ -23,7 +23,7 @@ import kotlinx.coroutines.flow.flowOf
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
-data class SearchScreen(val query: String = "", val onlyMyRecipes: Boolean = false) : Screen
+data class SearchScreen(val query: String = "", val onlyMyRecipes: Boolean = false) : ParcelableScreen
 
 typealias SearchEventSink = (SearchEvent) -> Unit
 

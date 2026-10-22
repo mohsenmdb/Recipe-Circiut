@@ -26,16 +26,15 @@ suspend inline fun <Key : Any, Output : Any> Store<Key, Output>.fetch(
 ): Output = when {
     // If we're forcing a fresh fetch, do it now
     forceFresh -> fresh(key)
+
     else -> get(key)
 }
 inline fun <Key : Any, Output : Any> Store<Key, Output>.observe(
     key: Key,
     forceFresh: Boolean = false,
-): Flow<Output> {
-    return stream(StoreReadRequest.cached(key, forceFresh))
-        .filterNot { it is StoreReadResponse.Loading || it is StoreReadResponse.NoNewData }
-        .map(StoreReadResponse<Output>::requireData)
-}
+): Flow<Output> = stream(StoreReadRequest.cached(key, forceFresh))
+    .filterNot { it is StoreReadResponse.Loading || it is StoreReadResponse.NoNewData }
+    .map(StoreReadResponse<Output>::requireData)
 
 suspend inline fun <Key : Any, Output : Any> Store<Key, Output>.fetchNoMemory(
     key: Key,
@@ -43,6 +42,7 @@ suspend inline fun <Key : Any, Output : Any> Store<Key, Output>.fetchNoMemory(
 ): Output = when {
     // If we're forcing a fresh fetch, do it now
     forceFresh -> fresh(key)
+
     else -> stream(
         StoreReadRequest.skipMemory(key, refresh = false),
     ).filterNot {

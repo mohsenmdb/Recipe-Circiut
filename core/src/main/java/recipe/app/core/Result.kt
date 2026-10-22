@@ -15,49 +15,41 @@ sealed interface Result<out T> {
     val isSuccess: Boolean get() = this is Success
     val isFailure: Boolean get() = this is Error
 
-    fun exceptionOrNull(): Throwable? =
-        when (this) {
-            is Error -> this.exception
-            else -> null
-        }
+    fun exceptionOrNull(): Throwable? = when (this) {
+        is Error -> this.exception
+        else -> null
+    }
 
     val isLoading
         get() = this is Loading
-    fun getOrNull(): T? =
-        when {
-            this is Success -> this.data
-            else -> null
-        }
+    fun getOrNull(): T? = when {
+        this is Success -> this.data
+        else -> null
+    }
 
     data class Success<T>(val data: T) : Result<T>
     data class Error(val exception: Throwable? = null) : Result<Nothing>
     data object Loading : Result<Nothing>
 }
 
-fun <T> Flow<T>.asResult(): Flow<Result<T>> {
-    return this
-        .map<T, Result<T>> {
-            Result.Success(it)
-        }
-        .onStart { emit(Result.Loading) }
-        .catch { emit(Result.Error(it)) }
-}
-
-inline fun <R> runAsResultFlow(crossinline block: suspend () -> R): Flow<Result<R>> {
-    return flow<Result<R>> {
-        emit(Result.Success(block()))
-    }.onStart { emit(Result.Loading) }
-        .catch { emit(Result.Error(it)) }
-}
-
-suspend inline fun <R> runAsResult(crossinline block: suspend () -> R): Result<R> {
-    return try {
-        Result.Success(block())
-    } catch (e: HttpException) {
-        Result.Error(handleHttpException(e))
-    } catch (e: Throwable) {
-        Result.Error(e)
+fun <T> Flow<T>.asResult(): Flow<Result<T>> = this
+    .map<T, Result<T>> {
+        Result.Success(it)
     }
+    .onStart { emit(Result.Loading) }
+    .catch { emit(Result.Error(it)) }
+
+inline fun <R> runAsResultFlow(crossinline block: suspend () -> R): Flow<Result<R>> = flow<Result<R>> {
+    emit(Result.Success(block()))
+}.onStart { emit(Result.Loading) }
+    .catch { emit(Result.Error(it)) }
+
+suspend inline fun <R> runAsResult(crossinline block: suspend () -> R): Result<R> = try {
+    Result.Success(block())
+} catch (e: HttpException) {
+    Result.Error(handleHttpException(e))
+} catch (e: Throwable) {
+    Result.Error(e)
 }
 
 fun handleHttpException(e: HttpException): Throwable {
@@ -67,10 +59,8 @@ fun handleHttpException(e: HttpException): Throwable {
     return error
 }
 
-inline fun <T, R> Result<T>.map(transform: (T) -> R): Result<R> {
-    return when (this) {
-        is Result.Success -> Result.Success(transform(data))
-        is Result.Error -> this
-        is Result.Loading -> this
-    }
+inline fun <T, R> Result<T>.map(transform: (T) -> R): Result<R> = when (this) {
+    is Result.Success -> Result.Success(transform(data))
+    is Result.Error -> this
+    is Result.Loading -> this
 }

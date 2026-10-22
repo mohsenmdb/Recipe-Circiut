@@ -36,21 +36,18 @@ class RecipeListRepositoryDefault @Inject constructor(
         emit(list)
     }.flowOn(ioDispatcher)
 
-    override fun restore(page: Int, query: String): Flow<ImmutableList<Recipe>> =
-        flow {
-            // just to show pagination, api is fast
-            delay(500)
-            val cacheResult = restoreCachedRecipes(query, page)
-            val list = recipeEntityMapper.toDomainList(cacheResult).toPersistentList()
-            emit(list)
-        }.flowOn(ioDispatcher)
+    override fun restore(page: Int, query: String): Flow<ImmutableList<Recipe>> = flow {
+        // just to show pagination, api is fast
+        delay(500)
+        val cacheResult = restoreCachedRecipes(query, page)
+        val list = recipeEntityMapper.toDomainList(cacheResult).toPersistentList()
+        emit(list)
+    }.flowOn(ioDispatcher)
 
-    override suspend fun getTopRecipe(): Recipe {
-        return try {
-            getRecipesFromNetwork(1, "", 1).firstOrNull() ?: Recipe.EMPTY
-        } catch (e: Exception) {
-            Recipe.EMPTY
-        }
+    override suspend fun getTopRecipe(): Recipe = try {
+        getRecipesFromNetwork(1, "", 1).firstOrNull() ?: Recipe.EMPTY
+    } catch (e: Exception) {
+        Recipe.EMPTY
     }
 
     private suspend fun getRecipesFromNetwork(page: Int, query: String, size: Int): List<Recipe> {
@@ -59,32 +56,29 @@ class RecipeListRepositoryDefault @Inject constructor(
         return mappedRecipes
     }
 
-    private suspend fun getCachedRecipes(query: String, page: Int): List<RecipeEntity> =
-        if (query.isBlank()) {
-            recipeDao.getAllRecipes(pageSize = RECIPE_PAGINATION_PAGE_SIZE, page = page)
-        } else {
-            recipeDao.searchRecipes(
-                pageSize = RECIPE_PAGINATION_PAGE_SIZE,
-                page = page,
-                query = query,
-            )
-        }
-
-    private suspend fun getCachedCategories(category: FoodCategory): List<RecipeEntity> =
+    private suspend fun getCachedRecipes(query: String, page: Int): List<RecipeEntity> = if (query.isBlank()) {
+        recipeDao.getAllRecipes(pageSize = RECIPE_PAGINATION_PAGE_SIZE, page = page)
+    } else {
         recipeDao.searchRecipes(
-            pageSize = RECIPE_CATEGORY_PAGE_SIZE,
-            query = category.name,
-            page = 1,
+            pageSize = RECIPE_PAGINATION_PAGE_SIZE,
+            page = page,
+            query = query,
         )
+    }
 
-    private suspend fun restoreCachedRecipes(query: String, page: Int): List<RecipeEntity> =
-        if (query.isBlank()) {
-            recipeDao.restoreAllRecipes(pageSize = RECIPE_PAGINATION_PAGE_SIZE, page = page)
-        } else {
-            recipeDao.restoreRecipes(
-                query = query,
-                pageSize = RECIPE_PAGINATION_PAGE_SIZE,
-                page = page,
-            )
-        }
+    private suspend fun getCachedCategories(category: FoodCategory): List<RecipeEntity> = recipeDao.searchRecipes(
+        pageSize = RECIPE_CATEGORY_PAGE_SIZE,
+        query = category.name,
+        page = 1,
+    )
+
+    private suspend fun restoreCachedRecipes(query: String, page: Int): List<RecipeEntity> = if (query.isBlank()) {
+        recipeDao.restoreAllRecipes(pageSize = RECIPE_PAGINATION_PAGE_SIZE, page = page)
+    } else {
+        recipeDao.restoreRecipes(
+            query = query,
+            pageSize = RECIPE_PAGINATION_PAGE_SIZE,
+            page = page,
+        )
+    }
 }

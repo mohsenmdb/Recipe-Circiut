@@ -10,53 +10,53 @@ import javax.inject.Inject
 
 class HomeScreenRobot @Inject constructor() {
 
-    context (RobotTestRule)
+    context(rule: RobotTestRule)
     fun setHomeScreen(
         state: HomeState,
     ) {
-        composeTestRule.setContent {
+        rule.composeTestRule.setContent {
             HomeUi(state = state)
         }
     }
 
-    context (RobotTestRule)
+    context(rule: RobotTestRule)
     fun assertAppNameTextIsDisplayed() {
         val context = InstrumentationRegistry.getInstrumentation().context
-        composeTestRule.onNodeWithText(context.getString(R.string.app_name), useUnmergedTree = true)
+        rule.composeTestRule.onNodeWithText(context.getString(R.string.app_name), useUnmergedTree = true)
             .assertIsDisplayed()
     }
 
-    context (RobotTestRule)
+    context(rule: RobotTestRule)
     fun assertChangeThemeIconIsDisplayed() {
-        composeTestRule.onNodeWithTag("testTag_changeThemeIcon", useUnmergedTree = true)
+        rule.composeTestRule.onNodeWithTag("testTag_changeThemeIcon", useUnmergedTree = true)
             .assertIsDisplayed()
     }
-    context (RobotTestRule)
+    context(rule: RobotTestRule)
     fun assertFirstSliderImageIsDisplayed() {
-        composeTestRule.onNodeWithTag("testTag_sliderCard_image", useUnmergedTree = true)
+        rule.composeTestRule.onNodeWithTag("testTag_sliderCard_image", useUnmergedTree = true)
             .assertIsDisplayed()
     }
-    context (RobotTestRule)
+    context(rule: RobotTestRule)
     fun assertFirstSliderTextIsDisplayed() {
-        composeTestRule.onNodeWithTag("testTag_sliderCard_text", useUnmergedTree = true)
+        rule.composeTestRule.onNodeWithTag("testTag_sliderCard_text", useUnmergedTree = true)
             .assertIsDisplayed()
     }
-    context (RobotTestRule)
+    context(rule: RobotTestRule)
     fun assertCategoryVerticalLazyRowIsDisplayed() {
-        composeTestRule.onNodeWithTag("testTag_category_vertical_lazyRow", useUnmergedTree = true)
+        rule.composeTestRule.onNodeWithTag("testTag_category_vertical_lazyRow", useUnmergedTree = true)
             .assertIsDisplayed()
     }
-    context (RobotTestRule)
+    context(rule: RobotTestRule)
     fun assertCategoryHorizontalLazyRowIsDisplayed() {
-        composeTestRule.onNodeWithTag("testTag_category_horizontal_lazyRow", useUnmergedTree = true)
+        rule.composeTestRule.onNodeWithTag("testTag_category_horizontal_lazyRow", useUnmergedTree = true)
             .assertIsDisplayed()
     }
 
-    context (RobotTestRule)
+    context(rule: RobotTestRule)
     fun assertCategoryTitleRowTextIsDisplayed(
         text: String,
     ) {
-        composeTestRule.onNodeWithText(text, useUnmergedTree = true)
+        rule.composeTestRule.onNodeWithText(text, useUnmergedTree = true)
             .assertIsDisplayed()
     }
 

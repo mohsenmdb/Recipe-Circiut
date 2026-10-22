@@ -9,34 +9,30 @@ import kotlinx.collections.immutable.toPersistentList
 
 class RecipeEntityMapper : DomainMapper<RecipeEntity, Recipe> {
 
-    override fun mapToDomainModel(model: RecipeEntity, uid: String?): Recipe {
-        return Recipe(
-            id = model.id,
-            uid = uid ?: UUID.randomUUID().toString(),
-            title = model.title,
-            description = model.description,
-            image = model.image,
-            rating = model.rating,
-            publisher = model.publisher,
-            ingredients = convertIngredientsToList(model.ingredients).toPersistentList(),
-            date = model.date,
-        )
-    }
+    override fun mapToDomainModel(model: RecipeEntity, uid: String?): Recipe = Recipe(
+        id = model.id,
+        uid = uid ?: UUID.randomUUID().toString(),
+        title = model.title,
+        description = model.description,
+        image = model.image,
+        rating = model.rating,
+        publisher = model.publisher,
+        ingredients = convertIngredientsToList(model.ingredients).toPersistentList(),
+        date = model.date,
+    )
 
-    fun mapFromDomainModel(domainModel: Recipe, isTodayRecipe: Boolean = false): RecipeEntity {
-        return RecipeEntity(
-            id = domainModel.id,
-            title = domainModel.title,
-            description = domainModel.description,
-            image = domainModel.image,
-            rating = domainModel.rating,
-            publisher = domainModel.publisher,
-            ingredients = domainModel.ingredients.joinToString(","),
-            date = domainModel.date,
-            dateCached = DateUtils.dateToLong(DateUtils.createTimestamp()),
-            isTodayRecipe = isTodayRecipe,
-        )
-    }
+    fun mapFromDomainModel(domainModel: Recipe, isTodayRecipe: Boolean = false): RecipeEntity = RecipeEntity(
+        id = domainModel.id,
+        title = domainModel.title,
+        description = domainModel.description,
+        image = domainModel.image,
+        rating = domainModel.rating,
+        publisher = domainModel.publisher,
+        ingredients = domainModel.ingredients.joinToString(","),
+        date = domainModel.date,
+        dateCached = DateUtils.dateToLong(DateUtils.createTimestamp()),
+        isTodayRecipe = isTodayRecipe,
+    )
 
     private fun convertIngredientsToList(ingredientsString: String?): List<String> {
         val list: ArrayList<String> = ArrayList()
@@ -48,11 +44,7 @@ class RecipeEntityMapper : DomainMapper<RecipeEntity, Recipe> {
         return list
     }
 
-    fun toDomainList(recipes: List<RecipeEntity>): List<Recipe> {
-        return recipes.map { mapToDomainModel(it) }
-    }
+    fun toDomainList(recipes: List<RecipeEntity>): List<Recipe> = recipes.map { mapToDomainModel(it) }
 
-    fun toEntityList(initial: List<Recipe>): List<RecipeEntity> {
-        return initial.map { mapFromDomainModel(it) }
-    }
+    fun toEntityList(initial: List<Recipe>): List<RecipeEntity> = initial.map { mapFromDomainModel(it) }
 }

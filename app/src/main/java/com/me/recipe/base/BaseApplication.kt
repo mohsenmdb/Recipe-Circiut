@@ -10,7 +10,9 @@ import javax.inject.Inject
 import timber.log.Timber
 
 @HiltAndroidApp
-class BaseApplication : Application(), Configuration.Provider {
+class BaseApplication :
+    Application(),
+    Configuration.Provider {
     @Inject
     lateinit var workerFactory: HiltWorkerFactory
     override fun onCreate() {

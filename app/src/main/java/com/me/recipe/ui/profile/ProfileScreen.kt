@@ -5,13 +5,13 @@ import com.me.recipe.R
 import com.slack.circuit.runtime.CircuitUiEvent
 import com.slack.circuit.runtime.CircuitUiState
 import com.slack.circuit.runtime.Navigator
-import com.slack.circuit.runtime.screen.Screen
+import com.slack.circuit.runtime.screen.ParcelableScreen
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
-data object ProfileScreen : Screen
+data object ProfileScreen : ParcelableScreen
 
 typealias ProfileEventSink = (ProfileEvent) -> Unit
 

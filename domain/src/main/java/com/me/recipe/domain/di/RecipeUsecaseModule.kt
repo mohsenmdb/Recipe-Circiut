@@ -20,31 +20,23 @@ object RecipeUsecaseModule {
     @Provides
     fun provideSearchRecipeUsecase(
         recipeListRepository: RecipeListRepository,
-    ): SearchRecipesUseCase {
-        return SearchRecipesUseCase(recipeListRepository = recipeListRepository)
-    }
+    ): SearchRecipesUseCase = SearchRecipesUseCase(recipeListRepository = recipeListRepository)
 
     @ViewModelScoped
     @Provides
     fun provideRestoreRecipesUsecase(
         recipeListRepository: RecipeListRepository,
-    ): RestoreRecipesUseCase {
-        return RestoreRecipesUseCase(recipeListRepository = recipeListRepository)
-    }
+    ): RestoreRecipesUseCase = RestoreRecipesUseCase(recipeListRepository = recipeListRepository)
 
     @ViewModelScoped
     @Provides
     fun provideGetRecipeUsecase(
         recipeRepository: RecipeRepository,
-    ): GetRecipeUseCase {
-        return GetRecipeUseCase(recipeRepository = recipeRepository)
-    }
+    ): GetRecipeUseCase = GetRecipeUseCase(recipeRepository = recipeRepository)
 
     @ViewModelScoped
     @Provides
     fun provideTopRecipeUsecase(
         recipeListRepository: RecipeListRepository,
-    ): TopRecipeUsecase {
-        return TopRecipeUsecase(recipeListRepository = recipeListRepository)
-    }
+    ): TopRecipeUsecase = TopRecipeUsecase(recipeListRepository = recipeListRepository)
 }

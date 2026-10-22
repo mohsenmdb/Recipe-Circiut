@@ -102,6 +102,7 @@ fun MessageEffect(
             is Message.Toast -> {
                 toast(context, message)
             }
+
             else -> {}
         }
     }

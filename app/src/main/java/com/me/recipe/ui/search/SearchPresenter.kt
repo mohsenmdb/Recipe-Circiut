@@ -132,15 +132,23 @@ class SearchPresenter @AssistedInject constructor(
             eventSink = { event ->
                 when (event) {
                     is OnSelectedCategoryChanged -> onSelectedCategoryChanged(event.category)
+
                     is OnQueryChanged -> searchText = event.query
+
                     NewSearchEvent -> onNewSearchEvent()
+
                     is OnRecipeClick -> navigateToRecipePage(event.recipe)
+
                     OnAppendingRetryClicked -> items.retry()
+
                     OngRetryClicked -> forceRefresher = ForceFresh.refresh()
+
                     ClearMessage -> stableScope.launch { uiMessageManager.clearMessage() }
+
                     is OnRecipeLongClick -> {
                         stableScope.launch { uiMessageManager.emitMessage(UiMessage.createSnackbar(event.title)) }
                     }
+
                     SearchClearEvent -> {
                         searchText = ""
                         query = ""
@@ -164,14 +172,12 @@ class SearchPresenter @AssistedInject constructor(
 }
 
 @Composable
-fun rememberRetainedCoroutineScope(): CoroutineScope {
-    return rememberRetained("coroutine_scope") {
-        RememberObserverHolder(
-            value = CoroutineScope(context = Dispatchers.Main + Job()),
-            onDestroy = CoroutineScope::cancel,
-        )
-    }.value
-}
+fun rememberRetainedCoroutineScope(): CoroutineScope = rememberRetained("coroutine_scope") {
+    RememberObserverHolder(
+        value = CoroutineScope(context = Dispatchers.Main + Job()),
+        onDestroy = CoroutineScope::cancel,
+    )
+}.value
 
 internal class RememberObserverHolder<T>(
     val value: T,
@@ -194,26 +200,14 @@ inline fun <T : Any> Flow<PagingData<T>>.rememberRetainedCachedPagingFlow(
     scope: CoroutineScope = rememberRetainedCoroutineScope(),
 ): Flow<PagingData<T>> = rememberRetained(this, key, scope) { cachedIn(scope) }
 
-inline fun CombinedLoadStates.appendErrorOrNull(): UiMessage? {
-    return (append as? LoadState.Error)?.let { UiMessage.createSnackbar(it.error) }
-}
+inline fun CombinedLoadStates.appendErrorOrNull(): UiMessage? = (append as? LoadState.Error)?.let { UiMessage.createSnackbar(it.error) }
 
-inline fun CombinedLoadStates.prependErrorOrNull(): UiMessage? {
-    return (prepend as? LoadState.Error)?.let { UiMessage.createSnackbar(it.error) }
-}
+inline fun CombinedLoadStates.prependErrorOrNull(): UiMessage? = (prepend as? LoadState.Error)?.let { UiMessage.createSnackbar(it.error) }
 
-inline fun CombinedLoadStates.refreshErrorOrNull(): UiMessage? {
-    return (refresh as? LoadState.Error)?.let { UiMessage.createSnackbar(it.error) }
-}
+inline fun CombinedLoadStates.refreshErrorOrNull(): UiMessage? = (refresh as? LoadState.Error)?.let { UiMessage.createSnackbar(it.error) }
 
-inline fun CombinedLoadStates.isRefreshing(): Boolean {
-    return refresh == LoadState.Loading
-}
+inline fun CombinedLoadStates.isRefreshing(): Boolean = refresh == LoadState.Loading
 
-inline fun CombinedLoadStates.isAppending(): Boolean {
-    return append == LoadState.Loading
-}
+inline fun CombinedLoadStates.isAppending(): Boolean = append == LoadState.Loading
 
-inline fun CombinedLoadStates.isEmpty(itemCount: Int): Boolean {
-    return refresh is LoadState.NotLoading && itemCount == 0 && (append as? LoadState.NotLoading)?.endOfPaginationReached == true
-}
+inline fun CombinedLoadStates.isEmpty(itemCount: Int): Boolean = refresh is LoadState.NotLoading && itemCount == 0 && (append as? LoadState.NotLoading)?.endOfPaginationReached == true
